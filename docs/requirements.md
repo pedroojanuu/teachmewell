@@ -1,9 +1,5 @@
 # Requirements
 
-## Use case model 
-
-![Use case model](../images/UseCaseModel.png)
-
 ## User Stories
 
 As a student, I want to check the rating of a teacher in order to know whether I should choose them.
