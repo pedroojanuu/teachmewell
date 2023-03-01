@@ -1,10 +1,10 @@
-## Requirements
+# Requirements
 
-### Use case model 
+## Use case model 
 
 ![Use case model](../images/UseCaseModel.png)
 
-### User Stories
+## User Stories
 
 As a student, I want to check the rating of a teacher in order to know whether I should choose them.
 
@@ -14,19 +14,11 @@ As a student, I want to rate my professors so that I can help others choose thei
 
 As a student or a teacher, I want to easily find a teacher's profile, so can easily rate and see the ratings.
 
-### Domain Modelling
+## Domain Modelling
 
-### Acceptance tests
+## Acceptance tests
 
-# User story 1 (student checks ratings and comments about a teacher)
-
-Feature: A teacher checks the ratings and the comments about them
-
-    Scenario: User checks a teacher's rating and comments left by students
-        When the teacher opens a teacher's page in the app
-        Then an average general score is presented (based on previous ratings), as well as averages in specific parameters.
-
-# User story 2 (teacher checks ratings and comments about them)
+### User story 1 (student checks ratings and comments about a teacher)
 
 Feature: A teacher checks the ratings and the comments about them
 
@@ -34,7 +26,15 @@ Feature: A teacher checks the ratings and the comments about them
         When the teacher opens a teacher's page in the app
         Then an average general score is presented (based on previous ratings), as well as averages in specific parameters.
 
-# User story 3 (rate a teacher)
+### User story 2 (teacher checks ratings and comments about them)
+
+Feature: A teacher checks the ratings and the comments about them
+
+    Scenario: User checks a teacher's rating and comments left by students
+        When the teacher opens a teacher's page in the app
+        Then an average general score is presented (based on previous ratings), as well as averages in specific parameters.
+
+### User story 3 (rate a teacher)
 
 Feature: Rate a teacher
 
@@ -43,7 +43,7 @@ Feature: Rate a teacher
         Then the teacher's page on the app is updated and includes the new rating and the teacher's points can change.
 
 
-## User story 4 (find teacher's profile)
+### User story 4 (find teacher's profile)
 
 Feature: Search for teacher
 
