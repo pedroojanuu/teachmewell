@@ -1,4 +1,5 @@
 # Architecture and Design
 
-## Domain Modelling
+## Domain Model
 
+![Domain Model](../images/DomainModel.png)
