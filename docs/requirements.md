@@ -10,6 +10,10 @@ As a student, I want to rate my professors so that I can help others choose thei
 
 As a student or a teacher, I want to easily find a teacher's profile, so can easily rate and see the ratings.
 
+## UI Mockups
+
+![UI Mockups](../images/UIMockups.png)
+
 ## Acceptance tests
 
 ### User story 1 (student checks ratings and comments about a teacher)
