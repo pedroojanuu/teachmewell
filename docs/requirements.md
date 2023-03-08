@@ -47,7 +47,7 @@ Feature: Search for teacher
 
 ## Domain Model
 
-![Domain Model](../images/Domain Model.png)
+![Domain Model](../images/Domain%20Model.png)
 
 ## UI Mockups
 
