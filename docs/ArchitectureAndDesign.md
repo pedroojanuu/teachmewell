@@ -1,5 +1,7 @@
 # Architecture and Design
 
-## Domain Model
+## Logical Architecture
 
-![Domain Model](../images/DomainModel.png)
+## Physical Architecture
+
+## Vertical prototype

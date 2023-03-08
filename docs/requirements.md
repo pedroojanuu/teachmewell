@@ -10,13 +10,9 @@ As a student, I want to rate my professors so that I can help others choose thei
 
 As a student or a teacher, I want to easily find a teacher's profile, so can easily rate and see the ratings.
 
-## UI Mockups
+### Acceptance tests
 
-![UI Mockups](../images/UIMockups.png)
-
-## Acceptance tests
-
-### User story 1 (student checks ratings and comments about a teacher)
+#### User story 1 (student checks ratings and comments about a teacher)
 
 Feature: A teacher checks the ratings and the comments about them
 
@@ -24,7 +20,7 @@ Feature: A teacher checks the ratings and the comments about them
         When the teacher opens a teacher's page in the app
         Then an average general score is presented (based on previous ratings), as well as averages in specific parameters.
 
-### User story 2 (teacher checks ratings and comments about them)
+#### User story 2 (teacher checks ratings and comments about them)
 
 Feature: A teacher checks the ratings and the comments about them
 
@@ -32,7 +28,7 @@ Feature: A teacher checks the ratings and the comments about them
         When the teacher opens a teacher's page in the app
         Then an average general score is presented (based on previous ratings), as well as averages in specific parameters.
 
-### User story 3 (rate a teacher)
+#### User story 3 (rate a teacher)
 
 Feature: Rate a teacher
 
@@ -41,10 +37,23 @@ Feature: Rate a teacher
         Then the teacher's page on the app is updated and includes the new rating and the teacher's points can change.
 
 
-### User story 4 (find teacher's profile)
+#### User story 4 (find teacher's profile)
 
 Feature: Search for teacher
 
     Scenario: User writes the teacher's name on the search bar
         When the user writes the teacher's name on the search bar and presses 'Search'
         Then a list of teachers with a compatible name is shown
+
+## Domain Model
+
+![Domain Model](../images/Domain Model.png)
+
+## UI Mockups
+
+![UI Mockup 1](../images/Mockup%201.png)
+![UI Mockup 2](../images/Mockup%202.png)
+![UI Mockup 3](../images/Mockup%203.png)
+![UI Mockup 4](../images/Mockup%204.png)
+![UI Mockup 5](../images/Mockup%205.png)
+
