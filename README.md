@@ -10,14 +10,21 @@
 
 # TeachMeWell
 
-## Vision Statement
+An app to help UP students choose their TP teachers, based on ratings made by other students.
 
-For UP (University of Porto) students. An app where the user can rate and get the ratings of teachers. Helps a student know which teacher(s) best suit(s) their needs in the parameters they value the most.
+You can find here details about the product (or mini-app or module), from a high-level vision to low-level implementation decisions, a kind of Software Development Report, organized by discipline (as of Rational Unified Process):
 
-## Main Features
- - Rate a Teacher - A student answers a set of questions in order to generate a rating in certain parameters and can also leave a comment.
- - View a Teacher's rating - Both teachers and students can view a teacher's score on many parameters.
+* Business Modelling
+    * ![Product Vision](docs/ProductVision.md)
 
-## Assumptions and dependencies
- - Firebase database to store the ratings
- - SIGARRA teacher search
+* ![Requirements](docs/requirements.md)
+    * ![User Stories](docs/requirements.md#user-stories)
+    * ![Domain Model](docs/requirements.md#domain-model)
+    * ![UI Mockups](docs/requirements.md#ui-mockups)
+
+* ![Architecture and Design](docs/ArchitectureAndDesign.md)
+    * ![Logical Architecture](docs/ArchitectureAndDesign.md#logical-architecture)
+    * ![Physical Architecture](docs/ArchitectureAndDesign.md#physical-architecture)
+    * ![Vertical Prototype](docs/ArchitectureAndDesign.md#vertical-prototype)
+
+* ![Implementation](/app/)
