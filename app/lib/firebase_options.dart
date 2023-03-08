@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -25,7 +28,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -43,19 +49,9 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAZG4eb3f07cWwuBUZlWtDS8Du5gT_WCYo',
-    appId: '1:20100769610:web:61398a426b5bfa514a83b3',
-    messagingSenderId: '20100769610',
-    projectId: 'teachmewell-esof',
-    authDomain: 'teachmewell-esof.firebaseapp.com',
-    databaseURL: 'https://teachmewell-esof-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'teachmewell-esof.appspot.com',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCockMIF8tf9Z7_wz3xC7fG8xQEgD8HqIo',
-    appId: '1:20100769610:android:db0e09ac911f3aa64a83b3',
+    appId: '1:20100769610:android:4fd437f64b982fa44a83b3',
     messagingSenderId: '20100769610',
     projectId: 'teachmewell-esof',
     databaseURL: 'https://teachmewell-esof-default-rtdb.europe-west1.firebasedatabase.app',
@@ -64,23 +60,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCIud3h3peXHWL4sZHH3KzQHzrMHySZPK4',
-    appId: '1:20100769610:ios:ae0349635595d9844a83b3',
+    appId: '1:20100769610:ios:2b9635973900878e4a83b3',
     messagingSenderId: '20100769610',
     projectId: 'teachmewell-esof',
     databaseURL: 'https://teachmewell-esof-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'teachmewell-esof.appspot.com',
-    iosClientId: '20100769610-q9mlrb0npv3tifsdgr6bvaq4fu7q3hhe.apps.googleusercontent.com',
-    iosBundleId: 'com.esof.teachmewell.app',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCIud3h3peXHWL4sZHH3KzQHzrMHySZPK4',
-    appId: '1:20100769610:ios:ae0349635595d9844a83b3',
-    messagingSenderId: '20100769610',
-    projectId: 'teachmewell-esof',
-    databaseURL: 'https://teachmewell-esof-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'teachmewell-esof.appspot.com',
-    iosClientId: '20100769610-q9mlrb0npv3tifsdgr6bvaq4fu7q3hhe.apps.googleusercontent.com',
-    iosBundleId: 'com.esof.teachmewell.app',
+    iosClientId: '20100769610-l6ipok81b6sq8cha6pk4g9gi6s5114fk.apps.googleusercontent.com',
+    iosBundleId: 'com.esof.teachmewell.teachmewell',
   );
 }

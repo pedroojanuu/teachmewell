@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>20100769610-q9mlrb0npv3tifsdgr6bvaq4fu7q3hhe.apps.googleusercontent.com</string>
+	<string>20100769610-l6ipok81b6sq8cha6pk4g9gi6s5114fk.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.20100769610-q9mlrb0npv3tifsdgr6bvaq4fu7q3hhe</string>
+	<string>com.googleusercontent.apps.20100769610-l6ipok81b6sq8cha6pk4g9gi6s5114fk</string>
 	<key>API_KEY</key>
 	<string>AIzaSyCIud3h3peXHWL4sZHH3KzQHzrMHySZPK4</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.esof.teachmewell.app</string>
+	<string>com.esof.teachmewell.teachmewell</string>
 	<key>PROJECT_ID</key>
 	<string>teachmewell-esof</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:20100769610:ios:ae0349635595d9844a83b3</string>
+	<string>1:20100769610:ios:2b9635973900878e4a83b3</string>
 	<key>DATABASE_URL</key>
 	<string>https://teachmewell-esof-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>

@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:20100769610:android:db0e09ac911f3aa64a83b3",
+        "mobilesdk_app_id": "1:20100769610:android:4fd437f64b982fa44a83b3",
         "android_client_info": {
-          "package_name": "com.esof.teachmewell.app"
+          "package_name": "com.esof.teachmewell.teachmewell"
         }
       },
       "oauth_client": [
@@ -32,10 +32,10 @@
               "client_type": 3
             },
             {
-              "client_id": "20100769610-q9mlrb0npv3tifsdgr6bvaq4fu7q3hhe.apps.googleusercontent.com",
+              "client_id": "20100769610-l6ipok81b6sq8cha6pk4g9gi6s5114fk.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.esof.teachmewell.app"
+                "bundle_id": "com.esof.teachmewell.teachmewell"
               }
             }
           ]

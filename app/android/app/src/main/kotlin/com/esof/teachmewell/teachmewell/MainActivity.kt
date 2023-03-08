@@ -1,4 +1,4 @@
-package com.esof.teachmewell.app
+package com.esof.teachmewell.teachmewell
 
 import io.flutter.embedding.android.FlutterActivity
 
