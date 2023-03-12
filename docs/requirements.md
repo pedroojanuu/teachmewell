@@ -62,4 +62,4 @@ A student is described by their student number and name. Each faculty, course an
 ![UI Mockup 4](../images/Mockup%204.png)
 ![UI Mockup 5](../images/Mockup%205.png)
 ![UI Mockup 6](../images/Mockup%206.png)
-![UI Mockup 7]()
+![UI Mockup 7](../images/Mockup%207.png)
