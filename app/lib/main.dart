@@ -186,7 +186,7 @@ class ProfileDetails extends StatelessWidget {
 
   Widget listComments(BuildContext context) {
     return StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('comments').snapshots(),
+        stream: FirebaseFirestore.instance.collection('comments').where('teacher', isEqualTo: int.parse(document.id) ).snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData) return const Text('Loading...');
           return ListView.builder(
