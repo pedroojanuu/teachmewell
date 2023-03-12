@@ -111,7 +111,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dunas"),
+        title: Text("TeachMeWell"),
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('teacher').snapshots(),
@@ -175,7 +175,7 @@ class ProfileDetails extends StatelessWidget {
           Text(document['name'], style: Theme.of(context).textTheme.headlineMedium,),
           Text(document['department'], style: Theme.of(context).textTheme.headlineSmall,),
           Container(
-            height: 400,
+            height: 300,
             width: 400,
             child: listComments(context),
           )

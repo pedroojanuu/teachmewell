@@ -47,6 +47,11 @@ Feature: Search for teacher
 
 ## Domain Model
 
+The TeachMeWell application allows Students to rate and view Professors' ratings. Each rating is described by a value between 1-5 and a comment,
+describing the professors. Each student belongs to one or more faculties and is enrolled in one or more courses which can be taught by one or more 
+faculties and has its own subjects that are taught by one or more professors. A professor is described by their acronym, name and Department. 
+A student is described by their student number and name. Each faculty, course and subject has their own acronym/code and name.
+
 ![Domain Model](../images/Domain%20Model.png)
 
 ## UI Mockups
@@ -56,4 +61,5 @@ Feature: Search for teacher
 ![UI Mockup 3](../images/Mockup%203.png)
 ![UI Mockup 4](../images/Mockup%204.png)
 ![UI Mockup 5](../images/Mockup%205.png)
-
+![UI Mockup 6](../images/Mockup%206.png)
+![UI Mockup 7]()
