@@ -10,6 +10,18 @@ Future <void> main() async {
   runApp(const MyApp());
 }
 
+class MyModel {
+  final String name;
+
+  MyModel(this.name);
+
+  factory MyModel.fromSnapshot(DocumentSnapshot snapshot) {
+    return MyModel(
+      snapshot.get('rating'),
+    );
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -54,16 +66,21 @@ class MyHomePage extends StatelessWidget {
 
   // ---------------------------------------
 
-  final String name = "lala";
-  final double votes = 1.2;
+  Widget _buildListItem(BuildContext context, DocumentSnapshot document) {
+    num acc = 0;
+    // make a query to find all comments in the comment collection, and add its rating to acc
+    FirebaseFirestore.instance.collection('teacher').doc(document.id).collection('comments').get().then((value) => {
+      value.docs.forEach((element) {
+        acc += element.get('rating');
+      })
+    });
 
-  Widget _buildListItem(BuildContext context) {
     return ListTile(
       title: Row(
         children: [
           Expanded(
               child: Text(
-                name,
+                document['name'],
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
           ),
@@ -73,14 +90,19 @@ class MyHomePage extends StatelessWidget {
             ),
             padding: const EdgeInsets.all(10.0),
             child: Text(
-              votes.toString(),
+              acc.toString(),
               style: Theme.of(context).textTheme.headlineMedium,
             )
           )
         ],
       ),
       onTap: () {
-        print("Should increase votes here.");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfileDetails(document),
+          ),
+        );
       }
     );
   }
@@ -91,16 +113,91 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Dunas"),
       ),
-      body: ListView.builder(
-        itemExtent: 80.0,
-        itemCount: 5,
-        itemBuilder:  (context, index) =>
-          _buildListItem(context),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('teacher').snapshots(),
+        builder: (context, snapshot) {
+          if(!snapshot.hasData) return const Text('Loading...');
+          return ListView.builder(
+            itemExtent: 80.0,
+            itemCount: (snapshot.data as QuerySnapshot).docs.length,
+            itemBuilder:  (context, index) =>
+                _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),
+          );
+        }
       )
     );
 
   }
 
+}
+
+class ProfileDetails extends StatelessWidget {
+  final DocumentSnapshot document;
+
+  ProfileDetails(this.document);
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot document2) {
+
+    return ListTile(
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                document2['description'],
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+            Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xffddddff),
+                ),
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  document2['rating'].toString(),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                )
+            )
+          ],
+        ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(document['name']),
+      ),
+      body:
+      Column(
+        children: [
+          Image.network('https://sigarra.up.pt/feup/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=' + document.id),
+          Text(document['name'], style: Theme.of(context).textTheme.headlineMedium,),
+          Text(document['department'], style: Theme.of(context).textTheme.headlineSmall,),
+          Container(
+            height: 400,
+            width: 400,
+            child: listComments(context),
+          )
+        ],
+      )
+    );
+  }
+
+  Widget listComments(BuildContext context) {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('comments').snapshots(),
+        builder: (context, snapshot) {
+          if(!snapshot.hasData) return const Text('Loading...');
+          return ListView.builder(
+            itemExtent: 80.0,
+            itemCount: (snapshot.data as QuerySnapshot).docs.length,
+            itemBuilder:  (context, index) =>
+                _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),
+          );
+        }
+    );
+  }
 }
 
 // class _MyHomePageState extends State<MyHomePage> {
