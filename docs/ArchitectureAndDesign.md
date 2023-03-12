@@ -18,5 +18,5 @@ list of all professors in the database, and if we click the name of one of them 
 and all the comments made about them. The vertical prototype is already connected to Sigarra and Firebase. For now, Sigarra is only used to retrieve 
 the photo and the rest of the professors’ information. Their comments are stored in Firestore (a specific Firebase service).
 
-![Vertical UI 1](../images/Vertical_UI_1.png)
-![Vertical UI 2](../images/Vertical_UI_2.png)
+<img alt="Vertical UI 1" src="../images/Vertical_UI_1.png" width=250>
+<img alt="Vertical UI 2" src="../images/Vertical_UI_2.png" width=250>
