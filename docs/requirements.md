@@ -13,38 +13,38 @@ As a student, I want to check the rating of a professor in order to know whether
 
 ### Acceptance tests
 
-#### User story 1 (student checks ratings and comments about a teacher)
+#### User story 1 (student checks ratings and comments about a professor)
 
-Feature: A teacher checks the ratings and the comments about them
+Feature: A student checks the ratings and comments about a professor
 
-    Scenario: User checks a teacher's rating and comments left by students
-        When the teacher opens a teacher's page in the app
+    Scenario: User checks a professor's rating and comments left by students
+        When the student opens a professor's page in the app
         Then an average general score is presented (based on previous ratings), as well as averages in specific parameters.
 
-#### User story 2 (teacher checks ratings and comments about them)
+#### User story 2 (professor checks ratings and comments about them)
 
-Feature: A teacher checks the ratings and the comments about them
+Feature: A professor checks the ratings and the comments about them
 
-    Scenario: User checks a teacher's rating and comments left by students
-        When the teacher opens a teacher's page in the app
+    Scenario: User checks a professor's rating and comments left by students
+        When the professor opens a professor's page in the app
         Then an average general score is presented (based on previous ratings), as well as averages in specific parameters.
 
-#### User story 3 (rate a teacher)
+#### User story 3 (rate a professor)
 
-Feature: Rate a teacher
+Feature: Rate a professor
 
-    Scenario: User rates a teacher
-        When the user rates a teacher by filling the rating form
-        Then the teacher's page on the app is updated and includes the new rating and the teacher's points can change.
+    Scenario: User rates a professor
+        When the user rates a professor by filling the rating form
+        Then the professor's page on the app is updated and includes the new rating and the professor's points can change.
 
 
-#### User story 4 (find teacher's profile)
+#### User story 4 (find professor's profile)
 
-Feature: Search for teacher
+Feature: Search for professor
 
-    Scenario: User writes the teacher's name on the search bar
-        When the user writes the teacher's name on the search bar and presses 'Search'
-        Then a list of teachers with a compatible name is shown
+    Scenario: User writes the professor's name on the search bar
+        When the user writes the professor's name on the search bar and presses 'Search'
+        Then a list of professors with a compatible name is shown
 
 ## Domain Model
 
