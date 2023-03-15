@@ -2,13 +2,14 @@
 
 ## User Stories
 
-As a student, I want to check the rating of a teacher in order to know whether I should choose them.
-
-As a professor I want to check my ratings and comments so I can improve my teaching method.
+As a student or a professor, I want to easily find a professors' profile, so I can see their ratings.
 
 As a student, I want to rate my professors so that I can help others choose their classes in the future.
 
-As a student or a teacher, I want to easily find a teacher's profile, so can easily rate and see the ratings.
+As a professor I want to check my ratings and comments so I can improve my teaching method.
+
+As a student, I want to check the rating of a professor in order to know whether I should choose them.
+
 
 ### Acceptance tests
 
