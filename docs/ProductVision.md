@@ -2,7 +2,7 @@
 
 ## Vision Statement
 
-For UP (University of Porto) students. An app where the user can rate and get the ratings of teachers. Helps a student know which teacher(s) best suit(s) their needs in the parameters they value the most.
+For UP (University of Porto) students. An app where the user can rate and get the ratings of teachers. Helps a student know which teacher(s) best suit(s) their learning needs in the parameters they value the most.
 
 ## Main Features
 
