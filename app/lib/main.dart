@@ -162,25 +162,70 @@ class ProfileDetails extends StatelessWidget {
     );
   }
 
+  Future<dynamic> addComment(String description, double rating) async {
+    final newDocument = FirebaseFirestore.instance.collection('comments').doc();
+    final json = { 'description': description, 'rating': rating, 'teacher': int.parse(document.id) };
+
+    // Write to Firebase
+    await newDocument.set(json);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final description = TextEditingController();
+    final rating = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(document['name']),
       ),
-      body:
-      Column(
-        children: [
-          Image.network('https://sigarra.up.pt/feup/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=' + document.id),
-          Text(document['name'], style: Theme.of(context).textTheme.headlineMedium,),
-          Text(document['department'], style: Theme.of(context).textTheme.headlineSmall,),
-          Container(
-            height: 300,
-            width: 400,
-            child: listComments(context),
-          )
-        ],
-      )
+      body: Container(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Image.network('https://sigarra.up.pt/feup/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=' + document.id),
+              Text(document['name'], style: Theme.of(context).textTheme.headlineMedium,),
+              Text(document['department'], style: Theme.of(context).textTheme.headlineSmall,),
+              Container(
+                height: 220,
+                width: 400,
+                child: listComments(context),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue, width: 2),
+                ),
+              ),
+              Text('\n\nComment:'),
+              TextFormField(
+                controller: description,
+                decoration: InputDecoration(
+                  labelText: 'Description',
+                ),
+              ),
+              TextFormField(
+                controller: rating,
+                decoration: InputDecoration(
+                  labelText: 'Rating',
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  final d = description.text;
+                  final r_temp = rating.text;
+                  double r;
+
+                  try {
+                    r = double.parse(r_temp);
+                    addComment(d, r);
+                    description.clear();
+                    rating.clear();
+                  } catch (e) {}
+                },
+                child : Text('Submit'),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 
