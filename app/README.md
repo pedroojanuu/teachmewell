@@ -1,16 +1,10 @@
 # teachmewell
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Current Features
+We have many amazing features planned for the app, but by now we can already:
+ - See the list of teachers in our database.
+ - View their comments and their corresponding ratings
+ - We can add new comments and ratings
+ - We can delete comments by dragging them to the side
+ 
+We can test this features by installing the app on your android smartphone using the APKs in the folder ![release apks](/release_apks/)
