@@ -139,7 +139,13 @@ class ProfileDetails extends StatelessWidget {
   Widget _buildListItem(BuildContext context, DocumentSnapshot document2) {
 
     return ListTile(
-        title: Row(
+        title: GestureDetector(
+        onHorizontalDragEnd: (DragEndDetails details) {
+          DocumentReference documentReference = FirebaseFirestore.instance.collection('comments').doc(document2.id);
+          documentReference.delete();
+        },
+        child:
+        Row(
           children: [
             Expanded(
               child: Text(
@@ -158,6 +164,7 @@ class ProfileDetails extends StatelessWidget {
                 )
             )
           ],
+        ),
         ),
     );
   }
@@ -215,9 +222,11 @@ class ProfileDetails extends StatelessWidget {
 
                   try {
                     r = double.parse(r_temp);
-                    addComment(d, r);
-                    description.clear();
-                    rating.clear();
+                    if(r >= 0 && r <= 5) {
+                      addComment(d, r);
+                      description.clear();
+                      rating.clear();
+                    }
                   } catch (e) {}
                 },
                 child : Text('Submit'),
