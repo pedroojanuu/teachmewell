@@ -19,4 +19,4 @@ and all the comments made about them. The vertical prototype is already connecte
 the photo and the rest of the professors’ information. Their comments are stored in Firestore (a specific Firebase service).
 
 <img alt="Vertical UI 1" src="../images/Vertical_UI_1.png" width=250>
-<img alt="Vertical UI 2" src="../images/Vertical_UI_2.png" width=250>
+<img alt="Vertical UI 2" src="../images/Vertical_UI_2.gif" width=250>

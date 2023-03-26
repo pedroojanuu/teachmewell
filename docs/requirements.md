@@ -53,7 +53,7 @@ describing the professors. Each student belongs to one or more faculties and is 
 faculties and has its own subjects that are taught by one or more professors. A professor is described by their acronym, name and Department. 
 A student is described by their student number and name. Each faculty, course and subject has their own acronym/code and name.
 
-![Domain Model](../images/Domain%20Model.png)
+![Domain Model](../images/Domain%20Model.jpg)
 
 ## UI Mockups
 
