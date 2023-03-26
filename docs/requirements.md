@@ -2,13 +2,13 @@
 
 ## User Stories
 
-As a student or a professor, I want to easily find a professors' profile, so I can see their ratings.
+As a student or a professor, I want to easily find a professors' profile, so I can see their ratings. (Mockups 3, 4 and 5)
 
-As a student, I want to rate my professors so that I can help others choose their classes in the future.
+As a student, I want to rate my professors so that I can help others choose their classes in the future. (Mockup 6)
 
-As a professor I want to check my ratings and comments so I can improve my teaching method.
+As a professor I want to check my ratings and comments so I can improve my teaching method. (Mockup 7)
 
-As a student, I want to check the rating of a professor in order to know whether I should choose them.
+As a student, I want to check the rating of a professor in order to know whether I should choose them. (Mockups 3 and 7)
 
 
 ### Acceptance tests
