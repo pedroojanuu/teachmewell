@@ -18,33 +18,42 @@ As a student, I want to check the rating of a professor in order to know whether
 Feature: A student checks the ratings and comments about a professor
 
     Scenario: User checks a professor's rating and comments left by students
-        When the student opens a professor's page in the app
-        Then an average general score is presented (based on previous ratings), as well as averages in specific parameters.
+    Given that he has successfully logged in with his SIGARRA credentials
+    When the student opens a professor's page in the app
+    Then an average general score is presented (based on previous ratings), as well as averages in specific parameters.
+    
 
 #### User story 2 (professor checks ratings and comments about them)
 
 Feature: A professor checks the ratings and the comments about them
 
     Scenario: User checks a professor's rating and comments left by students
-        When the professor opens a professor's page in the app
-        Then an average general score is presented (based on previous ratings), as well as averages in specific parameters.
+    Given that they are not logged in but signed in as guests
+    When the professor opens a professor's page in the app
+    Then an average general score is presented (based on previous ratings), as well as averages in specific parameters.
 
 #### User story 3 (rate a professor)
 
 Feature: Rate a professor
 
     Scenario: User rates a professor
-        When the user rates a professor by filling the rating form
-        Then the professor's page on the app is updated and includes the new rating and the professor's points can change.
-
+    Given that the professor he’s trying to rate has been his professor
+    When the user rates a professor by filling the rating form
+    Then the professor's page on the app is updated and includes the new rating and the professor's points can change.
+    
+    Scenario: User can't rate the professors
+    Given that he hasn't logged in
+    When he inputs the wrong credentials
+    Then the app will ask for the login information again and will not allow me to write a review until I login successfully
 
 #### User story 4 (find professor's profile)
 
 Feature: Search for professor
 
     Scenario: User writes the professor's name on the search bar
-        When the user writes the professor's name on the search bar and presses 'Search'
-        Then a list of professors with a compatible name is shown
+    Given he has accessed the search menu after logging in
+    When the user writes the professor's name on the search bar and presses 'Search'
+    Then a list of professors with a compatible name is shown
 
 ## Domain Model
 
