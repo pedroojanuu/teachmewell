@@ -5,7 +5,7 @@ main() async {
   print('\n');
   print(await getTeacherUCs("feup", 211636, 2022));
   print('\n');
-  print(await getUCName('fep', 499897));
+  print(await getUCInfo('feup', 501680));
 }
 
 bool isInList(List<int> l, int n) {
@@ -41,7 +41,7 @@ Future<List<int>> getTeacherUCs(String faculty, int teacher, int year) async {
   return ids;
 }
 
-Future<String> getUCName(String faculty, int id) async {
+Future<List<String>> getUCInfo(String faculty, int id) async {
   final response = await http.Client().get(Uri.parse('https://sigarra.up.pt/$faculty/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=$id'));
   String body = response.body;
 
@@ -49,6 +49,17 @@ Future<String> getUCName(String faculty, int id) async {
 
   var content = soup.find('*', id: 'conteudoinner');
   var h1 = content!.findAll('h1');
+  var table = soup.find('*', class_: 'formulario');
+  var td = table!.findAll('td');
 
-  return h1[1].string;
+  String name = h1[1].toString();
+  name = name.substring(4, (name.length) - 5);
+
+  String code = td[1].toString();
+  code = code.substring(4, (code.length) - 5);
+
+  String acronym = td[4].toString();
+  acronym = acronym.substring(4, (acronym.length) - 5);
+
+  return [name, code, acronym];
 }
