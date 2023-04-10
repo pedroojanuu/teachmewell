@@ -9,7 +9,7 @@ main() async {
   print(await getTeacherUCs("feup", 211636, 2022));
   print('\n');
   print(await getUCInfo('feup', 501680));
-  populateFCUPTeachers();
+  populateFPCEUPTeachers();
 }
 
 bool isInList(List<int> l, int n) {
@@ -89,8 +89,134 @@ void populateFCUPTeachers() {
   codesNames.forEach((key, value) {print('${key}: ${value}');});
 }
 
+void populateFCNAUPTeachers() {
+  File file = new File('assets/fcnaup2022.html');
+  String html = file.readAsStringSync();
+
+  BeautifulSoup soup = BeautifulSoup(html);
+
+  var content = soup.find('*', id: 'conteudoinner');
+  var rows = content!.findAll('li');
+
+  Map<int, String> codesNames = {};
+
+  for (var row in rows) {
+    var a = row.find('a');
+    String code = a.toString();
+    code = code.substring(38,44);
+    codesNames[int.parse(code)] = a!.getText();
+  }
+
+  codesNames.forEach((key, value) {print('${key}: ${value}');});
+}
+
+void populateFADEUPTeachers() {
+  File file = new File('assets/fadeup2022.html');
+  String html = file.readAsStringSync();
+
+  BeautifulSoup soup = BeautifulSoup(html);
+
+  var content = soup.find('*', id: 'conteudoinner');
+  var rows = content!.findAll('li');
+
+  Map<int, String> codesNames = {};
+
+  for (var row in rows) {
+    var a = row.find('a');
+    String code = a.toString();
+    code = code.substring(38,44);
+    codesNames[int.parse(code)] = a!.getText();
+  }
+
+  codesNames.forEach((key, value) {print('${key}: ${value}');});
+}
+
+void populateFDUPTeachers() {
+  File file = new File('assets/fdup2022.html');
+  String html = file.readAsStringSync();
+
+  BeautifulSoup soup = BeautifulSoup(html);
+
+  var content = soup.find('*', id: 'conteudoinner');
+  var rows = content!.findAll('li');
+
+  Map<int, String> codesNames = {};
+
+  for (var row in rows) {
+    var a = row.find('a');
+    String code = a.toString();
+    code = code.substring(38,44);
+    codesNames[int.parse(code)] = a!.getText();
+  }
+
+  codesNames.forEach((key, value) {print('${key}: ${value}');});
+}
+
+void populateFEPTeachers() {
+  File file = new File('assets/fep2022.html');
+  String html = file.readAsStringSync();
+
+  BeautifulSoup soup = BeautifulSoup(html);
+
+  var content = soup.find('*', id: 'conteudoinner');
+  var rows = content!.findAll('li');
+
+  Map<int, String> codesNames = {};
+
+  for (var row in rows) {
+    var a = row.find('a');
+    String code = a.toString();
+    code = code.substring(38,44);
+    codesNames[int.parse(code)] = a!.getText();
+  }
+
+  codesNames.forEach((key, value) {print('${key}: ${value}');});
+}
+
 void populateFEUPTeachers() {
   File file = new File('assets/feup2022.html');
+  String html = file.readAsStringSync();
+
+  BeautifulSoup soup = BeautifulSoup(html);
+
+  var content = soup.find('*', id: 'conteudoinner');
+  var rows = content!.findAll('li');
+
+  Map<int, String> codesNames = {};
+
+  for (var row in rows) {
+    var a = row.find('a');
+    String code = a.toString();
+    code = code.substring(38,44);
+    codesNames[int.parse(code)] = a!.getText();
+  }
+
+  codesNames.forEach((key, value) {print('${key}: ${value}');});
+}
+
+void populateFLUPTeachers() {
+  File file = new File('assets/flup2022.html');
+  String html = file.readAsStringSync();
+
+  BeautifulSoup soup = BeautifulSoup(html);
+
+  var content = soup.find('*', id: 'conteudoinner');
+  var rows = content!.findAll('li');
+
+  Map<int, String> codesNames = {};
+
+  for (var row in rows) {
+    var a = row.find('a');
+    String code = a.toString();
+    code = code.substring(38,44);
+    codesNames[int.parse(code)] = a!.getText();
+  }
+
+  codesNames.forEach((key, value) {print('${key}: ${value}');});
+}
+
+void populateFPCEUPTeachers() {
+  File file = new File('assets/fpceup2022.html');
   String html = file.readAsStringSync();
 
   BeautifulSoup soup = BeautifulSoup(html);
