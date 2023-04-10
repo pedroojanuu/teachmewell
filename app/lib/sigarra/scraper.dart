@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
@@ -9,7 +8,7 @@ main() async {
   print(await getTeacherUCs("feup", 211636, 2022));
   print('\n');
   print(await getUCInfo('feup', 501680));
-  populateFPCEUPTeachers();
+  populateICBASTeachers();
 }
 
 bool isInList(List<int> l, int n) {
@@ -215,8 +214,50 @@ void populateFLUPTeachers() {
   codesNames.forEach((key, value) {print('${key}: ${value}');});
 }
 
+void populateFMUPTeachers() {
+  File file = new File('assets/fmup2022.html');
+  String html = file.readAsStringSync();
+
+  BeautifulSoup soup = BeautifulSoup(html);
+
+  var content = soup.find('*', id: 'conteudoinner');
+  var rows = content!.findAll('li');
+
+  Map<int, String> codesNames = {};
+
+  for (var row in rows) {
+    var a = row.find('a');
+    String code = a.toString();
+    code = code.substring(38,44);
+    codesNames[int.parse(code)] = a!.getText();
+  }
+
+  codesNames.forEach((key, value) {print('${key}: ${value}');});
+}
+
 void populateFPCEUPTeachers() {
   File file = new File('assets/fpceup2022.html');
+  String html = file.readAsStringSync();
+
+  BeautifulSoup soup = BeautifulSoup(html);
+
+  var content = soup.find('*', id: 'conteudoinner');
+  var rows = content!.findAll('li');
+
+  Map<int, String> codesNames = {};
+
+  for (var row in rows) {
+    var a = row.find('a');
+    String code = a.toString();
+    code = code.substring(38,44);
+    codesNames[int.parse(code)] = a!.getText();
+  }
+
+  codesNames.forEach((key, value) {print('${key}: ${value}');});
+}
+
+void populateICBASTeachers() {
+  File file = new File('assets/icbas2022.html');
   String html = file.readAsStringSync();
 
   BeautifulSoup soup = BeautifulSoup(html);
