@@ -1,14 +1,38 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart';
 
-main() async {
+import '../firebase_options.dart';
+
+fakeMain() async {
   print('\n');
   print(await getTeacherUCs("feup", 211636, 2022));
   print('\n');
   print(await getUCInfo('feup', 501680));
+  populateFCUPTeachers();
+  populateFCNAUPTeachers();
+  populateFADEUPTeachers();
+  populateFDUPTeachers();
+  populateFEPTeachers();
+  populateFEUPTeachers();
+  populateFLUPTeachers();
+  populateFMUPTeachers();
+  populateFPCEUPTeachers();
   populateICBASTeachers();
+}
+
+String removeDiacritics(String str) {
+  var withDia = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+  var withoutDia = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
+
+  for (int i = 0; i < withDia.length; i++) {
+    str = str.replaceAll(withDia[i], withoutDia[i]);
+  }
+  return str;
 }
 
 bool isInList(List<int> l, int n) {
@@ -67,9 +91,8 @@ Future<List<String>> getUCInfo(String faculty, int id) async {
   return [name, code, acronym];
 }
 
-void populateFCUPTeachers() {
-  File file = new File('assets/fcup2022.html');
-  String html = file.readAsStringSync();
+Future populateFCUPTeachers() async {
+  String html = await rootBundle.loadString('assets/fcup2022.html');
 
   BeautifulSoup soup = BeautifulSoup(html);
 
@@ -85,12 +108,16 @@ void populateFCUPTeachers() {
     codesNames[int.parse(code)] = a!.getText();
   }
 
-  codesNames.forEach((key, value) {print('${key}: ${value}');});
+  codesNames.forEach((key, value) async {
+    final newDocument = FirebaseFirestore.instance.collection('professor').doc('FCUP'+key.toString());
+    final json = {'codigo': key, 'nome-simpl': removeDiacritics(value).toLowerCase(), 'nome': value, 'faculdade': 'FCUP'};
+
+    await newDocument.set(json);
+  });
 }
 
-void populateFCNAUPTeachers() {
-  File file = new File('assets/fcnaup2022.html');
-  String html = file.readAsStringSync();
+Future populateFCNAUPTeachers() async {
+  String html = await rootBundle.loadString('assets/fcnaup2022.html');
 
   BeautifulSoup soup = BeautifulSoup(html);
 
@@ -106,12 +133,16 @@ void populateFCNAUPTeachers() {
     codesNames[int.parse(code)] = a!.getText();
   }
 
-  codesNames.forEach((key, value) {print('${key}: ${value}');});
+  codesNames.forEach((key, value) async {
+    final newDocument = FirebaseFirestore.instance.collection('professor').doc('FCNAUP'+key.toString());
+    final json = {'codigo': key, 'nome-simpl': removeDiacritics(value).toLowerCase(), 'nome': value, 'faculdade': 'FCNAUP'};
+
+    await newDocument.set(json);
+  });
 }
 
-void populateFADEUPTeachers() {
-  File file = new File('assets/fadeup2022.html');
-  String html = file.readAsStringSync();
+void populateFADEUPTeachers() async {
+  String html = await rootBundle.loadString('assets/fadeup2022.html');
 
   BeautifulSoup soup = BeautifulSoup(html);
 
@@ -127,12 +158,16 @@ void populateFADEUPTeachers() {
     codesNames[int.parse(code)] = a!.getText();
   }
 
-  codesNames.forEach((key, value) {print('${key}: ${value}');});
+  codesNames.forEach((key, value) async {
+    final newDocument = FirebaseFirestore.instance.collection('professor').doc('FADEUP'+key.toString());
+    final json = {'codigo': key, 'nome-simpl': removeDiacritics(value).toLowerCase(), 'nome': value, 'faculdade': 'FADEUP'};
+
+    await newDocument.set(json);
+  });
 }
 
-void populateFDUPTeachers() {
-  File file = new File('assets/fdup2022.html');
-  String html = file.readAsStringSync();
+Future populateFDUPTeachers() async {
+  String html = await rootBundle.loadString('assets/fdup2022.html');
 
   BeautifulSoup soup = BeautifulSoup(html);
 
@@ -148,12 +183,16 @@ void populateFDUPTeachers() {
     codesNames[int.parse(code)] = a!.getText();
   }
 
-  codesNames.forEach((key, value) {print('${key}: ${value}');});
+  codesNames.forEach((key, value) async {
+    final newDocument = FirebaseFirestore.instance.collection('professor').doc('FDUP'+key.toString());
+    final json = {'codigo': key, 'nome-simpl': removeDiacritics(value).toLowerCase(), 'nome': value, 'faculdade': 'FDUP'};
+
+    await newDocument.set(json);
+  });
 }
 
-void populateFEPTeachers() {
-  File file = new File('assets/fep2022.html');
-  String html = file.readAsStringSync();
+Future populateFEPTeachers() async {
+  String html = await rootBundle.loadString('assets/fep2022.html');
 
   BeautifulSoup soup = BeautifulSoup(html);
 
@@ -169,12 +208,16 @@ void populateFEPTeachers() {
     codesNames[int.parse(code)] = a!.getText();
   }
 
-  codesNames.forEach((key, value) {print('${key}: ${value}');});
+  codesNames.forEach((key, value) async {
+    final newDocument = FirebaseFirestore.instance.collection('professor').doc('FEP'+key.toString());
+    final json = {'codigo': key, 'nome-simpl': removeDiacritics(value).toLowerCase(), 'nome': value, 'faculdade': 'FEP'};
+
+    await newDocument.set(json);
+  });
 }
 
-void populateFEUPTeachers() {
-  File file = new File('assets/feup2022.html');
-  String html = file.readAsStringSync();
+Future populateFEUPTeachers() async {
+  String html = await rootBundle.loadString('assets/feup2022.html');
 
   BeautifulSoup soup = BeautifulSoup(html);
 
@@ -190,12 +233,16 @@ void populateFEUPTeachers() {
     codesNames[int.parse(code)] = a!.getText();
   }
 
-  codesNames.forEach((key, value) {print('${key}: ${value}');});
+  codesNames.forEach((key, value) async {
+    final newDocument = FirebaseFirestore.instance.collection('professor').doc('FEUP'+key.toString());
+    final json = {'codigo': key, 'nome-simpl': removeDiacritics(value).toLowerCase(), 'nome': value, 'faculdade': 'FEUP'};
+
+    await newDocument.set(json);
+  });
 }
 
-void populateFLUPTeachers() {
-  File file = new File('assets/flup2022.html');
-  String html = file.readAsStringSync();
+Future populateFLUPTeachers() async {
+  String html = await rootBundle.loadString('assets/flup2022.html');
 
   BeautifulSoup soup = BeautifulSoup(html);
 
@@ -211,12 +258,16 @@ void populateFLUPTeachers() {
     codesNames[int.parse(code)] = a!.getText();
   }
 
-  codesNames.forEach((key, value) {print('${key}: ${value}');});
+  codesNames.forEach((key, value) async {
+    final newDocument = FirebaseFirestore.instance.collection('professor').doc('FLUP'+key.toString());
+    final json = {'codigo': key, 'nome-simpl': removeDiacritics(value).toLowerCase(), 'nome': value, 'faculdade': 'FLUP'};
+
+    await newDocument.set(json);
+  });
 }
 
-void populateFMUPTeachers() {
-  File file = new File('assets/fmup2022.html');
-  String html = file.readAsStringSync();
+Future populateFMUPTeachers() async {
+  String html = await rootBundle.loadString('assets/fmup2022.html');
 
   BeautifulSoup soup = BeautifulSoup(html);
 
@@ -232,12 +283,16 @@ void populateFMUPTeachers() {
     codesNames[int.parse(code)] = a!.getText();
   }
 
-  codesNames.forEach((key, value) {print('${key}: ${value}');});
+  codesNames.forEach((key, value) async {
+    final newDocument = FirebaseFirestore.instance.collection('professor').doc('FMUP'+key.toString());
+    final json = {'codigo': key, 'nome-simpl': removeDiacritics(value).toLowerCase(), 'nome': value, 'faculdade': 'FMUP'};
+
+    await newDocument.set(json);
+  });
 }
 
-void populateFPCEUPTeachers() {
-  File file = new File('assets/fpceup2022.html');
-  String html = file.readAsStringSync();
+Future populateFPCEUPTeachers() async {
+  String html = await rootBundle.loadString('assets/fpceup2022.html');
 
   BeautifulSoup soup = BeautifulSoup(html);
 
@@ -253,12 +308,16 @@ void populateFPCEUPTeachers() {
     codesNames[int.parse(code)] = a!.getText();
   }
 
-  codesNames.forEach((key, value) {print('${key}: ${value}');});
+  codesNames.forEach((key, value) async {
+    final newDocument = FirebaseFirestore.instance.collection('professor').doc('FPCEUP'+key.toString());
+    final json = {'codigo': key, 'nome-simpl': removeDiacritics(value).toLowerCase(), 'nome': value, 'faculdade': 'FPCEUP'};
+
+    await newDocument.set(json);
+  });
 }
 
-void populateICBASTeachers() {
-  File file = new File('assets/icbas2022.html');
-  String html = file.readAsStringSync();
+Future populateICBASTeachers() async {
+  String html = await rootBundle.loadString('assets/icbas2022.html');
 
   BeautifulSoup soup = BeautifulSoup(html);
 
@@ -274,5 +333,10 @@ void populateICBASTeachers() {
     codesNames[int.parse(code)] = a!.getText();
   }
 
-  codesNames.forEach((key, value) {print('${key}: ${value}');});
+  codesNames.forEach((key, value) async {
+    final newDocument = FirebaseFirestore.instance.collection('professor').doc('ICBAS'+key.toString());
+    final json = {'codigo': key, 'nome-simpl': removeDiacritics(value).toLowerCase(), 'nome': value, 'faculdade': 'ICBAS'};
+
+    await newDocument.set(json);
+  });
 }
