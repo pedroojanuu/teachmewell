@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:teachmewell/sigarra/scraper.dart';
+import 'package:teachmewell/teacherlist.dart';
 import 'firebase_options.dart';
 
 
@@ -10,7 +11,7 @@ Future <void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
-
+/*
 class MyModel {
   final String name;
 
@@ -21,7 +22,7 @@ class MyModel {
       snapshot.get('rating'),
     );
   }
-}
+}*/
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -43,11 +44,11 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'TeachMeWell'),
+      home: AllTeachersPage(),
     );
   }
 }
-
+/*
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -254,7 +255,7 @@ class ProfileDetails extends StatelessWidget {
     );
   }
 }
-
+*/
 // class _MyHomePageState extends State<MyHomePage> {
 //   int _counter = 0;
 //
