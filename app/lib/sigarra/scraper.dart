@@ -1,12 +1,7 @@
-import 'dart:io';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
-
-import '../firebase_options.dart';
 
 fakeMain() async {
   print('\n');

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import 'sigarra/scraper.dart';
 
 class Triplet<T1, T2, T3> {
   final T1 a;
@@ -67,7 +69,23 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
           )
         ),
       ),
-      body: nameListOnSearch.isEmpty && _textEditingController!.text.isNotEmpty?
+      body: nameList.isEmpty?
+          Center(
+            child:
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'A carregar...',
+                    style : TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+          )
+          : nameListOnSearch.isEmpty && _textEditingController!.text.isNotEmpty?
           Center (
             child:
               Column(
@@ -80,7 +98,7 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ]
+                  ],
               ),
           ) :
         ListView.builder(
@@ -221,6 +239,13 @@ class ProfileDetails extends StatelessWidget {
     final description = TextEditingController();
     final rating = TextEditingController();
 
+    Image image = Image.network(
+      'https://sigarra.up.pt/' + document['faculdade'].toString().toLowerCase() + '/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=' + document['codigo'].toString(),
+      errorBuilder: (BuildContext context, Object exception, StackTrace? stacktrace) {
+        return Image.asset('assets/default_teacher.jpg');
+      },
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(document['nome']),
@@ -229,7 +254,7 @@ class ProfileDetails extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Image.network('https://sigarra.up.pt/' + document['faculdade'].toString().toLowerCase() + '/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=' + document['codigo'].toString()),
+              image,
               Text(document['nome'], style: Theme.of(context).textTheme.headlineMedium,),
               Text(document['faculdade'], style: Theme.of(context).textTheme.headlineSmall,),
               Container(
