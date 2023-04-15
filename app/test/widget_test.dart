@@ -1,30 +1,25 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_driver/flutter_driver.dart';
+import 'package:integration_test/integration_test_driver.dart' as integration_test_driver;
+import 'dart:async';
+import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
+import 'package:glob/glob.dart';
 
 import 'package:teachmewell/main.dart';
 
-void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
-  });
+Future<void> main() {
+  final config = FlutterTestConfiguration()
+      ..features = [Glob(r"features/*.feature")]
+      ..reporters = [
+        ProgressReporter(),
+        TestRunSummaryReporter(),
+        JsonReporter(path: './reports/report.json')
+      ]
+      ..stepDefinitions = []
+      ..customStepParameterDefinitions = []
+      ..restartAppBetweenScenarios = true
+      ..targetAppPath = "../lib/main.dart";
+  return GherkinRunner().execute(config);
 }
