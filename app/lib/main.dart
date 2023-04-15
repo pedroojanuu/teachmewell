@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:teachmewell/teacherlist.dart';
 import 'firebase_options.dart';
+import 'dart:io' as io;
 
 
 Future <void> main() async {
@@ -209,7 +211,8 @@ class ProfileDetails extends StatelessWidget {
                 backgroundColor: Colors.orange,
                 radius: 55,
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
+                  foregroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
+                  backgroundImage: const NetworkImage('https://www.der-windows-papst.de/wp-content/uploads/2019/03/Windows-Change-Default-Avatar-448x400.png'),
                   radius: 50,
                   onBackgroundImageError: (e, s) {
                     debugPrint('image issue, $e,$s');
