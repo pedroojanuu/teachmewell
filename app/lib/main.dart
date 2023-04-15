@@ -18,107 +18,151 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'TeachMeWell',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const HomePage(),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      home: const Faculties(title: 'TeachMeWell'),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class Faculties extends StatelessWidget {
+  const Faculties({super.key, required this.title});
+
+  //Main page at the moment
+  final String title;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('TeachMeWell'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            tooltip: 'Pesquisar um docente',
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => AllTeachersPage()
-              ));
-            },
-          ),
-        ],
-    ),
-      body: Center(
-        child:
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Bem-vind@ ao TeachMeWell!\n\nCarregue na lupa no canto superior direito para pesquisar um docente e ver os seus detalhes e avaliações.',
-              style : TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+    return MaterialApp(
+      theme: ThemeData(
+          listTileTheme: const ListTileThemeData(
+            textColor: Colors.white,
+          )),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Faculdades'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              tooltip: 'Pesquisar um docente',
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AllTeachersPage()
+                ));
+              },
             ),
           ],
-        ),
-      )
+          ),
+        body: const LisTileExample(),
+      ),
     );
   }
 }
 
-/*
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+class LisTileExample extends StatefulWidget {
+  const LisTileExample({super.key});
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  @override
+  State<LisTileExample> createState() => _LisTileExampleState();
+}
 
-  final String title;
+class _LisTileExampleState extends State<LisTileExample>
+    with TickerProviderStateMixin {
 
-  // @override
-  // State<MyHomePage> createState() => _MyHomePageState();
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('faculdade').snapshots(),
+        builder: (context, snapshot) {
+          if(!snapshot.hasData) return const Text('Loading...');
+          return ListView.builder(
+            itemExtent: 80.0,
+            itemCount: (snapshot.data as QuerySnapshot).docs.length,
+            itemBuilder:  (context, index) =>
+                build_List_Item(context, (snapshot.data as QuerySnapshot).docs[index]),
+          );
+        }
+    );
+  }
 
-  // ---------------------------------------
+  Widget build_List_Item(BuildContext context, DocumentSnapshot document) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Hero(
+          tag: 'Faculdade',
+          // Wrap the ListTile in a Material widget so the ListTile has someplace
+          // to draw the animated colors during the hero transition.
+          child: Material(
+            child: ListTile(
+              title: Text(document["sigla"]),
+              subtitle: Text(document["nome"]),
+              tileColor: Colors.blue,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfessorsFeup(document, document["sigla"]),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class ProfessorsFeup extends StatelessWidget {
+  final DocumentSnapshot document;
+  final String faculdade;
+
+  ProfessorsFeup(this.document, this.faculdade);
+
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("Professores"),
+        ),
+        body: StreamBuilder(
+            stream: FirebaseFirestore.instance.collection('professor').where('faculdade', isEqualTo: faculdade).snapshots(),
+            builder: (context, snapshot) {
+              if(!snapshot.hasData) return const Text('Loading...');
+              return ListView.builder(
+                itemExtent: 80.0,
+                itemCount: (snapshot.data as QuerySnapshot).docs.length,
+                itemBuilder:  (context, index) =>
+                    _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),
+              );
+            }
+        )
+    );
+  }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot document) {
-    num acc = 0;
-    // make a query to find all comments in the comment collection, and add its rating to acc
-    FirebaseFirestore.instance.collection('teacher').doc(document.id).collection('comments').get().then((value) => {
-      value.docs.forEach((element) {
-        acc += element.get('rating');
-      })
-    });
 
     return ListTile(
       title: Row(
         children: [
           Expanded(
               child: Text(
-                document['name'],
-                style: Theme.of(context).textTheme.headlineMedium,
+                document['nome'],
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
           ),
           Container(
             decoration: const BoxDecoration(
               color: Color(0xffddddff),
+              shape: BoxShape.circle,
             ),
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(15.0),
             child: Text(
-              acc.toString(),
+              '0',
               style: Theme.of(context).textTheme.headlineMedium,
             )
           )
@@ -134,15 +178,180 @@ class MyHomePage extends StatelessWidget {
       }
     );
   }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class ProfileDetails extends StatelessWidget {
+  final DocumentSnapshot document;
+
+  ProfileDetails(this.document);
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
+    final description = TextEditingController();
+    final rating = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("TeachMeWell"),
+        title: Text(document['nome']),
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('teacher').snapshots(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Wrap(
+              spacing: 10,
+              children: [
+                Container(
+              alignment: Alignment.topLeft,
+              padding: const EdgeInsets.all(15.0),
+              child: CircleAvatar(
+                backgroundColor: Colors.orange,
+                radius: 55,
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
+                  radius: 50,
+                  onBackgroundImageError: (e, s) {
+                    debugPrint('image issue, $e,$s');
+                  },
+                ),
+              ),
+            ),
+              Container(
+                margin: const EdgeInsets.all(10.0),
+                decoration: const BoxDecoration(
+                    color: Colors.blue,
+                    shape: BoxShape.circle
+                ),
+              ),
+              Container(
+                child: SizedBox(
+                  child: Text(document['nome'], style: Theme.of(context).textTheme.headlineSmall,),
+                ),
+              ),
+              SizedBox(
+                child: Text(document['faculdade'], style: Theme.of(context).textTheme.headlineSmall,),
+              ),
+              ]
+            ),
+
+          Container(
+              height: 220,
+              width: 400,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blue, width: 2),
+              ),
+              child: listComments(context),
+            ),
+            const Text('\n\nComment:'),
+            TextFormField(
+              controller: description,
+              decoration: const InputDecoration(
+                labelText: 'Description',
+              ),
+            ),
+            TextFormField(
+              controller: rating,
+              decoration: const InputDecoration(
+                labelText: 'Rating',
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final d = description.text;
+                final rTemp = rating.text;
+                double r;
+
+                try {
+                  r = double.parse(rTemp);
+                  if(r >= 0 && r <= 5) {
+                    addComment(d, r);
+                    description.clear();
+                    rating.clear();
+                  }
+                  else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('Erro de Input'),
+                        content: const Text('O valor do Rating deve ser um número entre 0 e 5!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          )
+                        ],
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('Erro de Input'),
+                        content: const Text('O valor do Rating deve ser um número entre 0 e 5!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          )
+                        ],
+                      ),
+                  );
+                }
+              },
+              child : const Text('Submit'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot document2) {
+
+    return ListTile(
+        title: GestureDetector(
+        onHorizontalDragEnd: (DragEndDetails details) {
+          DocumentReference documentReference = FirebaseFirestore.instance.collection('comments').doc(document2.id);
+          documentReference.delete();
+        },
+        child:
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  document2['description'],
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+              Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xffddddff),
+                  ),
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    document2['rating'].toString(),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  )
+              )
+            ],
+          ),
+        ),
+    );
+  }
+
+  Future<dynamic> addComment(String description, double rating) async {
+    final newDocument = FirebaseFirestore.instance.collection('comments').doc();
+    final json = { 'description': description, 'rating': rating, 'teacher': int.parse(document['codigo'].toString()) };
+
+    // Write to Firebase
+    await newDocument.set(json);
+  }
+
+  Widget listComments(BuildContext context) {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('comments').where('teacher', isEqualTo: int.parse(document['codigo'].toString())).snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData) return const Text('Loading...');
           return ListView.builder(
@@ -152,8 +361,6 @@ class MyHomePage extends StatelessWidget {
                 _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),
           );
         }
-      )
     );
   }
 }
-*/
