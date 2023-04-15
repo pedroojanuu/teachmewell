@@ -1,4 +1,4 @@
-Here is a screenshot of the board after iteration 1:
+Here is a screenshot of the board before iteration 2:
 ![image](https://user-images.githubusercontent.com/92723402/232228974-e31ebd89-fe79-4ec9-b7dd-985019e303b6.png)
 
 Here is a screenshot of the board after iteration 2:
