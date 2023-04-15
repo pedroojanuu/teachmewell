@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:teachmewell/teacherlist.dart';
 import 'firebase_options.dart';
 
 
@@ -8,18 +8,6 @@ Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
-}
-
-class MyModel {
-  final String name;
-
-  MyModel(this.name);
-
-  factory MyModel.fromSnapshot(DocumentSnapshot snapshot) {
-    return MyModel(
-      snapshot.get('rating'),
-    );
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -51,7 +39,20 @@ class Faculties extends StatelessWidget {
             textColor: Colors.white,
           )),
       home: Scaffold(
-        appBar: AppBar(title: const Text('Faculdades')),
+        appBar: AppBar(
+          title: const Text('Faculdades'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              tooltip: 'Pesquisar um docente',
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AllTeachersPage()
+                ));
+              },
+            ),
+          ],
+          ),
         body: const LisTileExample(),
       ),
     );

@@ -28,4 +28,4 @@ You can find here details about the product (or mini-app or module), from a high
     * ![Vertical Prototype](docs/ArchitectureAndDesign.md#vertical-prototype)
 
 * ![Implementation](/app/)
-* ![Release](/release_apks/)
+* ![Project Management](docs/ProjectManagement.md)
