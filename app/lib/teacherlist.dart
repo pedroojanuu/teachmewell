@@ -193,10 +193,132 @@ class ProfileDetails extends StatelessWidget {
 
   ProfileDetails(this.document);
 
+  @override
+  Widget build(BuildContext context) {
+    final description = TextEditingController();
+    final rating = TextEditingController();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(document['nome']),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Wrap(
+                spacing: 10,
+                children: [
+                  Container(
+                    alignment: Alignment.topLeft,
+                    padding: const EdgeInsets.all(15.0),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.orange,
+                      radius: 55,
+                      child: CircleAvatar(
+                        foregroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
+                        backgroundImage: const NetworkImage('https://www.der-windows-papst.de/wp-content/uploads/2019/03/Windows-Change-Default-Avatar-448x400.png'),
+                        radius: 50,
+                        onBackgroundImageError: (e, s) {
+                          debugPrint('image issue, $e,$s');
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10.0),
+                    decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        shape: BoxShape.circle
+                    ),
+                  ),
+                  Container(
+                    child: SizedBox(
+                      child: Text(document['nome'], style: Theme.of(context).textTheme.headlineSmall,),
+                    ),
+                  ),
+                  SizedBox(
+                    child: Text(document['faculdade'], style: Theme.of(context).textTheme.headlineSmall,),
+                  ),
+                ]
+            ),
+
+            Container(
+              height: 220,
+              width: 400,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blue, width: 2),
+              ),
+              child: listComments(context),
+            ),
+            const Text('\n\nComment:'),
+            TextFormField(
+              controller: description,
+              decoration: const InputDecoration(
+                labelText: 'Description',
+              ),
+            ),
+            TextFormField(
+              controller: rating,
+              decoration: const InputDecoration(
+                labelText: 'Rating',
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final d = description.text;
+                final rTemp = rating.text;
+                double r;
+
+                try {
+                  r = double.parse(rTemp);
+                  if(r >= 0 && r <= 5) {
+                    addComment(d, r);
+                    description.clear();
+                    rating.clear();
+                  }
+                  else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('Erro de Input'),
+                        content: const Text('O valor do Rating deve ser um número entre 0 e 5!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          )
+                        ],
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Erro de Input'),
+                      content: const Text('O valor do Rating deve ser um número entre 0 e 5!'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        )
+                      ],
+                    ),
+                  );
+                }
+              },
+              child : const Text('Submit'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildListItem(BuildContext context, DocumentSnapshot document2) {
 
     return ListTile(
-        title: GestureDetector(
+      title: GestureDetector(
         onHorizontalDragEnd: (DragEndDetails details) {
           DocumentReference documentReference = FirebaseFirestore.instance.collection('comments').doc(document2.id);
           documentReference.delete();
@@ -222,89 +344,21 @@ class ProfileDetails extends StatelessWidget {
             )
           ],
         ),
-        ),
+      ),
     );
   }
 
   Future<dynamic> addComment(String description, double rating) async {
     final newDocument = FirebaseFirestore.instance.collection('comments').doc();
-    final json = { 'description': description, 'rating': rating, 'teacher': document['codigo'] };
+    final json = { 'description': description, 'rating': rating, 'teacher': int.parse(document['codigo'].toString()) };
 
     // Write to Firebase
     await newDocument.set(json);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final description = TextEditingController();
-    final rating = TextEditingController();
-
-    Image image = Image.network(
-      'https://sigarra.up.pt/' + document['faculdade'].toString().toLowerCase() + '/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=' + document['codigo'].toString(),
-      errorBuilder: (BuildContext context, Object exception, StackTrace? stacktrace) {
-        return Image.asset('assets/default_teacher.jpg');
-      },
-    );
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(document['nome']),
-      ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              image,
-              Text(document['nome'], style: Theme.of(context).textTheme.headlineMedium,),
-              Text(document['faculdade'], style: Theme.of(context).textTheme.headlineSmall,),
-              Container(
-                height: 220,
-                width: 400,
-                child: listComments(context),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue, width: 2),
-                ),
-              ),
-              Text('\n\nComment:'),
-              TextFormField(
-                controller: description,
-                decoration: InputDecoration(
-                  labelText: 'Description',
-                ),
-              ),
-              TextFormField(
-                controller: rating,
-                decoration: InputDecoration(
-                  labelText: 'Rating',
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  final d = description.text;
-                  final r_temp = rating.text;
-                  double r;
-
-                  try {
-                    r = double.parse(r_temp);
-                    if(r >= 0 && r <= 5) {
-                      addComment(d, r);
-                      description.clear();
-                      rating.clear();
-                    }
-                  } catch (e) {}
-                },
-                child : Text('Submit'),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget listComments(BuildContext context) {
     return StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('comments').where('teacher', isEqualTo: document['codigo'] ).snapshots(),
+        stream: FirebaseFirestore.instance.collection('comments').where('teacher', isEqualTo: int.parse(document['codigo'].toString())).snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData) return const Text('Loading...');
           return ListView.builder(
@@ -317,3 +371,4 @@ class ProfileDetails extends StatelessWidget {
     );
   }
 }
+
