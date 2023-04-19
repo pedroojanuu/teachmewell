@@ -210,8 +210,20 @@ class ProfileDetails extends StatelessWidget {
 
     final GlobalKey<FormState> _formKey = GlobalKey();
     final TextEditingController _controller = TextEditingController();
-    final description = TextEditingController();
-    final rating = TextEditingController();
+    final titulo = TextEditingController();
+    final descricao = TextEditingController();
+
+    double apreciacao_global = 0;
+    double relacionamento = 0;
+    double interesse = 0;
+    double regras = 0;
+    double disponibilidade = 0;
+    double empenho = 0;
+    double exigencia = 0;
+    double conteudos = 0;
+    double reflexao = 0;
+    double ensino = 0;
+
 
     return Scaffold(
       appBar: AppBar(
@@ -258,6 +270,7 @@ class ProfileDetails extends StatelessWidget {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
+                      scrollable: true,
                       content: Form(
                         key: _formKey,
                         child: Column(
@@ -267,41 +280,114 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
-                              itemBuilder: (context, _) => Icon(Icons.star, color: Colors.orange),
-                                onRatingUpdate: (rating) {},
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                                onRatingUpdate: (rating) {
+                                apreciacao_global = rating;
+                                },
                             ),
                             const SizedBox(
                               child: Text('Bom Relacionamento com os Estudantes'),
                             ),
+                            RatingBar.builder(
+                              minRating: 1,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                relacionamento = rating;
+                              },
+                            ),
                             const SizedBox(
                               child: Text('Capacidade de Estimular o Interesse'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 1,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                interesse = rating;
+                              },
                             ),
                             const SizedBox(
                               child: Text('Cumprimento das Regras de Avaliação'),
                             ),
+                            RatingBar.builder(
+                              minRating: 1,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                regras = rating;
+                              },
+                            ),
                             const SizedBox(
                               child: Text('Disponibilidade'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 1,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                disponibilidade = rating;
+                              },
                             ),
                             const SizedBox(
                               child: Text('Empenho'),
                             ),
+                            RatingBar.builder(
+                              minRating: 1,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                empenho = rating;
+                              },
+                            ),
                             const SizedBox(
                               child: Text('Exigência'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 1,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                exigencia = rating;
+                              },
                             ),
                             const SizedBox(
                               child: Text('Organização dos Conteúdos'),
                             ),
+                            RatingBar.builder(
+                              minRating: 1,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                conteudos = rating;
+                              },
+                            ),
                             const SizedBox(
                               child: Text('Promoção da Reflexão'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 1,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                reflexao = rating;
+                              },
                             ),
                             const SizedBox(
                               child: Text('Qualidade do Ensino'),
                             ),
+                            RatingBar.builder(
+                              minRating: 1,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                ensino = rating;
+                              },
+                            ),
                             TextFormField(
-                              controller: _controller,
+                              controller: titulo,
+                              decoration: const InputDecoration(
+                                labelText: 'Titulo',
+                                  hintText: 'Escreva uma breve descrição',
+                              ),
+                              maxLength: 20,
+                            ),
+                            TextFormField(
+                              controller: descricao,
                               keyboardType: TextInputType.multiline,
                               decoration: const InputDecoration(
-                                hintText: 'Comentario',
+                                hintText: 'Comentário',
                                 filled: true,
                               ),
                               maxLines: 5,
@@ -324,7 +410,38 @@ class ProfileDetails extends StatelessWidget {
                         ),
                         TextButton(
                             onPressed: () async {
-
+                              String aux = titulo.text.replaceAll(" ", "");
+                              if(aux == "") {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text('Erro de Input'),
+                                    content: const Text('O Título não deve estar vazio'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, 'OK'),
+                                        child: const Text('OK'),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                              else {
+                                addRating(apreciacao_global, relacionamento, interesse, regras, disponibilidade, empenho, exigencia, conteudos, reflexao, ensino, titulo.text);
+                                Navigator.pop(context, 'Submit');
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text('Comentário submetido'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, 'OK'),
+                                        child: const Text('OK'),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
                             },
                             child: const Text('Submit')
                         )
@@ -342,102 +459,31 @@ class ProfileDetails extends StatelessWidget {
               ),
               child: listComments(context),
             ),
-            const Text('\n\nComment:'),
-            TextFormField(
-              controller: description,
-              decoration: const InputDecoration(
-                labelText: 'Description',
-              ),
-            ),
-            TextFormField(
-              controller: rating,
-              decoration: const InputDecoration(
-                labelText: 'Rating',
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final d = description.text;
-                final rTemp = rating.text;
-                double r;
-
-                try {
-                  r = double.parse(rTemp);
-                  if(r >= 0 && r <= 5) {
-                    addComment(d, r);
-                    description.clear();
-                    rating.clear();
-                  }
-                  else {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                        title: const Text('Erro de Input'),
-                        content: const Text('O valor do Rating deve ser um número entre 0 e 5!'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('OK'),
-                          )
-                        ],
-                      ),
-                    );
-                  }
-                } catch (e) {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                        title: const Text('Erro de Input'),
-                        content: const Text('O valor do Rating deve ser um número entre 0 e 5!'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('OK'),
-                          )
-                        ],
-                      ),
-                  );
-                }
-              },
-              child : const Text('Submit'),
-            )
           ],
         ),
       ),
     );
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot document2) {
-
-    return ListTile(
-        title: GestureDetector(
-        onHorizontalDragEnd: (DragEndDetails details) {
-          DocumentReference documentReference = FirebaseFirestore.instance.collection('comments').doc(document2.id);
-          documentReference.delete();
-        },
-        child:
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  document2['description'],
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
-              Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xffddddff),
-                  ),
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    document2['rating'].toString(),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  )
-              )
-            ],
-          ),
-        ),
-    );
+  Future<dynamic> addRating(double apreciacao_global, double relacionamento, double interesse, double regras, double disponibilidade, double empenho, double exigencia, double conteudos, double reflexao, double ensino, String titulo) async {
+    final newDocument = FirebaseFirestore.instance.collection('avaliacao').doc();
+    final json = {
+      'apreciacao global': apreciacao_global,
+      'bom relacionamento com os estudantes': relacionamento,
+      'capacidade de estimular o interesse': interesse,
+      'cumprimento das regras de avaliacao': regras,
+      'disponibilidade': disponibilidade,
+      'empenho': empenho,
+      'exigencia': exigencia,
+      'organizacao dos conteudos': conteudos,
+      'promocao da reflexao': reflexao,
+      'qualidade do ensino': ensino,
+      'studentID': 202108677,
+      'teacherID': document['codigo'].toString(),
+      'titulo' : titulo,
+    };
+    // Write to Firebase
+    await newDocument.set(json);
   }
 
   Future<dynamic> addComment(String description, double rating) async {
@@ -450,7 +496,7 @@ class ProfileDetails extends StatelessWidget {
 
   Widget listComments(BuildContext context) {
     return StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('comments').where('teacher', isEqualTo: int.parse(document['codigo'].toString())).snapshots(),
+        stream: FirebaseFirestore.instance.collection('avaliacao').where('teacherID', isEqualTo : document['codigo'].toString()).snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData) return const Text('Loading...');
           return ListView.builder(
@@ -462,47 +508,37 @@ class ProfileDetails extends StatelessWidget {
         }
     );
   }
-}
 
-/*
-class RatingBar extends StatelessWidget {
-  final double rating;
-  final double size;
-  int? ratingCount;
+  Widget _buildListItem(BuildContext context, DocumentSnapshot document2) {
 
-  RatingBar({required this.rating, this.ratingCount, this.size = 18});
-
-  @override Widget build(BuildContext context) {
-    List<Widget> _starList = [];
-
-    int realNumber = rating.floor();
-    int partNumber = ((rating - realNumber) * 10).ceil();
-
-    for(int i = 0; i < 5; i++) {
-      if(i < realNumber) {
-        _starList.add(Icon(Icons.star, color: Colors.orange, size: size));
-      } else if (i == realNumber) {
-        _starList.add(SizedBox(
-          height: size,
-          width: size,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Icon(Icons.star, color: Colors.orange, size: size),
-            ],
-          ),
+    return ListTile(
+      title: GestureDetector(
+        onHorizontalDragEnd: (DragEndDetails details) {
+          DocumentReference documentReference = FirebaseFirestore.instance.collection('avaliacao').doc(document2.id);
+          documentReference.delete();
+        },
+        child:
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                document2['titulo'],
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+            Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xffddddff),
+                ),
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  document2['apreciacao global'].toString(),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                )
+            )
+          ],
         ),
-        );
-      }
-      else {
-        _starList.add(Icon(Icons.star, color: Colors.grey, size: size));
-      }
-    }
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: _starList,
+      ),
     );
   }
 }
-*/
