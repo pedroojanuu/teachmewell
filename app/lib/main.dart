@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:teachmewell/teacherlist.dart';
 import 'firebase_options.dart';
-import 'dart:io' as io;
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 
 Future <void> main() async {
@@ -207,6 +207,9 @@ class ProfileDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final GlobalKey<FormState> _formKey = GlobalKey();
+    final TextEditingController _controller = TextEditingController();
     final description = TextEditingController();
     final rating = TextEditingController();
 
@@ -230,9 +233,6 @@ class ProfileDetails extends StatelessWidget {
                   foregroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
                   backgroundImage: const NetworkImage('https://www.der-windows-papst.de/wp-content/uploads/2019/03/Windows-Change-Default-Avatar-448x400.png'),
                   radius: 50,
-                  onBackgroundImageError: (e, s) {
-                    debugPrint('image issue, $e,$s');
-                  },
                 ),
               ),
             ),
@@ -253,7 +253,87 @@ class ProfileDetails extends StatelessWidget {
               ),
               ]
             ),
+          ElevatedButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      content: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              child: Text('Apreciação Global'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 1,
+                              itemBuilder: (context, _) => Icon(Icons.star, color: Colors.orange),
+                                onRatingUpdate: (rating) {},
+                            ),
+                            const SizedBox(
+                              child: Text('Bom Relacionamento com os Estudantes'),
+                            ),
+                            const SizedBox(
+                              child: Text('Capacidade de Estimular o Interesse'),
+                            ),
+                            const SizedBox(
+                              child: Text('Cumprimento das Regras de Avaliação'),
+                            ),
+                            const SizedBox(
+                              child: Text('Disponibilidade'),
+                            ),
+                            const SizedBox(
+                              child: Text('Empenho'),
+                            ),
+                            const SizedBox(
+                              child: Text('Exigência'),
+                            ),
+                            const SizedBox(
+                              child: Text('Organização dos Conteúdos'),
+                            ),
+                            const SizedBox(
+                              child: Text('Promoção da Reflexão'),
+                            ),
+                            const SizedBox(
+                              child: Text('Qualidade do Ensino'),
+                            ),
+                            TextFormField(
+                              controller: _controller,
+                              keyboardType: TextInputType.multiline,
+                              decoration: const InputDecoration(
+                                hintText: 'Comentario',
+                                filled: true,
+                              ),
+                              maxLines: 5,
+                              maxLength: 4096,
+                              textInputAction: TextInputAction.done,
+                              validator: (String? text) {
+                                if(text == null || text.isEmpty) {
+                                  return 'Please enter a value';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                            onPressed: () async {
 
+                            },
+                            child: const Text('Submit')
+                        )
+                      ],
+                    ),
+                );
+              },
+              child: const Text('Avaliar'),
+          ),
           Container(
               height: 220,
               width: 400,
@@ -383,3 +463,46 @@ class ProfileDetails extends StatelessWidget {
     );
   }
 }
+
+/*
+class RatingBar extends StatelessWidget {
+  final double rating;
+  final double size;
+  int? ratingCount;
+
+  RatingBar({required this.rating, this.ratingCount, this.size = 18});
+
+  @override Widget build(BuildContext context) {
+    List<Widget> _starList = [];
+
+    int realNumber = rating.floor();
+    int partNumber = ((rating - realNumber) * 10).ceil();
+
+    for(int i = 0; i < 5; i++) {
+      if(i < realNumber) {
+        _starList.add(Icon(Icons.star, color: Colors.orange, size: size));
+      } else if (i == realNumber) {
+        _starList.add(SizedBox(
+          height: size,
+          width: size,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Icon(Icons.star, color: Colors.orange, size: size),
+            ],
+          ),
+        ),
+        );
+      }
+      else {
+        _starList.add(Icon(Icons.star, color: Colors.grey, size: size));
+      }
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: _starList,
+    );
+  }
+}
+*/
