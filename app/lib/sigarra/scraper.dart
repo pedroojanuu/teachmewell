@@ -4,27 +4,29 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 
 fakeMain() async {
-  print('\n');
-  print(await getTeacherUCs("feup", 211636, 2022));
-  print('\n');
-  print(await getUCInfo('feup', 501680));
-  populateFCUPTeachers();
-  populateFCNAUPTeachers();
-  populateFADEUPTeachers();
-  populateFDUPTeachers();
-  populateFEPTeachers();
-  populateFEUPTeachers();
-  populateFLUPTeachers();
-  populateFMUPTeachers();
-  populateFPCEUPTeachers();
-  populateICBASTeachers();
+  // print('\n');
+  // print(await getTeacherUCs("feup", 211636, 2022));
+  // print('\n');
+  // print(await getUCInfo('feup', 501680));
+  // populateFCUPTeachers();
+  // populateFCNAUPTeachers();
+  // populateFADEUPTeachers();
+  // populateFDUPTeachers();
+  // populateFEPTeachers();
+  // populateFEUPTeachers();
+  // populateFLUPTeachers();
+  // populateFMUPTeachers();
+  // populateFPCEUPTeachers();
+  // populateICBASTeachers();
 }
 
 Future<void> fakeMain2() async{
-  Set<int> t = await getUCsTeachers("icbas", 494829);
+  print("Started fakeMain2");
+  Set<int> t = await getUCsTeachers("fcnaup", 496448);
   for(int i in t){
     print(i);
   }
+  print("Ended fakeMain2");
 }
 
 String removeDiacritics(String str) {
@@ -73,31 +75,30 @@ Future<List<int>> getTeacherUCs(String faculty, int teacher, int year) async {
 Future<Set<int>> getUCsTeachers(String faculty, int uc_id) async {
   Set<int> teachers = {};
 
-  try {
     final response = await http.Client().get(Uri.parse(
         'https://sigarra.up.pt/$faculty/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=$uc_id'));
     String body = response.body;
 
     BeautifulSoup soup = BeautifulSoup(body);
 
-    var table = soup.find('*', class_: 'horas');
-    table = table!.find('table', class_: 'dados');
+    var tables = soup.findAll('table', class_: 'dados');
+    var table = null;
+    for(var t in tables){
+      if(t.toString().contains("Turmas")){
+        table = t;
+        break;
+      }
+    }
+    if(table == null)
+      return {};
     var rows = table!.findAll('td', class_:"t");
-    // for(var i in rows){
-    //   print(i.toString());
-    // }
 
-    for (Bs4Element row in rows) {
+    for (var row in rows) {
       var a = row.find('a');
-      print(a.toString());
       var a_string = a.toString();
-      // print(a_string);
-      if (a != null && a_string[46] != '8')
+      if (a != null && a_string.substring(29, 37) == "p_codigo")
         teachers.add(int.parse(a_string.substring(38, 44)));
     }
-  } catch (e) {
-    return {};
-  }
 
   return teachers;
 }
