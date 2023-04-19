@@ -457,7 +457,7 @@ class ProfileDetails extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.blue, width: 2),
               ),
-              child: listComments(context),
+              child: listRatings(context),
             ),
           ],
         ),
@@ -486,15 +486,7 @@ class ProfileDetails extends StatelessWidget {
     await newDocument.set(json);
   }
 
-  Future<dynamic> addComment(String description, double rating) async {
-    final newDocument = FirebaseFirestore.instance.collection('comments').doc();
-    final json = { 'description': description, 'rating': rating, 'teacher': int.parse(document['codigo'].toString()) };
-
-    // Write to Firebase
-    await newDocument.set(json);
-  }
-
-  Widget listComments(BuildContext context) {
+  Widget listRatings(BuildContext context) {
     return StreamBuilder(
         stream: FirebaseFirestore.instance.collection('avaliacao').where('teacherID', isEqualTo : document['codigo'].toString()).snapshots(),
         builder: (context, snapshot) {
