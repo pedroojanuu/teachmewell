@@ -20,6 +20,13 @@ fakeMain() async {
   populateICBASTeachers();
 }
 
+Future<void> fakeMain2() async{
+  Set<int> t = await getUCsTeachers("icbas", 494829);
+  for(int i in t){
+    print(i);
+  }
+}
+
 String removeDiacritics(String str) {
   var withDia = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
   var withoutDia = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
@@ -61,6 +68,38 @@ Future<List<int>> getTeacherUCs(String faculty, int teacher, int year) async {
   }
 
   return ids;
+}
+
+Future<Set<int>> getUCsTeachers(String faculty, int uc_id) async {
+  Set<int> teachers = {};
+
+  try {
+    final response = await http.Client().get(Uri.parse(
+        'https://sigarra.up.pt/$faculty/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=$uc_id'));
+    String body = response.body;
+
+    BeautifulSoup soup = BeautifulSoup(body);
+
+    var table = soup.find('*', class_: 'horas');
+    table = table!.find('table', class_: 'dados');
+    var rows = table!.findAll('td', class_:"t");
+    // for(var i in rows){
+    //   print(i.toString());
+    // }
+
+    for (Bs4Element row in rows) {
+      var a = row.find('a');
+      print(a.toString());
+      var a_string = a.toString();
+      // print(a_string);
+      if (a != null && a_string[46] != '8')
+        teachers.add(int.parse(a_string.substring(38, 44)));
+    }
+  } catch (e) {
+    return {};
+  }
+
+  return teachers;
 }
 
 Future<List<String>> getUCInfo(String faculty, int id) async {
