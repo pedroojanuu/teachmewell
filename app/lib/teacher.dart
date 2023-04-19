@@ -4,12 +4,13 @@ import 'package:http/http.dart' as http;
 
 import 'sigarra/scraper.dart';
 
-class Triplet<T1, T2, T3> {
-  final T1 a;
-  final T2 b;
-  final T3 c;
+class TeacherDetails {
+  final String rowid;
+  final String name;
+  final String faculty;
+  final int code;
 
-  Triplet(this.a, this.b, this.c);
+  TeacherDetails(this.rowid, this.name, this.faculty, this.code);
 }
 
 class AllTeachersPage extends StatefulWidget {
@@ -19,14 +20,16 @@ class AllTeachersPage extends StatefulWidget {
   }
 }
 
-Future<List<Triplet<String, String, String>>> getTeachersNames() async {
-  List<Triplet<String, String, String>> l = [];
+Future<List<TeacherDetails>> getTeachersDetails() async {
+  List<TeacherDetails> l = [];
   var querySnapshot = await FirebaseFirestore.instance.collection("professor").get();
 
   for (var element in querySnapshot.docs) {
+    String rowid = element.id.toString();
     String name = element.data()['nome'].toString();
     String faculty = element.data()['faculdade'].toString();
-    l.add(Triplet<String, String, String>(name, faculty, element.id.toString()));
+    int code = int.parse(element.data()['codigo'].toString());
+    l.add(TeacherDetails(rowid, name, faculty, code));
   }
 
   return l;
@@ -35,12 +38,12 @@ Future<List<Triplet<String, String, String>>> getTeachersNames() async {
 class _AllTeachersPageState extends State<AllTeachersPage> {
   TextEditingController _textEditingController = TextEditingController();
 
-  List<Triplet<String,String, String>> nameListOnSearch = [];
-  List<Triplet<String,String, String>> nameList = [];
+  List<TeacherDetails> teacherDetailsListOnSearch = [];
+  List<TeacherDetails> teacherDetailsList = [];
 
   _AllTeachersPageState() {
-    getTeachersNames().then((val) => setState(() {
-      nameList = val;
+    getTeachersDetails().then((val) => setState(() {
+      teacherDetailsList = val;
     }));
   }
 
@@ -56,7 +59,7 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
             child: TextField(
               onChanged: (value) {
                 setState(() {
-                  nameListOnSearch = search(nameList, _textEditingController.text, 2);
+                  teacherDetailsListOnSearch = search(teacherDetailsList, _textEditingController.text, 2);
                 });
               },
               controller: _textEditingController,
@@ -69,7 +72,7 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
           )
         ),
       ),
-      body: nameList.isEmpty?
+      body: teacherDetailsList.isEmpty?
           Center(
             child:
               Column(
@@ -85,7 +88,7 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
                 ],
               ),
           )
-          : nameListOnSearch.isEmpty && _textEditingController!.text.isNotEmpty?
+          : teacherDetailsListOnSearch.isEmpty && _textEditingController!.text.isNotEmpty?
           Center (
             child:
               Column(
@@ -102,9 +105,73 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
               ),
           ) :
         ListView.builder(
-            itemCount: _textEditingController!.text.isNotEmpty? nameListOnSearch.length : nameList.length,
+            itemCount: _textEditingController!.text.isNotEmpty? teacherDetailsListOnSearch.length : teacherDetailsList.length,
             itemBuilder: (_, index) {
-              return Card(
+              TeacherDetails teacher = _textEditingController!.text.isNotEmpty? teacherDetailsListOnSearch[index] : teacherDetailsList[index];
+
+              return ListTile(
+                  title: Row(
+                    children: [
+                      Container(
+                        alignment: Alignment.topLeft,
+                        padding: const EdgeInsets.only(right: 8.0, top: 8.0),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.orange,
+                          radius: 33,
+                          child: CircleAvatar(
+                            foregroundImage: NetworkImage('https://sigarra.up.pt/${teacher.faculty.toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${teacher.code}'),
+                            backgroundImage: const NetworkImage('https://www.der-windows-papst.de/wp-content/uploads/2019/03/Windows-Change-Default-Avatar-448x400.png'),
+                            radius: 30,
+                            onBackgroundImageError: (e, s) {
+                              debugPrint('image issue, $e,$s');
+                            },
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        //child: Text(teacher.name, style: const TextStyle(fontSize: 22.0, color: Colors.black),),
+                        child: Column(
+                          children: [
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                teacher.name,
+                                style: const TextStyle(fontSize: 22.0, color: Colors.black),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(teacher.faculty),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                          decoration: const BoxDecoration(
+                            color: Color(0xffddddff),
+                            shape: BoxShape.circle,
+                          ),
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            '0',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          )
+                      ),
+                    ],
+                  ),
+                  onTap: () async {
+                    final CollectionReference colRef = FirebaseFirestore.instance.collection('professor');
+
+                    final DocumentReference docRef = colRef.doc(teacher.rowid);
+
+                    final DocumentSnapshot documentSnapshot = await docRef.get();
+
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ProfileDetails(documentSnapshot)
+                    ));
+                  }
+              );
+              /*return Card(
                 child: ListTile(
                   title: Text(
                     overflow: TextOverflow.ellipsis,
@@ -127,20 +194,20 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
                     ));
                   },
                 ),
-              );
+              );*/
             },
           )
     );
   }
 }
 
-List<Triplet<String,String, String>> search(List<Triplet<String,String, String>> names, String source, int number_of_errors_per_word) {
-  List<Triplet<String,String, String>> ret = [];
+List<TeacherDetails> search(List<TeacherDetails> names, String source, int number_of_errors_per_word) {
+  List<TeacherDetails> ret = [];
 
   var l_source = source.split(" ");
 
   for(var element in names){
-    String s = element.a;
+    String s = element.name;
     var l_element = s.split(" ");
 
     int i = 0, j = 0;
@@ -151,7 +218,8 @@ List<Triplet<String,String, String>> search(List<Triplet<String,String, String>>
       }
       i++;
       if (j == l_source.length) {
-        ret.add(Triplet<String,String, String>(s, element.b, element.c));
+        ret.add(element);
+        //ret.add(Triplet<String,String, String>(s, element.b, element.c));
       }
     }
   }
