@@ -211,9 +211,8 @@ class ProfileDetails extends StatelessWidget {
     final GlobalKey<FormState> _formKey = GlobalKey();
     final TextEditingController _controller = TextEditingController();
     final titulo = TextEditingController();
-    final descricao = TextEditingController();
+    final comentario = TextEditingController();
 
-    double apreciacao_global = 0;
     double relacionamento = 0;
     double interesse = 0;
     double regras = 0;
@@ -223,6 +222,7 @@ class ProfileDetails extends StatelessWidget {
     double conteudos = 0;
     double reflexao = 0;
     double ensino = 0;
+    double media_single = 0;
 
 
     return Scaffold(
@@ -275,16 +275,6 @@ class ProfileDetails extends StatelessWidget {
                         key: _formKey,
                         child: Column(
                           children: [
-                            const SizedBox(
-                              child: Text('Apreciação Global'),
-                            ),
-                            RatingBar.builder(
-                              minRating: 1,
-                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
-                                onRatingUpdate: (rating) {
-                                apreciacao_global = rating;
-                                },
-                            ),
                             const SizedBox(
                               child: Text('Bom Relacionamento com os Estudantes'),
                             ),
@@ -384,7 +374,7 @@ class ProfileDetails extends StatelessWidget {
                               maxLength: 20,
                             ),
                             TextFormField(
-                              controller: descricao,
+                              controller: comentario,
                               keyboardType: TextInputType.multiline,
                               decoration: const InputDecoration(
                                 hintText: 'Comentário',
@@ -426,8 +416,24 @@ class ProfileDetails extends StatelessWidget {
                                   ),
                                 );
                               }
+                              else if(relacionamento == 0 || interesse == 0 || regras == 0 || disponibilidade == 0 || exigencia == 0 || conteudos == 0 || reflexao == 0 || ensino == 0){
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text('Erro de Input'),
+                                    content: const Text('Nenhum rating deve ficar por preencher!'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, 'OK'),
+                                        child: const Text('OK'),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
                               else {
-                                addRating(apreciacao_global, relacionamento, interesse, regras, disponibilidade, empenho, exigencia, conteudos, reflexao, ensino, titulo.text);
+                                media_single = (relacionamento + interesse + regras + disponibilidade + empenho + exigencia + conteudos + reflexao + ensino) / 9;
+                                addRating(relacionamento, interesse, regras, disponibilidade, empenho, exigencia, conteudos, reflexao, ensino, titulo.text, comentario.text, media_single);
                                 Navigator.pop(context, 'Submit');
                                 showDialog(
                                   context: context,
@@ -465,10 +471,9 @@ class ProfileDetails extends StatelessWidget {
     );
   }
 
-  Future<dynamic> addRating(double apreciacao_global, double relacionamento, double interesse, double regras, double disponibilidade, double empenho, double exigencia, double conteudos, double reflexao, double ensino, String titulo) async {
+  Future<dynamic> addRating(double relacionamento, double interesse, double regras, double disponibilidade, double empenho, double exigencia, double conteudos, double reflexao, double ensino, String titulo, String comentario, double media_single) async {
     final newDocument = FirebaseFirestore.instance.collection('avaliacao').doc();
     final json = {
-      'apreciacao global': apreciacao_global,
       'bom relacionamento com os estudantes': relacionamento,
       'capacidade de estimular o interesse': interesse,
       'cumprimento das regras de avaliacao': regras,
@@ -481,6 +486,8 @@ class ProfileDetails extends StatelessWidget {
       'studentID': 202108677,
       'teacherID': document['codigo'].toString(),
       'titulo' : titulo,
+      'comentario' : comentario,
+      'media_single' : media_single,
     };
     // Write to Firebase
     await newDocument.set(json);
@@ -503,33 +510,28 @@ class ProfileDetails extends StatelessWidget {
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot document2) {
 
+
     return ListTile(
-      title: GestureDetector(
-        onHorizontalDragEnd: (DragEndDetails details) {
-          DocumentReference documentReference = FirebaseFirestore.instance.collection('avaliacao').doc(document2.id);
-          documentReference.delete();
-        },
-        child:
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                document2['titulo'],
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+      title:
+      Row(
+        children: [
+          Expanded(
+            child: Text(
+              document2['titulo'],
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
-            Container(
-                decoration: const BoxDecoration(
-                  color: Color(0xffddddff),
-                ),
-                padding: const EdgeInsets.all(10.0),
-                child: Text(
-                  document2['apreciacao global'].toString(),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                )
-            )
-          ],
-        ),
+          ),
+          Container(
+              decoration: const BoxDecoration(
+                color: Color(0xffddddff),
+              ),
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                document2['media_single'].toStringAsFixed(1),
+                style: Theme.of(context).textTheme.bodyMedium,
+              )
+          )
+        ],
       ),
     );
   }
