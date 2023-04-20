@@ -22,7 +22,7 @@ fakeMain() async {
 
 Future<void> fakeMain2() async{
   print("Started fakeMain2");
-  Set<int> t = await getUCsTeachers("fcnaup", 496448);
+  List<int> t = await getCursoUCs("fcup", 13221, 2022);
   for(int i in t){
     print(i);
   }
@@ -101,6 +101,47 @@ Future<Set<int>> getUCsTeachers(String faculty, int uc_id) async {
     }
 
   return teachers;
+}
+
+Future<List<int>> getCursoUCs(String faculty, int curso, int ano_letivo) async {
+  final response = await http.Client().get(Uri.parse('https://sigarra.up.pt/$faculty/pt/cur_geral.cur_planos_estudos_view?pv_plano_id=$curso&pv_ano_lectivo=$ano_letivo'));
+  String body = response.body;
+
+  BeautifulSoup soup = BeautifulSoup(body);
+
+  var table = soup.find('*', id: 'conteudoinner');
+  var as = table!.findAll('a');
+  // table = table!.find('table');
+  // var rows = table!.findAll('tr');
+  // rows = rows.sublist(1, rows.length-3);
+
+  List<int> ids = [];
+
+  for (var a in as) {
+    // var a = row.find('a');
+    String s = a.toString();
+    if(s.substring(9, 14) == "ucurr"){
+      // print(s.substring(52, 58));
+      try {
+        int i = int.parse(s.substring(52, 58));
+        // print(i);
+        ids.add(i);
+      } catch (e) {
+        continue;
+      }
+      // if (!isInList(ids, i)) {
+      //   print(i);
+      //   // ids.add(i);
+      // }
+    }
+    // s = s.substring(52, 58);
+    // int i = int.parse(s);
+    // if (!isInList(ids, i)) {
+    //   ids.add(i);
+    // }
+  }
+
+  return ids;
 }
 
 Future<List<String>> getUCInfo(String faculty, int id) async {
