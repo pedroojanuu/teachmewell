@@ -211,9 +211,8 @@ class ProfileDetails extends StatelessWidget {
     final GlobalKey<FormState> _formKey = GlobalKey();
     final TextEditingController _controller = TextEditingController();
     final titulo = TextEditingController();
-    final descricao = TextEditingController();
+    final comentario = TextEditingController();
 
-    double apreciacao_global = 0;
     double relacionamento = 0;
     double interesse = 0;
     double regras = 0;
@@ -223,6 +222,7 @@ class ProfileDetails extends StatelessWidget {
     double conteudos = 0;
     double reflexao = 0;
     double ensino = 0;
+    double media_single = 0;
 
 
     return Scaffold(
@@ -232,38 +232,28 @@ class ProfileDetails extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Wrap(
-              spacing: 10,
+            Row(
               children: [
                 Container(
-              alignment: Alignment.topLeft,
-              padding: const EdgeInsets.all(15.0),
-              child: CircleAvatar(
-                backgroundColor: Colors.orange,
-                radius: 55,
-                child: CircleAvatar(
-                  foregroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
-                  backgroundImage: const NetworkImage('https://www.der-windows-papst.de/wp-content/uploads/2019/03/Windows-Change-Default-Avatar-448x400.png'),
-                  radius: 50,
+                  alignment: Alignment.topLeft,
+                  padding: const EdgeInsets.all(15.0),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.orange,
+                    radius: 55,
+                    child: CircleAvatar(
+                      foregroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
+                      backgroundImage: const NetworkImage('https://www.der-windows-papst.de/wp-content/uploads/2019/03/Windows-Change-Default-Avatar-448x400.png'),
+                      radius: 50,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-              Container(
-                margin: const EdgeInsets.all(10.0),
-                decoration: const BoxDecoration(
-                    color: Colors.blue,
-                    shape: BoxShape.circle
-                ),
-              ),
-              Container(
-                child: SizedBox(
+                Expanded(
                   child: Text(document['nome'], style: Theme.of(context).textTheme.headlineSmall,),
-                ),
-              ),
-              SizedBox(
-                child: Text(document['faculdade'], style: Theme.of(context).textTheme.headlineSmall,),
-              ),
-              ]
+                  ),
+              ],
+            ),
+            SizedBox(
+              child: Text(document['faculdade'], style: Theme.of(context).textTheme.headlineSmall,),
             ),
           ElevatedButton(
               onPressed: () {
@@ -275,16 +265,6 @@ class ProfileDetails extends StatelessWidget {
                         key: _formKey,
                         child: Column(
                           children: [
-                            const SizedBox(
-                              child: Text('Apreciação Global'),
-                            ),
-                            RatingBar.builder(
-                              minRating: 1,
-                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
-                                onRatingUpdate: (rating) {
-                                apreciacao_global = rating;
-                                },
-                            ),
                             const SizedBox(
                               child: Text('Bom Relacionamento com os Estudantes'),
                             ),
@@ -384,14 +364,14 @@ class ProfileDetails extends StatelessWidget {
                               maxLength: 20,
                             ),
                             TextFormField(
-                              controller: descricao,
+                              controller: comentario,
                               keyboardType: TextInputType.multiline,
                               decoration: const InputDecoration(
                                 hintText: 'Comentário',
                                 filled: true,
                               ),
                               maxLines: 5,
-                              maxLength: 4096,
+                              maxLength: 500,
                               textInputAction: TextInputAction.done,
                               validator: (String? text) {
                                 if(text == null || text.isEmpty) {
@@ -426,8 +406,24 @@ class ProfileDetails extends StatelessWidget {
                                   ),
                                 );
                               }
+                              else if(relacionamento == 0 || interesse == 0 || regras == 0 || disponibilidade == 0 || exigencia == 0 || conteudos == 0 || reflexao == 0 || ensino == 0){
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text('Erro de Input'),
+                                    content: const Text('Nenhum rating deve ficar por preencher!'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, 'OK'),
+                                        child: const Text('OK'),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
                               else {
-                                addRating(apreciacao_global, relacionamento, interesse, regras, disponibilidade, empenho, exigencia, conteudos, reflexao, ensino, titulo.text);
+                                media_single = (relacionamento + interesse + regras + disponibilidade + empenho + exigencia + conteudos + reflexao + ensino) / 9;
+                                addRating(relacionamento, interesse, regras, disponibilidade, empenho, exigencia, conteudos, reflexao, ensino, titulo.text, comentario.text, media_single);
                                 Navigator.pop(context, 'Submit');
                                 showDialog(
                                   context: context,
@@ -465,10 +461,9 @@ class ProfileDetails extends StatelessWidget {
     );
   }
 
-  Future<dynamic> addRating(double apreciacao_global, double relacionamento, double interesse, double regras, double disponibilidade, double empenho, double exigencia, double conteudos, double reflexao, double ensino, String titulo) async {
+  Future<dynamic> addRating(double relacionamento, double interesse, double regras, double disponibilidade, double empenho, double exigencia, double conteudos, double reflexao, double ensino, String titulo, String comentario, double media_single) async {
     final newDocument = FirebaseFirestore.instance.collection('avaliacao').doc();
     final json = {
-      'apreciacao global': apreciacao_global,
       'bom relacionamento com os estudantes': relacionamento,
       'capacidade de estimular o interesse': interesse,
       'cumprimento das regras de avaliacao': regras,
@@ -481,6 +476,8 @@ class ProfileDetails extends StatelessWidget {
       'studentID': 202108677,
       'teacherID': document['codigo'].toString(),
       'titulo' : titulo,
+      'comentario' : comentario,
+      'media_single' : media_single,
     };
     // Write to Firebase
     await newDocument.set(json);
@@ -492,7 +489,7 @@ class ProfileDetails extends StatelessWidget {
         builder: (context, snapshot) {
           if(!snapshot.hasData) return const Text('Loading...');
           return ListView.builder(
-            itemExtent: 80.0,
+            itemExtent: 55.0,
             itemCount: (snapshot.data as QuerySnapshot).docs.length,
             itemBuilder:  (context, index) =>
                 _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),
@@ -504,33 +501,97 @@ class ProfileDetails extends StatelessWidget {
   Widget _buildListItem(BuildContext context, DocumentSnapshot document2) {
 
     return ListTile(
-      title: GestureDetector(
-        onHorizontalDragEnd: (DragEndDetails details) {
-          DocumentReference documentReference = FirebaseFirestore.instance.collection('avaliacao').doc(document2.id);
-          documentReference.delete();
-        },
-        child:
-        Row(
-          children: [
-            Expanded(
+      title:
+      Row(
+        children: [
+          Expanded(
+            child: Text(
+              document2['titulo'],
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+          Container(
+              decoration: const BoxDecoration(
+                color: Color(0xffddddff),
+              ),
+              padding: const EdgeInsets.all(10.0),
               child: Text(
-                document2['titulo'],
+                document2['media_single'].toStringAsFixed(1),
                 style: Theme.of(context).textTheme.bodyMedium,
+              )
+          )
+        ],
+      ),
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              scrollable: true,
+              content: Column(
+                children: [
+                  const SizedBox(child: Text('Bom Relacionamento com os Estudantes'),),
+                  SizedBox(
+                    child: Text(document2['bom relacionamento com os estudantes'].toString()),
+                  ),
+                  const SizedBox(child: Text('Capacidade de Estimular o Interesse'),),
+                  SizedBox(
+                    child: Text(document2['capacidade de estimular o interesse'].toString()),
+                  ),
+                  const SizedBox(child: Text('Cumprimento das Regras de Avaliação'),),
+                  SizedBox(
+                    child: Text(document2['cumprimento das regras de avaliacao'].toString()),
+                  ),
+                  const SizedBox(child: Text('Disponibilidade'),),
+                  SizedBox(
+                    child: Text(document2['disponibilidade'].toString()),
+                  ),
+                  const SizedBox(child: Text('Empenho'),),
+                  SizedBox(
+                    child: Text(document2['empenho'].toString()),
+                  ),
+                  const SizedBox(child: Text('Exigência'),),
+                  SizedBox(
+                    child: Text(document2['exigencia'].toString()),
+                  ),
+                  const SizedBox(child: Text('Organização dos Conteúdos'),),
+                  SizedBox(
+                    child: Text(document2['organizacao dos conteudos'].toString()),
+                  ),
+                  const SizedBox(child: Text('Promoção da Reflexão'),),
+                  SizedBox(
+                    child: Text(document2['promocao da reflexao'].toString()),
+                  ),
+                  const SizedBox(child: Text('Qualidade do Ensino'),),
+                  SizedBox(
+                    child: Text(document2['qualidade do ensino'].toString()),
+                  ),
+                  Container(
+                    height: 50,
+                    width: 400,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.blue, width: 2),
+                    ),
+                    child: Center(
+                      child: Text(document2['titulo']),
+                    )
+                  ),
+                  Container(
+                      height: 220,
+                      width: 400,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blue, width: 2),
+                      ),
+                      child: SizedBox(
+                        child: SingleChildScrollView(
+                          child: Text(document2['comentario']),
+                        ),
+                      )
+                  ),
+                ],
               ),
             ),
-            Container(
-                decoration: const BoxDecoration(
-                  color: Color(0xffddddff),
-                ),
-                padding: const EdgeInsets.all(10.0),
-                child: Text(
-                  document2['apreciacao global'].toString(),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                )
-            )
-          ],
-        ),
-      ),
+        );
+      },
     );
   }
 }
