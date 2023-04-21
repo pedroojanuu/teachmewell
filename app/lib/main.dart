@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:teachmewell/teacher.dart';
 import 'firebase_options.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
+import 'package:flutter_rating_native/flutter_rating_native.dart';
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -270,6 +270,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 relacionamento = rating;
@@ -280,6 +282,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 interesse = rating;
@@ -290,6 +294,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 regras = rating;
@@ -300,6 +306,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 disponibilidade = rating;
@@ -310,6 +318,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 empenho = rating;
@@ -320,6 +330,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 exigencia = rating;
@@ -330,6 +342,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 conteudos = rating;
@@ -340,6 +354,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 reflexao = rating;
@@ -350,6 +366,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 ensino = rating;
@@ -531,39 +549,39 @@ class ProfileDetails extends StatelessWidget {
                 children: [
                   const SizedBox(child: Text('Bom Relacionamento com os Estudantes'),),
                   SizedBox(
-                    child: Text(document2['bom relacionamento com os estudantes'].toString()),
+                    child: FlutterRating (rating: document2['bom relacionamento com os estudantes'], size: 40),
                   ),
                   const SizedBox(child: Text('Capacidade de Estimular o Interesse'),),
                   SizedBox(
-                    child: Text(document2['capacidade de estimular o interesse'].toString()),
+                    child: FlutterRating (rating: document2['capacidade de estimular o interesse'], size: 40),
                   ),
                   const SizedBox(child: Text('Cumprimento das Regras de Avaliação'),),
                   SizedBox(
-                    child: Text(document2['cumprimento das regras de avaliacao'].toString()),
+                    child: FlutterRating (rating: document2['cumprimento das regras de avaliacao'], size: 40),
                   ),
                   const SizedBox(child: Text('Disponibilidade'),),
                   SizedBox(
-                    child: Text(document2['disponibilidade'].toString()),
+                    child: FlutterRating (rating: document2['disponibilidade'], size: 40),
                   ),
                   const SizedBox(child: Text('Empenho'),),
                   SizedBox(
-                    child: Text(document2['empenho'].toString()),
+                    child: FlutterRating (rating: document2['empenho'], size: 40),
                   ),
                   const SizedBox(child: Text('Exigência'),),
                   SizedBox(
-                    child: Text(document2['exigencia'].toString()),
+                    child: FlutterRating (rating: document2['exigencia'], size: 40),
                   ),
                   const SizedBox(child: Text('Organização dos Conteúdos'),),
                   SizedBox(
-                    child: Text(document2['organizacao dos conteudos'].toString()),
+                    child: FlutterRating (rating: document2['organizacao dos conteudos'], size: 40),
                   ),
                   const SizedBox(child: Text('Promoção da Reflexão'),),
                   SizedBox(
-                    child: Text(document2['promocao da reflexao'].toString()),
+                    child: FlutterRating (rating: document2['promocao da reflexao'], size: 40),
                   ),
                   const SizedBox(child: Text('Qualidade do Ensino'),),
                   SizedBox(
-                    child: Text(document2['qualidade do ensino'].toString()),
+                    child: FlutterRating (rating: document2['qualidade do ensino'], size: 40),
                   ),
                   Container(
                     height: 50,
