@@ -270,6 +270,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 relacionamento = rating;
@@ -280,6 +282,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 interesse = rating;
@@ -290,6 +294,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 regras = rating;
@@ -300,6 +306,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 disponibilidade = rating;
@@ -310,6 +318,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 empenho = rating;
@@ -320,6 +330,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 exigencia = rating;
@@ -330,6 +342,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 conteudos = rating;
@@ -340,6 +354,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 reflexao = rating;
@@ -350,6 +366,8 @@ class ProfileDetails extends StatelessWidget {
                             ),
                             RatingBar.builder(
                               minRating: 1,
+                              maxRating: 5,
+                              allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
                               onRatingUpdate: (rating) {
                                 ensino = rating;
