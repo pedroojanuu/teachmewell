@@ -32,11 +32,11 @@ dependencies:
     sdk: flutter
   flutter_driver:
     sdk: flutter
-  flutter_gherkin:
+  flutter_gherkin: ^3.0.0-rc.17
   gherkin:
   glob:
-  firebase_core: ^2.7.1
-  cloud_firestore:
+  firebase_core: ^2.10.0
+  cloud_firestore: ^4.5.2
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -48,6 +48,8 @@ dependencies:
   http: ^0.13.5
   flutter_rating_bar: ^4.0.1
   flutter_rating_native: ^0.0.2
+  firebase_auth: ^4.4.2
+  firebase_analytics: ^10.2.1
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.0"
@@ -60,7 +62,6 @@ dev_dependencies:
   integration_test:
     sdk: flutter
 
-  flutter_gherkin:
   build_runner:
 
 

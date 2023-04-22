@@ -88,7 +88,7 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
                 ],
               ),
           )
-          : teacherDetailsListOnSearch.isEmpty && _textEditingController!.text.isNotEmpty?
+          : teacherDetailsListOnSearch.isEmpty && _textEditingController.text.isNotEmpty?
           Center (
             child:
               Column(
@@ -105,9 +105,9 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
               ),
           ) :
         ListView.builder(
-            itemCount: _textEditingController!.text.isNotEmpty? teacherDetailsListOnSearch.length : teacherDetailsList.length,
+            itemCount: _textEditingController.text.isNotEmpty? teacherDetailsListOnSearch.length : teacherDetailsList.length,
             itemBuilder: (_, index) {
-              TeacherDetails teacher = _textEditingController!.text.isNotEmpty? teacherDetailsListOnSearch[index] : teacherDetailsList[index];
+              TeacherDetails teacher = _textEditingController.text.isNotEmpty? teacherDetailsListOnSearch[index] : teacherDetailsList[index];
 
               return ListTile(
                   title: Row(
