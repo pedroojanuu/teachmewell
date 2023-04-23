@@ -268,7 +268,7 @@ class Course {
   }
 }
 
-Future<Course> getCourse(String faculty, int id) async {
+Future<Course> getCourse(String faculty, int id, String degree) async {
   final response = await http.Client().get(Uri.parse('https://sigarra.up.pt/$faculty/pt/cur_geral.cur_view?pv_curso_id=$id'));
   String body = response.body;
 
@@ -282,61 +282,27 @@ Future<Course> getCourse(String faculty, int id) async {
 
   String grau;
 
-  if (sigla[0] == 'L') grau = 'Licenciatura';
-  else if (sigla[0] == 'M') {
-    if (sigla.substring(0, 2) == 'MI') grau = 'Mestrado Integrado';
-    else grau = 'Mestrado';
-  }
-  else grau = 'Doutoramento';
+  if (nome == 'Criminologia' || nome == 'Direito') grau = 'Licenciatura';
+  else if (nome.substring(0, 12) == 'Licenciatura') grau = 'Licenciatura';
+  else if (nome.substring(0, 18) == 'Mestrado Integrado') grau = 'Mestrado Integrado';
+  else grau = degree;
 
   return Course(grau, nome, sigla);
 }
 
+List<String> faculties = ['fcup', 'fcnaup', 'fadeup', 'fdup', 'fep', 'feup', 'flup', 'fmup', 'fpceup', 'icbas'];
+
 Future<void> main() async {
-  for (int id in await getFacultyBachelorsIDs('fcnaup')) {
-    (await getCourse('fcnaup', id)).write();
+  for (String faculty in faculties) {
+    print('\n\n' + faculty.toUpperCase());
+
+    print('\nLicenciaturas/Mestrados Integrados\n');
+    for (int id in await getFacultyBachelorsIDs(faculty)) (await getCourse(faculty, id, 'Licenciatura')).write();
+
+    print('\nMestrados\n');
+    for (int id in await getFacultyMastersIDs(faculty)) (await getCourse(faculty, id, 'Mestrado')).write();
+
+    print('\nDoutoramentos\n');
+    for (int id in await getFacultyPhDsIDs(faculty)) (await getCourse(faculty, id, 'Doutoramento')).write();
   }
-  /*print(await getFacultyBachelorsIDs('fbaup'));
-  print(await getFacultyBachelorsIDs('fcup'));
-  print(await getFacultyBachelorsIDs('fcnaup'));
-  print(await getFacultyBachelorsIDs('fadeup'));
-  print(await getFacultyBachelorsIDs('fdup'));
-  print(await getFacultyBachelorsIDs('fep'));
-  print(await getFacultyBachelorsIDs('feup'));
-  print(await getFacultyBachelorsIDs('ffup'));
-  print(await getFacultyBachelorsIDs('flup'));
-  print(await getFacultyBachelorsIDs('fmup'));
-  print(await getFacultyBachelorsIDs('fmdup'));
-  print(await getFacultyBachelorsIDs('fpceup'));
-  print(await getFacultyBachelorsIDs('icbas'));
-
-  print(await getFacultyMastersIDs('faup'));
-  print(await getFacultyMastersIDs('fbaup'));
-  print(await getFacultyMastersIDs('fcup'));
-  print(await getFacultyMastersIDs('fcnaup'));
-  print(await getFacultyMastersIDs('fadeup'));
-  print(await getFacultyMastersIDs('fdup'));
-  print(await getFacultyMastersIDs('fep'));
-  print(await getFacultyMastersIDs('feup'));
-  print(await getFacultyMastersIDs('ffup'));
-  print(await getFacultyMastersIDs('flup'));
-  print(await getFacultyMastersIDs('fmup'));
-  print(await getFacultyMastersIDs('fmdup'));
-  print(await getFacultyMastersIDs('fpceup'));
-  print(await getFacultyMastersIDs('icbas'));
-
-  print(await getFacultyPhDsIDs('faup'));
-  print(await getFacultyPhDsIDs('fbaup'));
-  print(await getFacultyPhDsIDs('fcup'));
-  print(await getFacultyPhDsIDs('fcnaup'));
-  print(await getFacultyPhDsIDs('fadeup'));
-  print(await getFacultyPhDsIDs('fdup'));
-  print(await getFacultyPhDsIDs('fep'));
-  print(await getFacultyPhDsIDs('feup'));
-  print(await getFacultyPhDsIDs('ffup'));
-  print(await getFacultyPhDsIDs('flup'));
-  print(await getFacultyPhDsIDs('fmup'));
-  print(await getFacultyPhDsIDs('fmdup'));
-  print(await getFacultyPhDsIDs('fpceup'));
-  print(await getFacultyPhDsIDs('icbas'));*/
 }
