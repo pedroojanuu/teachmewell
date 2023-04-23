@@ -1,24 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart';
-
-fakeMain() async {
-  // print('\n');
-  // print(await getTeacherUCs("feup", 211636, 2022));
-  // print('\n');
-  // print(await getUCInfo('feup', 501680));
-  // populateFCUPTeachers();
-  // populateFCNAUPTeachers();
-  // populateFADEUPTeachers();
-  // populateFDUPTeachers();
-  // populateFEPTeachers();
-  // populateFEUPTeachers();
-  // populateFLUPTeachers();
-  // populateFMUPTeachers();
-  // populateFPCEUPTeachers();
-  // populateICBASTeachers();
-}
 
 Future<void> fakeMain2() async{
   print("Started fakeMain2");
@@ -260,12 +241,9 @@ class Course {
   String grau;
   String nome;
   String sigla;
+  String faculdade;
 
-  Course(this.grau, this.nome, this.sigla);
-
-  write() {
-    print(this.sigla + ',' + this.nome + ',' + this.grau);
-  }
+  Course(this.grau, this.nome, this.sigla, this.faculdade);
 }
 
 Future<Course> getCourse(String faculty, int id, String degree) async {
@@ -287,22 +265,10 @@ Future<Course> getCourse(String faculty, int id, String degree) async {
   else if (nome.substring(0, 18) == 'Mestrado Integrado') grau = 'Mestrado Integrado';
   else grau = degree;
 
-  return Course(grau, nome, sigla);
+  return Course(grau, nome, sigla, faculty.toUpperCase());
 }
 
 List<String> faculties = ['fcup', 'fcnaup', 'fadeup', 'fdup', 'fep', 'feup', 'flup', 'fmup', 'fpceup', 'icbas'];
 
 Future<void> main() async {
-  for (String faculty in faculties) {
-    print('\n\n' + faculty.toUpperCase());
-
-    print('\nLicenciaturas/Mestrados Integrados\n');
-    for (int id in await getFacultyBachelorsIDs(faculty)) (await getCourse(faculty, id, 'Licenciatura')).write();
-
-    print('\nMestrados\n');
-    for (int id in await getFacultyMastersIDs(faculty)) (await getCourse(faculty, id, 'Mestrado')).write();
-
-    print('\nDoutoramentos\n');
-    for (int id in await getFacultyPhDsIDs(faculty)) (await getCourse(faculty, id, 'Doutoramento')).write();
-  }
 }

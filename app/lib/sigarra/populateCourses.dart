@@ -20,7 +20,7 @@ Future<void> populateCourses(String faculty) async {
   
   for (Course course in courses) {
     final newDocument = FirebaseFirestore.instance.collection('curso').doc(faculty.toUpperCase() + course.sigla);
-    final json = {'grau': course.grau, 'nome': course.nome, 'sigla': course.sigla};
+    final json = {'grau': course.grau, 'nome': course.nome, 'sigla': course.sigla, 'faculdade': course.faculdade};
 
     await newDocument.set(json);
   }
