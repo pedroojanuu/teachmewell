@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:teachmewell/teacherlist.dart';
+import 'package:teachmewell/faculty.dart';
 import 'firebase_options.dart';
 import 'package:teachmewell/sigarra/scraper.dart';
 import 'dart:io' as io;
@@ -11,7 +12,7 @@ Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
-  fakeMain2();
+  //fakeMain2();
 }
 
 class MyApp extends StatelessWidget {
@@ -107,7 +108,8 @@ class _LisTileExampleState extends State<LisTileExample>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfessorsFeup(document, document["sigla"]),
+                    builder: (context) => //ProfessorsFeup(document, document["sigla"]),
+                    Faculty(document),
                   ),
                 );
               },
@@ -136,7 +138,7 @@ class ProfessorsFeup extends StatelessWidget {
         body: StreamBuilder(
             stream: FirebaseFirestore.instance.collection('professor').where('faculdade', isEqualTo: faculdade).snapshots(),
             builder: (context, snapshot) {
-              if(!snapshot.hasData) return const Text('Loading...');
+              if(!snapshot.hasData) return const Text('A carregar...');
               return ListView.builder(
                 itemExtent: 80.0,
                 itemCount: (snapshot.data as QuerySnapshot).docs.length,
