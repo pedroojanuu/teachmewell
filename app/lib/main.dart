@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachmewell/teacher.dart';
 import 'firebase_options.dart';
@@ -29,48 +30,253 @@ class MyApp extends StatelessWidget {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  late final TextEditingController _email;
+  late final TextEditingController _password;
+
+  @override
+  void initState() {
+    _email = TextEditingController();
+    _password = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
 
   @override
   // Login page
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('TeachMeWell'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Bem-vindo ao TeachMeWell!',
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Faculties(title: 'Faculdades')),
-                );
+      backgroundColor: const Color.fromARGB(255, 32, 82, 156),
+      body: Column(
+        children: [
+          const Image(image: AssetImage('media/teachmewell_logo.png'),),
+          TextField(
+            controller: _email,
+            enableSuggestions: false,
+            autocorrect: false,
+            keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Email',
+              )
+          ),
+          TextField(
+            controller: _password,
+            obscureText: true,
+            enableSuggestions: false,
+            autocorrect: false,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Password',
+            )
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const Faculties()
+              ));
+            },
+            child: const Text('Login', style: TextStyle(color: Colors.white),),
+          ),
+          TextButton(
+              onPressed: () async {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const RegisterPage()
+                ));
               },
-              child: const Text('Iniciar sessão'),
-            ),
-          ],
-        ),
-      ),
+              child: const Text('Register', style: TextStyle(color: Colors.white),),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const ForgotPassword()
+              ));
+            },
+            child: const Text('Forgot Password', style: TextStyle(color: Colors.white),),
+          )
+        ],
+      )
     );
   }
-  
+}
+
+class RegisterPage extends StatefulWidget{
+  const RegisterPage({Key? key}) : super(key: key);
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+
+  late final TextEditingController _up;
+  late final TextEditingController _email;
+  late final TextEditingController _password;
+  late final TextEditingController _confirmPassword;
+
+  @override
+  void initState() {
+    _up = TextEditingController();
+    _email = TextEditingController();
+    _password = TextEditingController();
+    _confirmPassword = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _up.dispose();
+    _email.dispose();
+    _password.dispose();
+    _confirmPassword.dispose();
+    super.dispose();
+  }
+
+  @override
+  // Register page
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register'),
+      ),
+      body: Column( 
+        children: [
+          TextField(
+            controller: _up,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'UP',
+            ),
+          ),
+          TextField(
+            controller: _email,
+            enableSuggestions: false,
+            autocorrect: false,
+            keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Email',
+            )
+          ),
+          TextField(
+            controller: _password,
+            obscureText: true,
+            enableSuggestions: false,
+            autocorrect: false,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Password',
+            )
+          ),
+          TextField(
+            controller: _confirmPassword,
+            obscureText: true,
+            enableSuggestions: false,
+            autocorrect: false,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Confirm Password',
+            )
+          ),
+          TextButton(
+            onPressed: () async {
+              final String up = _up.text;
+              final String email = _email.text;
+              final String password = _password.text;
+              final String confirmPassword = _confirmPassword.text;
+              await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) {
+                FirebaseFirestore.instance.collection('users').doc(value.user!.uid).set({
+                  'up': up,
+                  'email': email,
+                  'password': password,
+                  'confirmPassword': confirmPassword,
+                });
+              });
+            },
+            child: const Text('Register'),
+          ),
+        ]
+      )
+    );
+  }
+}
+
+class ForgotPassword extends StatefulWidget{
+  const ForgotPassword({Key? key}) : super(key: key);
+
+  @override
+  State<ForgotPassword> createState() => _ForgotPasswordState();
+}
+
+class _ForgotPasswordState extends State<ForgotPassword> {
+
+  late final TextEditingController _email;
+
+  @override
+  void initState() {
+    _email = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _email.dispose();
+    super.dispose();
+  }
+
+  @override
+  // Forgot password page
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Forgot Password'),
+        ),
+        body: Column(
+            children: [
+              TextField(
+                controller: _email,
+                enableSuggestions: false,
+                autocorrect: false,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Email',
+                )
+              ),
+              TextButton(
+                onPressed: () async {
+
+                },
+                child: const Text('Send Email'),
+              ),
+            ]
+        )
+    );
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class Faculties extends StatelessWidget {
-  const Faculties({super.key, required this.title});
+  const Faculties({super.key});
 
   //Main page at the moment
-  final String title;
+  final String title = "TeachMeWell";
 
   @override
   Widget build(BuildContext context) {
