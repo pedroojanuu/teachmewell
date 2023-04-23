@@ -195,18 +195,21 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           TextButton(
             onPressed: () async {
-              final String up = _up.text;
-              final String email = _email.text;
-              final String password = _password.text;
-              final String confirmPassword = _confirmPassword.text;
-              await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) {
-                FirebaseFirestore.instance.collection('users').doc(value.user!.uid).set({
-                  'up': up,
-                  'email': email,
-                  'password': password,
-                  'confirmPassword': confirmPassword,
+              if(_password.text != _confirmPassword.text){
+                return;
+              }
+              else{
+                final String up = _up.text;
+                final String email = _email.text;
+                final String password = _password.text;
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) {
+                  FirebaseFirestore.instance.collection('users').doc(value.user!.uid).set({
+                    'up': up,
+                    'email': email,
+                    'password': password,
+                  });
                 });
-              });
+              }
             },
             child: const Text('Register'),
           ),
