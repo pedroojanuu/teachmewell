@@ -23,21 +23,21 @@ class MyApp extends StatelessWidget {
       title: 'TeachMeWell',
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      home: const HomePage(),
+      home: const LoginPage(),
     );
   }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _LoginPageState extends State<LoginPage> {
 
   late final TextEditingController _email;
   late final TextEditingController _password;
@@ -60,55 +60,58 @@ class _HomePageState extends State<HomePage> {
   // Login page
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: const Color.fromARGB(255, 32, 82, 156),
-      body: Column(
-        children: [
-          const Image(image: AssetImage('media/teachmewell_logo.png'),),
-          TextField(
-            controller: _email,
-            enableSuggestions: false,
-            autocorrect: false,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Email',
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Image(image: AssetImage('media/teachmewell_logo.png'),),
+            TextField(
+              controller: _email,
+              enableSuggestions: false,
+              autocorrect: false,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Email',
+                )
+            ),
+            TextField(
+              controller: _password,
+              obscureText: true,
+              enableSuggestions: false,
+              autocorrect: false,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Password',
               )
-          ),
-          TextField(
-            controller: _password,
-            obscureText: true,
-            enableSuggestions: false,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Password',
-            )
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const Faculties()
-              ));
-            },
-            child: const Text('Login', style: TextStyle(color: Colors.white),),
-          ),
-          TextButton(
+            ),
+            TextButton(
               onPressed: () async {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const RegisterPage()
+                    builder: (context) => const Faculties()
                 ));
               },
-              child: const Text('Register', style: TextStyle(color: Colors.white),),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const ForgotPassword()
-              ));
-            },
-            child: const Text('Forgot Password', style: TextStyle(color: Colors.white),),
-          )
-        ],
+              child: const Text('Login', style: TextStyle(color: Colors.white),),
+            ),
+            TextButton(
+                onPressed: () async {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const RegisterPage()
+                  ));
+                },
+                child: const Text('Register', style: TextStyle(color: Colors.white),),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const ForgotPassword()
+                ));
+              },
+              child: const Text('Forgot Password', style: TextStyle(color: Colors.white),),
+            )
+          ],
+        )
       )
     );
   }
@@ -227,7 +230,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   });
                 });
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const HomePage()
+                    builder: (context) => const LoginPage()
                 ));
               }
             },
@@ -313,7 +316,7 @@ class Faculties extends StatelessWidget {
           title: const Text('Faculdades'),
           actions: [
             IconButton(
-              icon: Icon(Icons.search),
+              icon: const Icon(Icons.search),
               tooltip: 'Pesquisar um docente',
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
