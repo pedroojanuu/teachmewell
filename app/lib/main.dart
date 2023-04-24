@@ -178,16 +178,16 @@ class _RegisterPageState extends State<RegisterPage> {
         message = 'Todos os campos devem ser preenchidos';
         break;
       case 2:
-        message = 'Insira um email @up.pt valido';
+        message = 'Insira um email @up.pt válido';
         break;
       case 3:
-        message = 'O numero UP é diferente do usado no email';
+        message = 'O número UP é diferente do usado no email';
         break;
       case 4:
         message = 'A password deve ter entre 6 e 20 caracteres';
         break;
       case 5:
-        message = 'As passwords nao coincidem';
+        message = 'As passwords não coincidem';
         break;
     }
 
