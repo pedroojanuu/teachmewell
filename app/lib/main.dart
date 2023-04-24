@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Email',
-                )
+              )
             ),
             TextField(
               controller: _password,
@@ -91,9 +91,27 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextButton(
               onPressed: () async {
+                final email = _email.text;
+                final password = _password.text;
+
+                if(email == '' || password == ''){
+                  return;
+                }
+
+                try{
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'user-not-found') {
+                    //print('No user found for that email.');
+                    return;
+                  } else if (e.code == 'wrong-password') {
+                    //print('Wrong password provided for that user.');
+                    return;
+                  }
+                }
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const Faculties()
-                ));
+                ));    
               },
               child: const Text('Login', style: TextStyle(color: Colors.white),),
             ),
@@ -269,11 +287,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 else if(_password.text != _confirmPassword.text){
                   createPopUp(5);
                   return;
-                }
-                else{
-                  final String up = _up.text;
-                  final String email = _email.text;
-                  final String password = _password.text;
+                }           
+              else{
+                final String up = _up.text;
+                final String email = _email.text;
+                final String password = _password.text;
+
+                try{
                   await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) {
                     FirebaseFirestore.instance.collection('users').doc(value.user!.uid).set({
                       'up': up,
@@ -281,19 +301,27 @@ class _RegisterPageState extends State<RegisterPage> {
                       'password': password,
                     });
                   });
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const LoginPage()
-                  ));
-                }
-              },
-              child: const Text('Register'),
-              style: TextButton.styleFrom(
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'weak-password') {
+                    //print('The password provided is too weak.');
+                    return;
+                  } else if (e.code == 'email-already-in-use') {
+                    //print('The account already exists for that email.');
+                    return;
+                  }
+                } 
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const LoginPage()
+                ));
+              }
+            },
+            child: const Text('Register'),
+            style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
                   elevation: 4,
                   backgroundColor: Colors.blue),
-            ),
-          ]
-        )
+          ),
+        ]
       )
     );
   }
@@ -886,39 +914,39 @@ class ProfileDetails extends StatelessWidget {
                 children: [
                   const SizedBox(child: Text('Bom Relacionamento com os Estudantes'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['bom relacionamento com os estudantes'], size: 40),
+                    child: FlutterRating (rating: document2['bom relacionamento com os estudantes'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Capacidade de Estimular o Interesse'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['capacidade de estimular o interesse'], size: 40),
+                    child: FlutterRating (rating: document2['capacidade de estimular o interesse'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Cumprimento das Regras de Avaliação'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['cumprimento das regras de avaliacao'], size: 40),
+                    child: FlutterRating (rating: document2['cumprimento das regras de avaliacao'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Disponibilidade'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['disponibilidade'], size: 40),
+                    child: FlutterRating (rating: document2['disponibilidade'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Empenho'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['empenho'], size: 40),
+                    child: FlutterRating (rating: document2['empenho'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Exigência'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['exigencia'], size: 40),
+                    child: FlutterRating (rating: document2['exigencia'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Organização dos Conteúdos'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['organizacao dos conteudos'], size: 40),
+                    child: FlutterRating (rating: document2['organizacao dos conteudos'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Promoção da Reflexão'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['promocao da reflexao'], size: 40),
+                    child: FlutterRating (rating: document2['promocao da reflexao'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Qualidade do Ensino'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['qualidade do ensino'], size: 40),
+                    child: FlutterRating (rating: document2['qualidade do ensino'], size: 40, color: Colors.orange),
                   ),
                   Container(
                     height: 50,
