@@ -372,6 +372,37 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               TextButton(
                 onPressed: () async {
 
+                  if(_email.text == ''){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('Email field is empty'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          )
+                        ],
+                      ),
+                    );
+                    return;
+                  }
+
+                  final String email = _email.text;
+
+                  try{
+                    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+                  } on FirebaseAuthException catch (e) {
+                    if (e.code == 'user-not-found') {
+                      //print('No user found for that email.');
+                      return;
+                    }
+                  }
+
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const LoginPage()
+                  ));
+
                 },
                 child: const Text('Send Email'),
               ),
