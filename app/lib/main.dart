@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -79,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                 labelText: 'Email',
               )
             ),
+            const Padding(padding: EdgeInsets.only(top: 15.0)),
             TextField(
               controller: _password,
               obscureText: true,
@@ -109,9 +108,11 @@ class _LoginPageState extends State<LoginPage> {
                     return;
                   }
                 }
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const Faculties()
-                ));    
+                if(context.mounted) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const Faculties()
+                  ));
+                }
               },
               child: const Text('Login', style: TextStyle(color: Colors.white),),
             ),
@@ -188,6 +189,15 @@ class _RegisterPageState extends State<RegisterPage> {
         break;
       case 5:
         message = 'As passwords não coincidem';
+        break;
+      case 6:
+        message = 'The password provided is too weak';
+        break;
+      case 7:
+        message = 'This email is already being used';
+        break;
+      case 8:
+        message = 'Conta registada';
         break;
     }
 
@@ -301,25 +311,28 @@ class _RegisterPageState extends State<RegisterPage> {
                       'password': password,
                     });
                   });
+                  createPopUp(8);
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'weak-password') {
-                    //print('The password provided is too weak.');
+                    createPopUp(6);
                     return;
                   } else if (e.code == 'email-already-in-use') {
-                    //print('The account already exists for that email.');
+                    createPopUp(7);
                     return;
                   }
-                } 
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const LoginPage()
-                ));
+                }
+                if(context.mounted) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const LoginPage()
+                  ));
+                }
               }
             },
-            child: const Text('Register'),
             style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
                   elevation: 4,
                   backgroundColor: Colors.blue),
+            child: const Text('Register'),
           ),
         ]
       )
@@ -398,11 +411,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       return;
                     }
                   }
-
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const LoginPage()
-                  ));
-
+                  if(context.mounted) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const LoginPage()
+                    ));
+                  }
                 },
                 child: const Text('Send Email'),
               ),
@@ -414,8 +427,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Faculties extends StatelessWidget {
-  const Faculties({super.key});
+class Faculties extends StatefulWidget {
+  const Faculties({Key? key}) : super(key: key);
+
+  @override
+  State<Faculties> createState() => _FacultiesState();
+}
+
+class _FacultiesState extends State<Faculties> {
 
   //Main page at the moment
   final String title = "TeachMeWell";
@@ -492,7 +511,7 @@ class _LisTileExampleState extends State<LisTileExample>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfessorsFeup(document, document["sigla"]),
+                    builder: (context) => Professors(document, document["sigla"]),
                   ),
                 );
               },
@@ -506,11 +525,13 @@ class _LisTileExampleState extends State<LisTileExample>
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class ProfessorsFeup extends StatelessWidget {
+
+
+class Professors extends StatelessWidget {
   final DocumentSnapshot document;
   final String faculdade;
 
-  ProfessorsFeup(this.document, this.faculdade);
+  Professors(this.document, this.faculdade);
 
   @override
   Widget build(BuildContext context){
@@ -541,7 +562,7 @@ class ProfessorsFeup extends StatelessWidget {
         closedElevation: 0,
         openColor: Colors.transparent,
         openElevation: 0,
-        transitionDuration: const Duration(seconds: 1),
+        transitionDuration: const Duration(milliseconds: 400),
         transitionType: ContainerTransitionType.fadeThrough,
         openBuilder: (context, _) => ProfileDetails(document),
         closedBuilder: (context, VoidCallback openContainer) => Row(
@@ -604,8 +625,7 @@ class ProfileDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final GlobalKey<FormState> _formKey = GlobalKey();
-    final TextEditingController _controller = TextEditingController();
+    final GlobalKey<FormState> formKey = GlobalKey();
     final titulo = TextEditingController();
     final comentario = TextEditingController();
 
@@ -618,7 +638,7 @@ class ProfileDetails extends StatelessWidget {
     double conteudos = 0;
     double reflexao = 0;
     double ensino = 0;
-    double media_single = 0;
+    double mediaSingle = 0;
 
 
     return Scaffold(
@@ -658,7 +678,7 @@ class ProfileDetails extends StatelessWidget {
                     builder: (BuildContext context) => AlertDialog(
                       scrollable: true,
                       content: Form(
-                        key: _formKey,
+                        key: formKey,
                         child: Column(
                           children: [
                             const SizedBox(
@@ -836,8 +856,8 @@ class ProfileDetails extends StatelessWidget {
                                 );
                               }
                               else {
-                                media_single = (relacionamento + interesse + regras + disponibilidade + empenho + exigencia + conteudos + reflexao + ensino) / 9;
-                                addRating(relacionamento, interesse, regras, disponibilidade, empenho, exigencia, conteudos, reflexao, ensino, titulo.text, comentario.text, media_single);
+                                mediaSingle = (relacionamento + interesse + regras + disponibilidade + empenho + exigencia + conteudos + reflexao + ensino) / 9;
+                                addRating(relacionamento, interesse, regras, disponibilidade, empenho, exigencia, conteudos, reflexao, ensino, titulo.text, comentario.text, mediaSingle);
                                 Navigator.pop(context, 'Submit');
                                 showDialog(
                                   context: context,
@@ -875,7 +895,7 @@ class ProfileDetails extends StatelessWidget {
     );
   }
 
-  Future<dynamic> addRating(double relacionamento, double interesse, double regras, double disponibilidade, double empenho, double exigencia, double conteudos, double reflexao, double ensino, String titulo, String comentario, double media_single) async {
+  Future<dynamic> addRating(double relacionamento, double interesse, double regras, double disponibilidade, double empenho, double exigencia, double conteudos, double reflexao, double ensino, String titulo, String comentario, double mediaSingle) async {
     final newDocument = FirebaseFirestore.instance.collection('avaliacao').doc();
     final json = {
       'bom relacionamento com os estudantes': relacionamento,
@@ -891,7 +911,7 @@ class ProfileDetails extends StatelessWidget {
       'teacherID': document['codigo'].toString(),
       'titulo' : titulo,
       'comentario' : comentario,
-      'media_single' : media_single,
+      'media_single' : mediaSingle,
     };
     // Write to Firebase
     await newDocument.set(json);
