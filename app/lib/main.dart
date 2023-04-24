@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Email',
-                )
+              )
             ),
             TextField(
               controller: _password,
@@ -88,9 +88,27 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextButton(
               onPressed: () async {
+                final email = _email.text;
+                final password = _password.text;
+
+                if(email == '' || password == ''){
+                  return;
+                }
+
+                try{
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'user-not-found') {
+                    //print('No user found for that email.');
+                    return;
+                  } else if (e.code == 'wrong-password') {
+                    //print('Wrong password provided for that user.');
+                    return;
+                  }
+                }
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const Faculties()
-                ));
+                ));    
               },
               child: const Text('Login', style: TextStyle(color: Colors.white),),
             ),
@@ -222,13 +240,24 @@ class _RegisterPageState extends State<RegisterPage> {
                 final String up = _up.text;
                 final String email = _email.text;
                 final String password = _password.text;
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) {
-                  FirebaseFirestore.instance.collection('users').doc(value.user!.uid).set({
-                    'up': up,
-                    'email': email,
-                    'password': password,
+
+                try{
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) {
+                    FirebaseFirestore.instance.collection('users').doc(value.user!.uid).set({
+                      'up': up,
+                      'email': email,
+                      'password': password,
+                    });
                   });
-                });
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'weak-password') {
+                    //print('The password provided is too weak.');
+                    return;
+                  } else if (e.code == 'email-already-in-use') {
+                    //print('The account already exists for that email.');
+                    return;
+                  }
+                } 
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const LoginPage()
                 ));
