@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:teachmewell/course.dart';
 
+//A titulo de curioside, o termo course é utilizado com o significa de curso no Reino Unido, Australia, Singapura e India, enquanto que nos EUA e Canadá é utilizado com o significado de unidade curricular.
 class Faculty extends StatelessWidget {
   final DocumentSnapshot faculty;
 
@@ -10,8 +12,8 @@ class Faculty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(faculty['sigla']),
+        appBar: AppBar(
+          title: Text(faculty['sigla']),
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('curso').where('faculdade', isEqualTo: faculty['sigla']).snapshots(),
@@ -52,6 +54,12 @@ class Faculty extends StatelessWidget {
             ),
           ),
         ],
+      ),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Course(document),
+        ),
       ),
     );
   }

@@ -85,75 +85,133 @@ Future<Set<int>> getUCsTeachersIDs(String faculty, int uc_id) async {
 }
 
 Future<List<int>> getCourseUCsIDs(String faculty, int curso, int ano_letivo) async {
-  final response = await http.Client().get(Uri.parse('https://sigarra.up.pt/$faculty/pt/cur_geral.cur_planos_estudos_view?pv_plano_id=$curso&pv_ano_lectivo=$ano_letivo'));
+  faculty = faculty.toLowerCase();
+  // print("faculdade: $faculty, curso: $curso, ano_letivo: $ano_letivo");
+  final response_before = await http.Client().get(Uri.parse('https://sigarra.up.pt/$faculty/pt/cur_geral.cur_view?pv_curso_id=$curso&pv_ano_lectivo=$ano_letivo'));
+  String body_before = response_before.body;
+
+  BeautifulSoup soup_before = BeautifulSoup(body_before);
+  var table_before = soup_before.find('*', id: 'conteudoinner');
+  var a_before = table_before!.findAll('a');
+  int id_before = 0;
+
+  for(var a in a_before){
+    String s = a.toString();
+    if(s.contains("Plano ")){
+      int i = 55;
+      String char = s.substring(55, 56);
+      while(true){
+        try {
+          int.parse(char);
+        } catch (e) {
+          break;
+        }
+        i++;
+        char = s.substring(i, i+1);
+      }
+      id_before = int.parse(s.substring(55, i));
+      break;
+    }
+  }
+
+  // print("id_before: $id_before");
+
+  final response = await http.Client().get(Uri.parse('https://sigarra.up.pt/$faculty/pt/cur_geral.cur_planos_estudos_view?pv_plano_id=$id_before&pv_ano_lectivo=$ano_letivo'));
   String body = response.body;
 
   BeautifulSoup soup = BeautifulSoup(body);
 
   var table = soup.find('*', id: 'conteudoinner');
   var as = table!.findAll('a');
-  // table = table!.find('table');
-  // var rows = table!.findAll('tr');
-  // rows = rows.sublist(1, rows.length-3);
 
   List<int> ids = [];
 
   for (var a in as) {
-    // var a = row.find('a');
     String s = a.toString();
-    if(s.substring(9, 14) == "ucurr"){
-      // print(s.substring(52, 58));
+    // print(s);
+    if(s.length < 51 || s.substring(35, 51) != "pv_ocorrencia_id")
+      continue;
+    // print(s.substring(35, 51));
+    int i = 52;
+    String char = s.substring(52, 56);
+    while(true){
       try {
-        int i = int.parse(s.substring(52, 58));
-        // print(i);
-        ids.add(i);
+        int.parse(char);
       } catch (e) {
-        continue;
+        break;
       }
-      // if (!isInList(ids, i)) {
-      //   print(i);
-      //   // ids.add(i);
-      // }
+      i++;
+      char = s.substring(i, i+1);
     }
-    // s = s.substring(52, 58);
-    // int i = int.parse(s);
-    // if (!isInList(ids, i)) {
-    //   ids.add(i);
-    // }
+    int id = int.parse(s.substring(52, i));
+    if (!isInList(ids, id)) {
+      ids.add(id);
+    }
   }
-
   return ids;
+}
+
+Stream<UC> getCourseUCsIDsStream(String faculty, int curso, int ano_letivo) async* {
+  for (var i in await getCourseUCsIDs(faculty, curso, ano_letivo)) {
+    yield await getUCInfo(faculty, i);
+  }
 }
 
 class UC {
   String nome;
-  int codigo;
+  String codigo;
   String acronimo;
+  String faculdade;
 
-  UC(this.nome, this.codigo, this.acronimo);
+  UC(this.nome, this.codigo, this.acronimo, this.faculdade);
 }
 
 Future<UC> getUCInfo(String faculty, int id) async {
-  final response = await http.Client().get(Uri.parse('https://sigarra.up.pt/$faculty/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=$id'));
+  faculty = faculty.toLowerCase();
+  // print("faculdade: $faculty, id: $id");
+  final response = await http.Client().get(Uri.parse(
+      'https://sigarra.up.pt/$faculty/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=$id'));
   String body = response.body;
-
   BeautifulSoup soup = BeautifulSoup(body);
+  try {
+    var content = soup.find('*', id: 'conteudoinner');
+    var h1 = content!.findAll('h1');
+    var table = soup.find('*', class_: 'formulario');
+    var td = table!.findAll('td');
 
-  var content = soup.find('*', id: 'conteudoinner');
-  var h1 = content!.findAll('h1');
-  var table = soup.find('*', class_: 'formulario');
-  var td = table!.findAll('td');
+    String nome = h1[1].toString();
+    nome = nome.substring(4, (nome.length) - 5);
 
-  String nome = h1[1].toString();
-  nome = nome.substring(4, (nome.length) - 5);
+    String codigo = td[1].toString();
+    codigo = codigo.substring(4, (codigo.length) - 5);
 
-  String codigo = td[1].toString();
-  codigo = codigo.substring(4, (codigo.length) - 5);
+    String acronimo = td[4].toString();
+    acronimo = acronimo.substring(4, (acronimo.length) - 5);
 
-  String acronimo = td[4].toString();
-  acronimo = acronimo.substring(4, (acronimo.length) - 5);
+    return UC(nome, codigo, acronimo, faculty);
+  } catch (e) {
+    try {
+      var meta = soup.findAll('meta');
 
-  return UC(nome, int.parse(codigo), acronimo);
+      for (var m in meta) {
+        if (m.toString().contains("url=")) {
+          String s = m.toString();
+          // print(s);
+          int i = 63;
+          String char = s.substring(63, 64);
+          while (char != "/") {
+            i++;
+            char = s.substring(i, i + 1);
+          }
+          // print(s.substring(63, i));
+          return await getUCInfo(s.substring(63, i), id);
+        }
+      }
+    } catch (e) {
+      return UC("", "", "", "");
+    }
+  }
+  return UC("", "", "", "");
 }
 
 Future<List<int>> getFacultyBachelorsIDs(String faculty) async {
@@ -242,8 +300,9 @@ class Course {
   String nome;
   String sigla;
   String faculdade;
+  int id;
 
-  Course(this.grau, this.nome, this.sigla, this.faculdade);
+  Course(this.grau, this.nome, this.sigla, this.faculdade, this.id);
 }
 
 Future<Course> getCourse(String faculty, int id, String degree) async {
@@ -265,7 +324,7 @@ Future<Course> getCourse(String faculty, int id, String degree) async {
   else if (nome.substring(0, 18) == 'Mestrado Integrado') grau = 'Mestrado Integrado';
   else grau = degree;
 
-  return Course(grau, nome, sigla, faculty.toUpperCase());
+  return Course(grau, nome, sigla, faculty.toUpperCase(), id);
 }
 
 List<String> faculties = ['fcup', 'fcnaup', 'fadeup', 'fdup', 'fep', 'feup', 'flup', 'fmup', 'fpceup', 'icbas'];
