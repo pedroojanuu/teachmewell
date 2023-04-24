@@ -170,7 +170,7 @@ class _RegisterPageState extends State<RegisterPage> {
             keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Email',
+              labelText: 'Email (UP) -> up---------@up.pt', 
             )
           ),
           TextField(
@@ -180,7 +180,7 @@ class _RegisterPageState extends State<RegisterPage> {
             autocorrect: false,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Password',
+              labelText: 'Password -> 6 to 20 characters',
             )
           ),
           TextField(
@@ -195,7 +195,24 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           TextButton(
             onPressed: () async {
-              if(_password.text != _confirmPassword.text){
+              if(_up.text == '' || _email.text == '' || _password.text == '' || _confirmPassword.text == ''){
+                //print('primeiro if');
+                return;
+              }
+              else if(_email.text.substring(11) != '@up.pt'){
+                //print('segundo if');
+                return;
+              }
+              else if(_up.text != _email.text.substring(2, 11)){
+                //print('terceiro if');
+                return;
+              }
+              else if(_password.text.length < 6 || _password.text.length > 20){
+                //print('quarto if');
+                return;
+              }
+              else if(_password.text != _confirmPassword.text){
+                //print('quinto if');
                 return;
               }
               else{
@@ -209,6 +226,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     'password': password,
                   });
                 });
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const HomePage()
+                ));
               }
             },
             child: const Text('Register'),
