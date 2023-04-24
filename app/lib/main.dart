@@ -820,39 +820,39 @@ class ProfileDetails extends StatelessWidget {
                 children: [
                   const SizedBox(child: Text('Bom Relacionamento com os Estudantes'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['bom relacionamento com os estudantes'], size: 40),
+                    child: FlutterRating (rating: document2['bom relacionamento com os estudantes'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Capacidade de Estimular o Interesse'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['capacidade de estimular o interesse'], size: 40),
+                    child: FlutterRating (rating: document2['capacidade de estimular o interesse'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Cumprimento das Regras de Avaliação'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['cumprimento das regras de avaliacao'], size: 40),
+                    child: FlutterRating (rating: document2['cumprimento das regras de avaliacao'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Disponibilidade'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['disponibilidade'], size: 40),
+                    child: FlutterRating (rating: document2['disponibilidade'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Empenho'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['empenho'], size: 40),
+                    child: FlutterRating (rating: document2['empenho'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Exigência'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['exigencia'], size: 40),
+                    child: FlutterRating (rating: document2['exigencia'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Organização dos Conteúdos'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['organizacao dos conteudos'], size: 40),
+                    child: FlutterRating (rating: document2['organizacao dos conteudos'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Promoção da Reflexão'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['promocao da reflexao'], size: 40),
+                    child: FlutterRating (rating: document2['promocao da reflexao'], size: 40, color: Colors.orange),
                   ),
                   const SizedBox(child: Text('Qualidade do Ensino'),),
                   SizedBox(
-                    child: FlutterRating (rating: document2['qualidade do ensino'], size: 40),
+                    child: FlutterRating (rating: document2['qualidade do ensino'], size: 40, color: Colors.orange),
                   ),
                   Container(
                     height: 50,
