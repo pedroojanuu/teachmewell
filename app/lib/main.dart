@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +8,7 @@ import 'package:teachmewell/teacher.dart';
 import 'firebase_options.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_rating_native/flutter_rating_native.dart';
+import 'package:animations/animations.dart';
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -149,94 +152,148 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
+  void createPopUp(int num) {
+    String message = '';
+
+    switch (num) {
+      case 1:
+        message = 'Todos os campos devem ser preenchidos';
+        break;
+      case 2:
+        message = 'Insira um email @up.pt valido';
+        break;
+      case 3:
+        message = 'O numero UP é diferente do usado no email';
+        break;
+      case 4:
+        message = 'A password deve ter entre 6 e 20 caracteres';
+        break;
+      case 5:
+        message = 'As passwords nao coincidem';
+        break;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'OK'),
+            child: const Text('OK'),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   // Register page
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('Register'),
       ),
-      body: Column( 
-        children: [
-          TextField(
-            controller: _up,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'UP',
+      body: SingleChildScrollView(
+          child : Column(
+          children: [
+            const Padding(padding: EdgeInsets.only(top: 15.0)),
+            SizedBox(
+              child: TextField(
+                controller: _up,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'UP',
+                ),
+              ),
             ),
-          ),
-          TextField(
-            controller: _email,
-            enableSuggestions: false,
-            autocorrect: false,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Email (UP) -> up---------@up.pt', 
-            )
-          ),
-          TextField(
-            controller: _password,
-            obscureText: true,
-            enableSuggestions: false,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Password -> 6 to 20 characters',
-            )
-          ),
-          TextField(
-            controller: _confirmPassword,
-            obscureText: true,
-            enableSuggestions: false,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Confirm Password',
-            )
-          ),
-          TextButton(
-            onPressed: () async {
-              if(_up.text == '' || _email.text == '' || _password.text == '' || _confirmPassword.text == ''){
-                //print('primeiro if');
-                return;
-              }
-              else if(_email.text.substring(11) != '@up.pt'){
-                //print('segundo if');
-                return;
-              }
-              else if(_up.text != _email.text.substring(2, 11)){
-                //print('terceiro if');
-                return;
-              }
-              else if(_password.text.length < 6 || _password.text.length > 20){
-                //print('quarto if');
-                return;
-              }
-              else if(_password.text != _confirmPassword.text){
-                //print('quinto if');
-                return;
-              }
-              else{
-                final String up = _up.text;
-                final String email = _email.text;
-                final String password = _password.text;
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) {
-                  FirebaseFirestore.instance.collection('users').doc(value.user!.uid).set({
-                    'up': up,
-                    'email': email,
-                    'password': password,
+            const Padding(padding: EdgeInsets.only(top: 25.0)),
+            SizedBox(
+              child: TextField(
+                  controller: _email,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Email (UP) -> up---------@up.pt',
+                  )
+              ),
+            ),
+            const Padding(padding: EdgeInsets.only(top: 25.0)),
+            SizedBox(
+              child: TextField(
+                  controller: _password,
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password -> 6 to 20 characters',
+                  )
+              ),
+            ),
+            const Padding(padding: EdgeInsets.only(top: 25.0)),
+            SizedBox(
+              child: TextField(
+                  controller: _confirmPassword,
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Confirm Password',
+                  )
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                if(_up.text == '' || _email.text == '' || _password.text == '' || _confirmPassword.text == ''){
+                  createPopUp(1);
+                  return;
+                }
+                else if(_email.text.substring(11) != '@up.pt'){
+                  createPopUp(2);
+                  return;
+                }
+                else if(_up.text != _email.text.substring(2, 11)){
+                  createPopUp(3);
+                  return;
+                }
+                else if(_password.text.length < 6 || _password.text.length > 20){
+                  createPopUp(4);
+                  return;
+                }
+                else if(_password.text != _confirmPassword.text){
+                  createPopUp(5);
+                  return;
+                }
+                else{
+                  final String up = _up.text;
+                  final String email = _email.text;
+                  final String password = _password.text;
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) {
+                    FirebaseFirestore.instance.collection('users').doc(value.user!.uid).set({
+                      'up': up,
+                      'email': email,
+                      'password': password,
+                    });
                   });
-                });
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const LoginPage()
-                ));
-              }
-            },
-            child: const Text('Register'),
-          ),
-        ]
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const LoginPage()
+                  ));
+                }
+              },
+              child: const Text('Register'),
+              style: TextButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  elevation: 4,
+                  backgroundColor: Colors.blue),
+            ),
+          ]
+        )
       )
     );
   }
@@ -420,42 +477,51 @@ class ProfessorsFeup extends StatelessWidget {
   Widget _buildListItem(BuildContext context, DocumentSnapshot document) {
 
     return ListTile(
-      title: Row(
-        children: [
-          Container(
-            alignment: Alignment.topLeft,
-            padding: const EdgeInsets.only(right: 8.0, top: 8.0),
-            child: CircleAvatar(
-              backgroundColor: Colors.orange,
-              radius: 33,
+      title: OpenContainer(
+        closedColor: Colors.transparent,
+        closedElevation: 0,
+        openColor: Colors.transparent,
+        openElevation: 0,
+        transitionDuration: const Duration(seconds: 1),
+        transitionType: ContainerTransitionType.fadeThrough,
+        openBuilder: (context, _) => ProfileDetails(document),
+        closedBuilder: (context, VoidCallback openContainer) => Row(
+          children: [
+            Container(
+              alignment: Alignment.topLeft,
+              padding: const EdgeInsets.only(right: 8.0, top: 8.0),
               child: CircleAvatar(
-                foregroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
-                backgroundImage: const NetworkImage('https://www.der-windows-papst.de/wp-content/uploads/2019/03/Windows-Change-Default-Avatar-448x400.png'),
-                radius: 30,
-                onBackgroundImageError: (e, s) {
-                  debugPrint('image issue, $e,$s');
-                },
+                backgroundColor: Colors.orange,
+                radius: 33,
+                child: CircleAvatar(
+                  foregroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
+                  backgroundImage: const NetworkImage('https://www.der-windows-papst.de/wp-content/uploads/2019/03/Windows-Change-Default-Avatar-448x400.png'),
+                  radius: 30,
+                  onBackgroundImageError: (e, s) {
+                    debugPrint('image issue, $e,$s');
+                  },
+                ),
               ),
             ),
-          ),
-          Expanded(
+            Expanded(
               child: Text(
                 document['nome'],
                 style: const TextStyle(fontSize: 22.0, color: Colors.black),
               ),
-          ),
-          Container(
-            decoration: const BoxDecoration(
-              color: Color(0xffddddff),
-              shape: BoxShape.circle,
             ),
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              '0',
-              style: Theme.of(context).textTheme.headlineMedium,
+            Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xffddddff),
+                  shape: BoxShape.circle,
+                ),
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  '0',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                )
             )
-          )
-        ],
+          ],
+        ),
       ),
       onTap: () {
         Navigator.push(
