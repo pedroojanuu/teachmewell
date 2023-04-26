@@ -74,6 +74,8 @@ class _LoginPageState extends State<LoginPage> {
               keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.orange),
+                fillColor: Colors.white,
                 labelText: 'Email',
               )
             ),
@@ -85,6 +87,8 @@ class _LoginPageState extends State<LoginPage> {
               autocorrect: false,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.orange),
+                fillColor: Colors.white,
                 labelText: 'Password',
               )
             ),
@@ -219,9 +223,12 @@ class _RegisterPageState extends State<RegisterPage> {
   // Register page
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: true,
+      backgroundColor: const Color(0xFF2574A8), //#2574A8
       appBar: AppBar(
         title: const Text('Register'),
+        backgroundColor: const Color(0xFF2574A8), //#2574A8
+        shadowColor: const Color.fromARGB(48, 0, 0, 0),
       ),
       body: SingleChildScrollView(
           child : Column(
@@ -233,6 +240,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Colors.orange),
+                  fillColor: Colors.white,
                   labelText: 'UP',
                 ),
               ),
@@ -246,6 +255,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
+                    labelStyle: TextStyle(color: Colors.orange),
+                    fillColor: Colors.white,
                     labelText: 'Email (UP) -> up---------@up.pt',
                   )
               ),
@@ -259,6 +270,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   autocorrect: false,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
+                    labelStyle: TextStyle(color: Colors.orange),
+                    fillColor: Colors.white,
                     labelText: 'Password -> 6 to 20 characters',
                   )
               ),
@@ -272,6 +285,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   autocorrect: false,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
+                    labelStyle: TextStyle(color: Colors.orange),
+                    fillColor: Colors.white,
                     labelText: 'Confirm Password',
                   )
               ),
