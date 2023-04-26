@@ -62,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: const Color.fromARGB(255, 32, 82, 156),
+      backgroundColor: const Color(0xFF2574A8), //#2574A8
       body: SingleChildScrollView(
         child: Column(
           children: [
