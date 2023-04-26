@@ -1,4 +1,5 @@
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
 Future<void> fakeMain2() async{
@@ -56,9 +57,12 @@ Future<List<int>> getTeacherUCsIDs(String faculty, int teacher, int year) async 
 Future<Set<int>> getUCsTeachersIDs(String faculty, int uc_id) async {
   Set<int> teachers = {};
 
+  faculty = faculty.toLowerCase();
     final response = await http.Client().get(Uri.parse(
         'https://sigarra.up.pt/$faculty/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=$uc_id'));
     String body = response.body;
+    print(uc_id);
+    print(body);
 
     BeautifulSoup soup = BeautifulSoup(body);
 
@@ -82,6 +86,19 @@ Future<Set<int>> getUCsTeachersIDs(String faculty, int uc_id) async {
     }
 
   return teachers;
+}
+
+Stream<dynamic> getUCsTeachersStream(String faculty, int uc_id) async* {
+  Set<int> s = await getUCsTeachersIDs(faculty, uc_id);
+  for(int i in s){
+    var i_query = FirebaseFirestore.instance.collection('uc').where('id', isEqualTo: i).where('faculdade', isEqualTo: faculty.toUpperCase()).snapshots();
+    yield i_query;
+  }
+}
+
+Future<int> getUCsTeachersLength(String faculty, int uc_id) async {
+  Set<int> s = await getUCsTeachersIDs(faculty, uc_id);
+  return s.length;
 }
 
 Future<List<int>> getCourseUCsIDs(String faculty, int curso, int ano_letivo) async {
@@ -163,23 +180,23 @@ Future<List<int>> getCourseUCsIDs(String faculty, int curso, int ano_letivo) asy
   return ids;
 }
 
-Stream<UC> getCourseUCsIDsStream(String faculty, int curso, int ano_letivo) async* {
+Stream<UC_details> getCourseUCsIDsStream(String faculty, int curso, int ano_letivo) async* {
   for (var i in await getCourseUCsIDs(faculty, curso, ano_letivo)) {
     yield await getUCInfo(faculty, i);
   }
 }
 
-class UC {
+class UC_details {
   String nome;
   String codigo;
   String acronimo;
   String faculdade;
   int id;
 
-  UC(this.nome, this.codigo, this.acronimo, this.faculdade, this.id);
+  UC_details(this.nome, this.codigo, this.acronimo, this.faculdade, this.id);
 }
 
-Future<UC> getUCInfo(String faculty, int id) async {
+Future<UC_details> getUCInfo(String faculty, int id) async {
   faculty = faculty.toLowerCase();
   // print("faculdade: $faculty, id: $id");
   final response = await http.Client().get(Uri.parse(
@@ -201,7 +218,7 @@ Future<UC> getUCInfo(String faculty, int id) async {
     String acronimo = td[4].toString();
     acronimo = acronimo.substring(4, (acronimo.length) - 5);
 
-    return UC(nome, codigo, acronimo, faculty, id);
+    return UC_details(nome, codigo, acronimo, faculty, id);
   } catch (e) {
     try {
       var meta = soup.findAll('meta');
@@ -223,13 +240,13 @@ Future<UC> getUCInfo(String faculty, int id) async {
         }
       }
       if (!found) {
-        return UC("", "", "", "", 0);
+        return UC_details("", "", "", "", 0);
       }
     } catch (e) {
-      return UC("", "", "", "", 0);
+      return UC_details("", "", "", "", 0);
     }
   }
-  return UC("", "", "", "", 0);
+  return UC_details("", "", "", "", 0);
 }
 
 Future<List<int>> getFacultyBachelorsIDs(String faculty) async {

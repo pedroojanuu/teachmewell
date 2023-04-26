@@ -30,7 +30,7 @@ Future<void> populateUCs() async {
       //   continue;
       // }
       // faculties.add(course['faculdade']);
-      Stream<UC> stream = await getCourseUCsIDsStream(course['faculdade'], course['id'], 2022);
+      Stream<UC_details> stream = await getCourseUCsIDsStream(course['faculdade'], course['id'], 2022);
       await for (final uc in stream) {
         if (uc.nome != "") {
           if(uc.codigo.contains("/"))

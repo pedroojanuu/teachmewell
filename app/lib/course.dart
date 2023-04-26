@@ -2,17 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:teachmewell/sigarra/scraper.dart';
+import 'package:teachmewell/uc.dart';
 
-main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  print("Starting...");
-  Stream<UC> stream = await getCourseUCsIDsStream("feup", 22803, 2022);
-  await for (final value in stream) {
-    print(value.nome);
-  }
-  print("Done!");
-}
-
+//A palavra course tem o significado de curso no Reino Unido, Australia, Singapura e India. Ja nos EUA e no Canada tem o significado de unidade curricular.
 class Course extends StatelessWidget {
   final DocumentSnapshot course;
 
@@ -45,12 +37,12 @@ class Course extends StatelessWidget {
               style: const TextStyle(fontSize: 22.0, color: Colors.black),
             ),
           ),
-      // onTap: () => Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => Course(document),
-      //   ),
-      // ),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => UC(document),
+        ),
+      ),
     );
   }
 }
