@@ -92,25 +92,36 @@ Future<List<int>> getCourseUCsIDs(String faculty, int curso, int ano_letivo) asy
 
   BeautifulSoup soup_before = BeautifulSoup(body_before);
   var table_before = soup_before.find('*', id: 'conteudoinner');
-  var a_before = table_before!.findAll('a');
+  var li_before = table_before!.findAll('li');
   int id_before = 0;
 
-  for(var a in a_before){
-    String s = a.toString();
-    if(s.contains("Plano ")){
-      int i = 55;
-      String char = s.substring(55, 56);
-      while(true){
-        try {
-          int.parse(char);
-        } catch (e) {
-          break;
+  for(var li in li_before) {
+    var a_before = li!.findAll('a');
+    for (var a in a_before) {
+      String s = a.toString();
+      if (s.contains("Plano ")) {
+        print(s);
+        int i = 55;
+        String char = s.substring(55, 56);
+        while (true) {
+          try {
+            int.parse(char);
+          } catch (e) {
+            break;
+          }
+          i++;
+          char = s.substring(i, i + 1);
         }
-        i++;
-        char = s.substring(i, i+1);
+        try {
+          id_before = int.parse(s.substring(55, i));
+        } catch (e) {
+          print("Helloo!!!!");
+          print(curso);
+          print(s.substring(55, i));
+          throw e;
+        }
+        break;
       }
-      id_before = int.parse(s.substring(55, i));
-      break;
     }
   }
 
@@ -143,6 +154,7 @@ Future<List<int>> getCourseUCsIDs(String faculty, int curso, int ano_letivo) asy
       i++;
       char = s.substring(i, i+1);
     }
+
     int id = int.parse(s.substring(52, i));
     if (!isInList(ids, id)) {
       ids.add(id);
@@ -162,8 +174,9 @@ class UC {
   String codigo;
   String acronimo;
   String faculdade;
+  int id;
 
-  UC(this.nome, this.codigo, this.acronimo, this.faculdade);
+  UC(this.nome, this.codigo, this.acronimo, this.faculdade, this.id);
 }
 
 Future<UC> getUCInfo(String faculty, int id) async {
@@ -188,12 +201,14 @@ Future<UC> getUCInfo(String faculty, int id) async {
     String acronimo = td[4].toString();
     acronimo = acronimo.substring(4, (acronimo.length) - 5);
 
-    return UC(nome, codigo, acronimo, faculty);
+    return UC(nome, codigo, acronimo, faculty, id);
   } catch (e) {
     try {
       var meta = soup.findAll('meta');
+      bool found = false;
 
       for (var m in meta) {
+        found = true;
         if (m.toString().contains("url=")) {
           String s = m.toString();
           // print(s);
@@ -207,11 +222,14 @@ Future<UC> getUCInfo(String faculty, int id) async {
           return await getUCInfo(s.substring(63, i), id);
         }
       }
+      if (!found) {
+        return UC("", "", "", "", 0);
+      }
     } catch (e) {
-      return UC("", "", "", "");
+      return UC("", "", "", "", 0);
     }
   }
-  return UC("", "", "", "");
+  return UC("", "", "", "", 0);
 }
 
 Future<List<int>> getFacultyBachelorsIDs(String faculty) async {
