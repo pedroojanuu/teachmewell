@@ -685,7 +685,7 @@ class ProfileDetails extends StatelessWidget {
                               child: Text('Bom Relacionamento com os Estudantes'),
                             ),
                             RatingBar.builder(
-                              minRating: 1,
+                              minRating: 0.5,
                               maxRating: 5,
                               allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
@@ -697,7 +697,7 @@ class ProfileDetails extends StatelessWidget {
                               child: Text('Capacidade de Estimular o Interesse'),
                             ),
                             RatingBar.builder(
-                              minRating: 1,
+                              minRating: 0.5,
                               maxRating: 5,
                               allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
@@ -709,7 +709,7 @@ class ProfileDetails extends StatelessWidget {
                               child: Text('Cumprimento das Regras de Avaliação'),
                             ),
                             RatingBar.builder(
-                              minRating: 1,
+                              minRating: 0.5,
                               maxRating: 5,
                               allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
@@ -721,7 +721,7 @@ class ProfileDetails extends StatelessWidget {
                               child: Text('Disponibilidade'),
                             ),
                             RatingBar.builder(
-                              minRating: 1,
+                              minRating: 0.5,
                               maxRating: 5,
                               allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
@@ -733,7 +733,7 @@ class ProfileDetails extends StatelessWidget {
                               child: Text('Empenho'),
                             ),
                             RatingBar.builder(
-                              minRating: 1,
+                              minRating: 0.5,
                               maxRating: 5,
                               allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
@@ -745,7 +745,7 @@ class ProfileDetails extends StatelessWidget {
                               child: Text('Exigência'),
                             ),
                             RatingBar.builder(
-                              minRating: 1,
+                              minRating: 0.5,
                               maxRating: 5,
                               allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
@@ -757,7 +757,7 @@ class ProfileDetails extends StatelessWidget {
                               child: Text('Organização dos Conteúdos'),
                             ),
                             RatingBar.builder(
-                              minRating: 1,
+                              minRating: 0.5,
                               maxRating: 5,
                               allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
@@ -769,7 +769,7 @@ class ProfileDetails extends StatelessWidget {
                               child: Text('Promoção da Reflexão'),
                             ),
                             RatingBar.builder(
-                              minRating: 1,
+                              minRating: 0.5,
                               maxRating: 5,
                               allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
@@ -781,7 +781,7 @@ class ProfileDetails extends StatelessWidget {
                               child: Text('Qualidade do Ensino'),
                             ),
                             RatingBar.builder(
-                              minRating: 1,
+                              minRating: 0.5,
                               maxRating: 5,
                               allowHalfRating: true,
                               itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
