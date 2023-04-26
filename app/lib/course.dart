@@ -25,7 +25,7 @@ class Course extends StatelessWidget {
         title: Text(course['sigla']),
       ),
         body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('uc').where('courseId', isEqualTo: course['id']).snapshots(),
+          stream: FirebaseFirestore.instance.collection('uc').where('courseId', isEqualTo: course['id']).orderBy('codigo', descending: false).snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('A carregar...');
             return ListView.builder(
@@ -37,20 +37,14 @@ class Course extends StatelessWidget {
     );
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot document) {
+  Widget _buildListItem(BuildContext context, DocumentSnapshot uc) {
     return ListTile(
       title: Expanded(
-            child: Text(
-              document['nome'],
-              style: const TextStyle(fontSize: 22.0, color: Colors.black),
-            ),
-          ),
-      // onTap: () => Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => Course(document),
-      //   ),
-      // ),
+        child: Text(
+          uc['nome'],
+          style: const TextStyle(fontSize: 22.0, color: Colors.black),
+        ),
+      ),
     );
   }
 }
