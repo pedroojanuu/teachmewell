@@ -9,10 +9,11 @@ import 'sigarra/scraper.dart';
 class TeacherDetails {
   final String rowid;
   final String name;
+  final String name_simpl;
   final String faculty;
   final int code;
 
-  TeacherDetails(this.rowid, this.name, this.faculty, this.code);
+  TeacherDetails(this.rowid, this.name, this.name_simpl, this.faculty, this.code);
 }
 
 class AllTeachersPage extends StatefulWidget {
@@ -29,9 +30,10 @@ Future<List<TeacherDetails>> getTeachersDetails() async {
   for (var element in querySnapshot.docs) {
     String rowid = element.id.toString();
     String name = element.data()['nome'].toString();
+    String name_simpl = element.data()['nome-simpl'].toString();
     String faculty = element.data()['faculdade'].toString();
     int code = int.parse(element.data()['codigo'].toString());
-    l.add(TeacherDetails(rowid, name, faculty, code));
+    l.add(TeacherDetails(rowid, name, name_simpl, faculty, code));
   }
 
   return l;
@@ -61,7 +63,7 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
             child: TextField(
               onChanged: (value) {
                 setState(() {
-                  teacherDetailsListOnSearch = search(teacherDetailsList, _textEditingController.text, 2);
+                  teacherDetailsListOnSearch = search(teacherDetailsList, _textEditingController.text, 1);
                 });
               },
               controller: _textEditingController,
@@ -208,14 +210,19 @@ List<TeacherDetails> search(List<TeacherDetails> names, String source, int numbe
 
   var l_source = source.split(" ");
 
+  for(var e in l_source){
+    if(e == '')
+      l_source.remove(e);
+  }
+
   for(var element in names){
-    String s = element.name;
+    String s = element.name_simpl;
     var l_element = s.split(" ");
 
     int i = 0, j = 0;
     while (j < l_source.length && i < l_element.length) {
       int m = minimumEditDistance(l_source[j], l_element[i]);
-      if (m < number_of_errors_per_word) {
+      if (m <= number_of_errors_per_word) {
         j++;
       }
       i++;
