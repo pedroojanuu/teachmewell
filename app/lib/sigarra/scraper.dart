@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
@@ -55,20 +57,24 @@ Future<List<int>> getTeacherUCsIDs(String faculty, int teacher, int year) async 
 }
 
 Future<Set<int>> getUCsTeachersIDs(String faculty, int uc_id) async {
+  print("Started getUCsTeachersIDs");
   Set<int> teachers = {};
 
+  // print("helo1");
   faculty = faculty.toLowerCase();
     final response = await http.Client().get(Uri.parse(
         'https://sigarra.up.pt/$faculty/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=$uc_id'));
     String body = response.body;
-    print(uc_id);
-    print(body);
+    // print(uc_id);
+    // print("helo2" );
+    // print(body);
 
     BeautifulSoup soup = BeautifulSoup(body);
 
     var tables = soup.findAll('table', class_: 'dados');
     var table = null;
     for(var t in tables){
+      // print("Searching for table");
       if(t.toString().contains("Turmas")){
         table = t;
         break;
@@ -79,27 +85,61 @@ Future<Set<int>> getUCsTeachersIDs(String faculty, int uc_id) async {
     var rows = table!.findAll('td', class_:"t");
 
     for (var row in rows) {
+      // print("Searching for row");
       var a = row.find('a');
       var a_string = a.toString();
+      // print(a_string);
       if (a != null && a_string.substring(29, 37) == "p_codigo")
         teachers.add(int.parse(a_string.substring(38, 44)));
     }
 
+  // print("Reached end of getUCsTeachersIDs");
+  print(teachers);
+
   return teachers;
 }
 
-Stream<dynamic> getUCsTeachersStream(String faculty, int uc_id) async* {
+Stream<QuerySnapshot> getUCsTeachersStream(String faculty, int uc_id) async* {
   Set<int> s = await getUCsTeachersIDs(faculty, uc_id);
   for(int i in s){
     var i_query = FirebaseFirestore.instance.collection('uc').where('id', isEqualTo: i).where('faculdade', isEqualTo: faculty.toUpperCase()).snapshots();
-    yield i_query;
+    await for(QuerySnapshot i_res in i_query)
+      yield i_res;
   }
 }
 
-Future<int> getUCsTeachersLength(String faculty, int uc_id) async {
-  Set<int> s = await getUCsTeachersIDs(faculty, uc_id);
-  return s.length;
+dynamic UCsCount = null;
+bool awaitRet = false;
+
+// Future<void> getUCsTeachersLengthAwait(String faculty, int uc_id) async {
+//   print("Started getUCsTeachersLengthAwait");
+//   Set<int> s = await getUCsTeachersIDs(faculty, uc_id);
+//   UCsCount = s.length;
+//   awaitRet = true;
+// }
+
+int getUCsTeachersLength(String faculty, int uc_id) {
+  getUCsTeachersIDs(faculty, uc_id).then(
+          (Set<int> s) {
+            print("Ended getUCsTeachersLength");
+            UCsCount = s.length; awaitRet = true;
+          });
+  while(!awaitRet){
+    print("Waiting for awaitRet");
+    sleep(Duration(seconds: 1));
+  }
+  int ret = UCsCount;
+  UCsCount = null;
+  awaitRet = false;
+  print("Returning $ret");
+  return ret;
 }
+
+// Future<int> getUCsTeachersLength(String faculty, int uc_id) async{
+//   Set<int> s = await getUCsTeachersIDs(faculty, uc_id);
+//   // print("Ended getUCsTeachersLength");
+//   return s.length;
+// }
 
 Future<List<int>> getCourseUCsIDs(String faculty, int curso, int ano_letivo) async {
   faculty = faculty.toLowerCase();
@@ -364,5 +404,3 @@ Future<Course> getCourse(String faculty, int id, String degree) async {
 
 List<String> faculties = ['fcup', 'fcnaup', 'fadeup', 'fdup', 'fep', 'feup', 'flup', 'fmup', 'fpceup', 'icbas'];
 
-Future<void> main() async {
-}

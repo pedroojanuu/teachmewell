@@ -22,6 +22,8 @@ class UC extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // int len = getUCsTeachersLength(uc['faculdade'], uc['id']);
+    int len = 7;//getUCsTeachersLength(uc['faculdade'], uc['id']);
     return Scaffold(
         appBar: AppBar(
           title: Text(uc['nome']),
@@ -31,7 +33,7 @@ class UC extends StatelessWidget {
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('A carregar...');
             return ListView.builder(
-              // itemCount: (snapshot.data as QuerySnapshot).docs.length,
+              itemCount: null,
               itemBuilder: (context, index) => _buildListItem(context,(snapshot.data as QuerySnapshot).docs[index]),
             );
           },
