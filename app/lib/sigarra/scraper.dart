@@ -56,9 +56,9 @@ Future<List<int>> getTeacherUCsIDs(String faculty, int teacher, int year) async 
   return ids;
 }
 
-Future<Set<int>> getUCsTeachersIDs(String faculty, int uc_id) async {
+Future<List<int>> getUCTeachersIDs(String faculty, int uc_id) async {
   print("Started getUCsTeachersIDs");
-  Set<int> teachers = {};
+  List<int> teachers = [];
 
   // print("helo1");
   faculty = faculty.toLowerCase();
@@ -81,7 +81,7 @@ Future<Set<int>> getUCsTeachersIDs(String faculty, int uc_id) async {
       }
     }
     if(table == null)
-      return {};
+      return [];
     var rows = table!.findAll('td', class_:"t");
 
     for (var row in rows) {
@@ -99,9 +99,44 @@ Future<Set<int>> getUCsTeachersIDs(String faculty, int uc_id) async {
   return teachers;
 }
 
+bool isInDocumentSnapshotList(List<DocumentSnapshot> l, DocumentSnapshot document) {
+  for (DocumentSnapshot d in l) {
+    if (d == document) return true;
+  }
+
+  return false;
+}
+
+void sortDocumentSnapshotList(List<DocumentSnapshot> l) {
+  l.sort((a, b) => a['nome'].compareTo(b['nome']));
+}
+
+Future<List<DocumentSnapshot>> getUCTeachers(String faculty, int uc_id) async {
+  List<DocumentSnapshot> ret = [];
+
+  List<int> ids = await getUCTeachersIDs(faculty, uc_id);
+
+  for (int id in ids) {
+    QuerySnapshot query = await FirebaseFirestore.instance.collection('professor')
+        .where('codigo', isEqualTo: id)
+        .where('faculdade', isEqualTo: faculty).get();
+    print(id.toString() + ' ' + uc_id.toString());
+
+    if (query.docs.length > 0) {
+      DocumentSnapshot document = query.docs.first;
+      if (!isInDocumentSnapshotList(ret, document)) ret.add(document);
+    }
+  }
+
+  sortDocumentSnapshotList(ret);
+
+  return ret;
+}
+
 Stream<QuerySnapshot> getUCsTeachersStream(String faculty, int uc_id) async* {
-  Set<int> s = await getUCsTeachersIDs(faculty, uc_id);
-  for(int i in s){
+  List<int> ids = await getUCTeachersIDs(faculty, uc_id);
+
+  for(int i in ids){
     var i_query = FirebaseFirestore.instance.collection('professor').where('id', isEqualTo: i).where('faculdade', isEqualTo: faculty.toUpperCase()).snapshots();
     await for(QuerySnapshot i_res in i_query) {
       print(i_res.docs[0]['nome']);
@@ -119,10 +154,10 @@ bool awaitRet = false;
 //   UCsCount = s.length;
 //   awaitRet = true;
 // }
-
+/*
 int getUCsTeachersLength(String faculty, int uc_id) {
   getUCsTeachersIDs(faculty, uc_id).then(
-          (Set<int> s) {
+          (List<int> s) {
             print("Ended getUCsTeachersLength");
             UCsCount = s.length; awaitRet = true;
           });
@@ -135,7 +170,7 @@ int getUCsTeachersLength(String faculty, int uc_id) {
   awaitRet = false;
   print("Returning $ret");
   return ret;
-}
+}*/
 
 // Future<int> getUCsTeachersLength(String faculty, int uc_id) async{
 //   Set<int> s = await getUCsTeachersIDs(faculty, uc_id);

@@ -15,27 +15,39 @@ import 'package:teachmewell/main.dart';
 // }
 
 //A palavra course tem o significado de curso no Reino Unido, Australia, Singapura e India. Ja nos EUA e no Canada tem o significado de unidade curricular.
-class UC extends StatelessWidget {
+
+class UC extends StatefulWidget {
   final DocumentSnapshot uc;
 
   UC(this.uc);
 
   @override
+  _UCState createState() {
+    return new _UCState(uc);
+  }
+}
+
+class _UCState extends State<UC> {
+  final DocumentSnapshot uc;
+
+  List<DocumentSnapshot> teacherList = [];
+
+  _UCState(this.uc) {
+    getUCTeachers(uc['faculdade'], uc['id']).then((value) => setState(() {
+      teacherList = value;
+    }));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // int len = getUCsTeachersLength(uc['faculdade'], uc['id']);
-    int len = 7;//getUCsTeachersLength(uc['faculdade'], uc['id']);
     return Scaffold(
         appBar: AppBar(
           title: Text(uc['nome']),
         ),
-        body: StreamBuilder(
-          stream: getUCsTeachersStream(uc['faculdade'], uc['id']),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return const Text('A carregar...');
-            return ListView.builder(
-              itemCount: (snapshot.data as QuerySnapshot).docs.length,
-              itemBuilder: (context, index) => _buildListItem(context,(snapshot.data as QuerySnapshot).docs[index]),
-            );
+        body: ListView.builder(
+          itemCount: teacherList.length,
+          itemBuilder: (_, index) {
+            return _buildListItem(context, teacherList[index]);
           },
         )
     );
