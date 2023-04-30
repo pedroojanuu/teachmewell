@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:teachmewell/course.dart';
+import 'package:teachmewell/teacher.dart';
 
-//A titulo de curioside, o termo course é utilizado com o significa de curso no Reino Unido, Australia, Singapura e India, enquanto que nos EUA e Canadá é utilizado com o significado de unidade curricular.
 class Faculty extends StatelessWidget {
   final DocumentSnapshot faculty;
 
@@ -61,6 +61,99 @@ class Faculty extends StatelessWidget {
           builder: (context) => Course(document),
         ),
       ),
+    );
+  }
+}
+
+class Faculties extends StatefulWidget {
+  const Faculties({Key? key}) : super(key: key);
+
+  @override
+  State<Faculties> createState() => _FacultiesState();
+}
+
+class _FacultiesState extends State<Faculties> {
+
+  //Main page at the moment
+  final String title = "TeachMeWell";
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+          listTileTheme: const ListTileThemeData(
+            textColor: Colors.white,
+          )),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Faculdades'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              tooltip: 'Pesquisar um docente',
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AllTeachersPage()
+                ));
+              },
+            ),
+          ],
+        ),
+        body: const LisTileExample(),
+      ),
+    );
+  }
+}
+
+class LisTileExample extends StatefulWidget {
+  const LisTileExample({super.key});
+
+  @override
+  State<LisTileExample> createState() => _LisTileExampleState();
+}
+
+class _LisTileExampleState extends State<LisTileExample>
+    with TickerProviderStateMixin {
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('faculdade').snapshots(),
+        builder: (context, snapshot) {
+          if(!snapshot.hasData) return const Text('A carregar...');
+          return ListView.builder(
+            itemExtent: 80.0,
+            itemCount: (snapshot.data as QuerySnapshot).docs.length,
+            itemBuilder:  (context, index) =>
+                build_List_Item(context, (snapshot.data as QuerySnapshot).docs[index]),
+          );
+        }
+    );
+  }
+
+  Widget build_List_Item(BuildContext context, DocumentSnapshot document) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Hero(
+          tag: 'Faculdade',
+          child: Material(
+            child: ListTile(
+              title: Text(document["sigla"]),
+              subtitle: Text(document["nome"]),
+              tileColor: Colors.blue,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Faculty(document),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

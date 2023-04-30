@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:teachmewell/sigarra/scraper.dart';
 import 'package:teachmewell/uc.dart';
 
-//A palavra course tem o significado de curso no Reino Unido, Australia, Singapura e India. Ja nos EUA e no Canada tem o significado de unidade curricular.
 class Course extends StatelessWidget {
   final DocumentSnapshot course;
 

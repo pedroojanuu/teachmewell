@@ -1,10 +1,8 @@
+import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_rating_native/flutter_rating_native.dart';
-
-import 'sigarra/scraper.dart';
 
 class TeacherDetails {
   final String rowid;
@@ -171,34 +169,10 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
                     final DocumentSnapshot documentSnapshot = await docRef.get();
 
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ProfileDetails(documentSnapshot)
+                        builder: (context) => TeacherPage(documentSnapshot)
                     ));
                   }
               );
-              /*return Card(
-                child: ListTile(
-                  title: Text(
-                    overflow: TextOverflow.ellipsis,
-                    _textEditingController!.text.isNotEmpty? nameListOnSearch[index].a : nameList[index].a,
-                    style: TextStyle(fontSize: 20,),
-                  ),
-                  subtitle: Text(
-                    _textEditingController!.text.isNotEmpty? nameListOnSearch[index].b : nameList[index].b,
-                    style: TextStyle(fontSize: 13,),
-                  ),
-                  onTap: () async {
-                    final CollectionReference colRef = FirebaseFirestore.instance.collection('professor');
-
-                    final DocumentReference docRef = colRef.doc(_textEditingController!.text.isNotEmpty? nameListOnSearch[index].c : nameList[index].c);
-
-                    final DocumentSnapshot documentSnapshot = await docRef.get();
-
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ProfileDetails(documentSnapshot)
-                    ));
-                  },
-                ),
-              );*/
             },
           )
     );
@@ -265,10 +239,10 @@ int minimumEditDistance(String source, String target) {
   return dp[n][m];
 }
 
-class ProfileDetails extends StatelessWidget {
+class TeacherPage extends StatelessWidget {
   final DocumentSnapshot document;
 
-  ProfileDetails(this.document);
+  TeacherPage(this.document);
 
   @override
   Widget build(BuildContext context) {
@@ -287,7 +261,6 @@ class ProfileDetails extends StatelessWidget {
     double reflexao = 0;
     double ensino = 0;
     double mediaSingle = 0;
-
 
     return Scaffold(
       appBar: AppBar(
@@ -674,6 +647,94 @@ class ProfileDetails extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class FacultyTeachers extends StatelessWidget {
+  final DocumentSnapshot document;
+  final String faculdade;
+
+  FacultyTeachers(this.document, this.faculdade);
+
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("Professores"),
+        ),
+        body: StreamBuilder(
+            stream: FirebaseFirestore.instance.collection('professor').where('faculdade', isEqualTo: faculdade).snapshots(),
+            builder: (context, snapshot) {
+              if(!snapshot.hasData) return const Text('A carregar...');
+              return ListView.builder(
+                itemExtent: 80.0,
+                itemCount: (snapshot.data as QuerySnapshot).docs.length,
+                itemBuilder:  (context, index) =>
+                    _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),
+              );
+            }
+        )
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot document) {
+
+    return ListTile(
+        title: OpenContainer(
+          closedColor: Colors.transparent,
+          closedElevation: 0,
+          openColor: Colors.transparent,
+          openElevation: 0,
+          transitionDuration: const Duration(milliseconds: 400),
+          transitionType: ContainerTransitionType.fadeThrough,
+          openBuilder: (context, _) => TeacherPage(document),
+          closedBuilder: (context, VoidCallback openContainer) => Row(
+            children: [
+              Container(
+                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.only(right: 8.0, top: 8.0),
+                child: CircleAvatar(
+                  backgroundColor: Colors.orange,
+                  radius: 33,
+                  child: CircleAvatar(
+                    foregroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
+                    backgroundImage: const NetworkImage('https://www.der-windows-papst.de/wp-content/uploads/2019/03/Windows-Change-Default-Avatar-448x400.png'),
+                    radius: 30,
+                    onBackgroundImageError: (e, s) {
+                      debugPrint('image issue, $e,$s');
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  document['nome'],
+                  style: const TextStyle(fontSize: 22.0, color: Colors.black),
+                ),
+              ),
+              Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xffddddff),
+                    shape: BoxShape.circle,
+                  ),
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    '0',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  )
+              )
+            ],
+          ),
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TeacherPage(document),
+            ),
+          );
+        }
     );
   }
 }
