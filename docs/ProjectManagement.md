@@ -22,6 +22,8 @@ In this release, we implemented a search feature and the possibility of seeing e
 
 #### Do differently:
 
+ - Divide user stories into smaller ones.
+
 #### Puzzles:
 
  - Using the app, tapping the system's back button leads the user to the login page.
