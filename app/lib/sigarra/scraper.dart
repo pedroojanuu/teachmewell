@@ -102,9 +102,11 @@ Future<Set<int>> getUCsTeachersIDs(String faculty, int uc_id) async {
 Stream<QuerySnapshot> getUCsTeachersStream(String faculty, int uc_id) async* {
   Set<int> s = await getUCsTeachersIDs(faculty, uc_id);
   for(int i in s){
-    var i_query = FirebaseFirestore.instance.collection('uc').where('id', isEqualTo: i).where('faculdade', isEqualTo: faculty.toUpperCase()).snapshots();
-    await for(QuerySnapshot i_res in i_query)
+    var i_query = FirebaseFirestore.instance.collection('professor').where('id', isEqualTo: i).where('faculdade', isEqualTo: faculty.toUpperCase()).snapshots();
+    await for(QuerySnapshot i_res in i_query) {
+      print(i_res.docs[0]['nome']);
       yield i_res;
+    }
   }
 }
 

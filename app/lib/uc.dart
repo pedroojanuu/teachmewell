@@ -33,7 +33,7 @@ class UC extends StatelessWidget {
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('A carregar...');
             return ListView.builder(
-              itemCount: null,
+              itemCount: (snapshot.data as QuerySnapshot).docs.length,
               itemBuilder: (context, index) => _buildListItem(context,(snapshot.data as QuerySnapshot).docs[index]),
             );
           },
