@@ -2,6 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:teachmewell/teacherlist.dart';
+import 'package:teachmewell/faculty.dart';
+import 'firebase_options.dart';
+import 'package:teachmewell/sigarra/scraper.dart';
+import 'dart:io' as io;
 import 'package:teachmewell/teacher.dart';
 import 'firebase_options.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -527,7 +532,8 @@ class _LisTileExampleState extends State<LisTileExample>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Professors(document, document["sigla"]),
+                    builder: (context) => //ProfessorsFeup(document, document["sigla"]),
+                    Faculty(document),
                   ),
                 );
               },
