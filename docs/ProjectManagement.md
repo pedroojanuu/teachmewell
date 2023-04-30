@@ -4,7 +4,7 @@
 ![image](https://user-images.githubusercontent.com/93834123/235357504-ce4f7c76-af26-4f61-8fa3-2464465aa0be.png)
 
 #### After iteration 3:
-
+![image](https://user-images.githubusercontent.com/93834123/235372720-a60effd2-dae3-4e61-aad1-3af129958130.png)
 
 Below, you can find links to every release so far;
 
