@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachmewell/faculty.dart';
+import 'globals.dart' as globals;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -85,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     }
                     if(context.mounted) {
+                      globals.loggedIn = true;
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const Faculties()
                       ));
@@ -102,14 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const ForgotPassword()
-                    ));
-                  },
-                  child: const Text('Esqueci-me da palavra-passe', style: TextStyle(color: Colors.white),),
-                ),
-                TextButton(
-                  onPressed: () async {
+                    globals.loggedIn = false;
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const Faculties()
                     ));

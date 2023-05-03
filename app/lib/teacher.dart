@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_rating_native/flutter_rating_native.dart';
+import 'globals.dart' as globals;
 
 class TeacherDetails {
   final String rowid;
@@ -262,17 +263,271 @@ class TeacherPage extends StatelessWidget {
     double ensino = 0;
     double mediaSingle = 0;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(document['nome']),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
+    if (globals.loggedIn) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(document['nome']),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    alignment: Alignment.topLeft,
+                    padding: const EdgeInsets.all(15.0),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.orange,
+                      radius: 55,
+                      child: CircleAvatar(
+                        foregroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
+                        backgroundImage: const NetworkImage('https://www.der-windows-papst.de/wp-content/uploads/2019/03/Windows-Change-Default-Avatar-448x400.png'),
+                        radius: 50,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(document['nome'], style: Theme.of(context).textTheme.headlineSmall,),
+                  ),
+                ],
+              ),
+              SizedBox(
+                child: Text(document['faculdade'], style: Theme.of(context).textTheme.headlineSmall,),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      scrollable: true,
+                      content: Form(
+                        key: formKey,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              child: Text('Bom Relacionamento com os Estudantes'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 0.5,
+                              maxRating: 5,
+                              allowHalfRating: true,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                relacionamento = rating;
+                              },
+                            ),
+                            const SizedBox(
+                              child: Text('Capacidade de Estimular o Interesse'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 0.5,
+                              maxRating: 5,
+                              allowHalfRating: true,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                interesse = rating;
+                              },
+                            ),
+                            const SizedBox(
+                              child: Text('Cumprimento das Regras de Avaliação'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 0.5,
+                              maxRating: 5,
+                              allowHalfRating: true,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                regras = rating;
+                              },
+                            ),
+                            const SizedBox(
+                              child: Text('Disponibilidade'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 0.5,
+                              maxRating: 5,
+                              allowHalfRating: true,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                disponibilidade = rating;
+                              },
+                            ),
+                            const SizedBox(
+                              child: Text('Empenho'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 0.5,
+                              maxRating: 5,
+                              allowHalfRating: true,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                empenho = rating;
+                              },
+                            ),
+                            const SizedBox(
+                              child: Text('Exigência'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 0.5,
+                              maxRating: 5,
+                              allowHalfRating: true,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                exigencia = rating;
+                              },
+                            ),
+                            const SizedBox(
+                              child: Text('Organização dos Conteúdos'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 0.5,
+                              maxRating: 5,
+                              allowHalfRating: true,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                conteudos = rating;
+                              },
+                            ),
+                            const SizedBox(
+                              child: Text('Promoção da Reflexão'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 0.5,
+                              maxRating: 5,
+                              allowHalfRating: true,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                reflexao = rating;
+                              },
+                            ),
+                            const SizedBox(
+                              child: Text('Qualidade do Ensino'),
+                            ),
+                            RatingBar.builder(
+                              minRating: 0.5,
+                              maxRating: 5,
+                              allowHalfRating: true,
+                              itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
+                              onRatingUpdate: (rating) {
+                                ensino = rating;
+                              },
+                            ),
+                            TextFormField(
+                              controller: titulo,
+                              decoration: const InputDecoration(
+                                labelText: 'Titulo',
+                                hintText: 'Escreva uma breve descrição',
+                              ),
+                              maxLength: 20,
+                            ),
+                            TextFormField(
+                              controller: comentario,
+                              keyboardType: TextInputType.multiline,
+                              decoration: const InputDecoration(
+                                hintText: 'Comentário',
+                                filled: true,
+                              ),
+                              maxLines: 5,
+                              maxLength: 500,
+                              textInputAction: TextInputAction.done,
+                              validator: (String? text) {
+                                if(text == null || text.isEmpty) {
+                                  return 'Please enter a value';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                            onPressed: () async {
+                              String aux = titulo.text.replaceAll(" ", "");
+                              if(aux == "") {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text('Erro de Input'),
+                                    content: const Text('O Título não deve estar vazio'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, 'OK'),
+                                        child: const Text('OK'),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                              else if(relacionamento == 0 || interesse == 0 || regras == 0 || disponibilidade == 0 || exigencia == 0 || conteudos == 0 || reflexao == 0 || ensino == 0){
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text('Erro de Input'),
+                                    content: const Text('Nenhum rating deve ficar por preencher!'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, 'OK'),
+                                        child: const Text('OK'),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                              else {
+                                mediaSingle = (relacionamento + interesse + regras + disponibilidade + empenho + exigencia + conteudos + reflexao + ensino) / 9;
+                                addRating(relacionamento, interesse, regras, disponibilidade, empenho, exigencia, conteudos, reflexao, ensino, titulo.text, comentario.text, mediaSingle);
+                                Navigator.pop(context, 'Submit');
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text('Comentário submetido'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, 'OK'),
+                                        child: const Text('OK'),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
+                            child: const Text('Submeter')
+                        )
+                      ],
+                    ),
+                  );
+                },
+                child: const Text('Avaliar'),
+              ),
+              Container(
+                height: 220,
+                width: 400,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue, width: 2),
+                ),
+                child: listRatings(context),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(document['nome']),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
               children: [
                 Container(
-                  alignment: Alignment.topLeft,
+                alignment: Alignment.topLeft,
                   padding: const EdgeInsets.all(15.0),
                   child: CircleAvatar(
                     backgroundColor: Colors.orange,
@@ -286,234 +541,25 @@ class TeacherPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(document['nome'], style: Theme.of(context).textTheme.headlineSmall,),
-                ),
-              ],
-            ),
-            SizedBox(
-              child: Text(document['faculdade'], style: Theme.of(context).textTheme.headlineSmall,),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    scrollable: true,
-                    content: Form(
-                      key: formKey,
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            child: Text('Bom Relacionamento com os Estudantes'),
-                          ),
-                          RatingBar.builder(
-                            minRating: 0.5,
-                            maxRating: 5,
-                            allowHalfRating: true,
-                            itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
-                            onRatingUpdate: (rating) {
-                              relacionamento = rating;
-                            },
-                          ),
-                          const SizedBox(
-                            child: Text('Capacidade de Estimular o Interesse'),
-                          ),
-                          RatingBar.builder(
-                            minRating: 0.5,
-                            maxRating: 5,
-                            allowHalfRating: true,
-                            itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
-                            onRatingUpdate: (rating) {
-                              interesse = rating;
-                            },
-                          ),
-                          const SizedBox(
-                            child: Text('Cumprimento das Regras de Avaliação'),
-                          ),
-                          RatingBar.builder(
-                            minRating: 0.5,
-                            maxRating: 5,
-                            allowHalfRating: true,
-                            itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
-                            onRatingUpdate: (rating) {
-                              regras = rating;
-                            },
-                          ),
-                          const SizedBox(
-                            child: Text('Disponibilidade'),
-                          ),
-                          RatingBar.builder(
-                            minRating: 0.5,
-                            maxRating: 5,
-                            allowHalfRating: true,
-                            itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
-                            onRatingUpdate: (rating) {
-                              disponibilidade = rating;
-                            },
-                          ),
-                          const SizedBox(
-                            child: Text('Empenho'),
-                          ),
-                          RatingBar.builder(
-                            minRating: 0.5,
-                            maxRating: 5,
-                            allowHalfRating: true,
-                            itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
-                            onRatingUpdate: (rating) {
-                              empenho = rating;
-                            },
-                          ),
-                          const SizedBox(
-                            child: Text('Exigência'),
-                          ),
-                          RatingBar.builder(
-                            minRating: 0.5,
-                            maxRating: 5,
-                            allowHalfRating: true,
-                            itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
-                            onRatingUpdate: (rating) {
-                              exigencia = rating;
-                            },
-                          ),
-                          const SizedBox(
-                            child: Text('Organização dos Conteúdos'),
-                          ),
-                          RatingBar.builder(
-                            minRating: 0.5,
-                            maxRating: 5,
-                            allowHalfRating: true,
-                            itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
-                            onRatingUpdate: (rating) {
-                              conteudos = rating;
-                            },
-                          ),
-                          const SizedBox(
-                            child: Text('Promoção da Reflexão'),
-                          ),
-                          RatingBar.builder(
-                            minRating: 0.5,
-                            maxRating: 5,
-                            allowHalfRating: true,
-                            itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
-                            onRatingUpdate: (rating) {
-                              reflexao = rating;
-                            },
-                          ),
-                          const SizedBox(
-                            child: Text('Qualidade do Ensino'),
-                          ),
-                          RatingBar.builder(
-                            minRating: 0.5,
-                            maxRating: 5,
-                            allowHalfRating: true,
-                            itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange),
-                            onRatingUpdate: (rating) {
-                              ensino = rating;
-                            },
-                          ),
-                          TextFormField(
-                            controller: titulo,
-                            decoration: const InputDecoration(
-                              labelText: 'Titulo',
-                              hintText: 'Escreva uma breve descrição',
-                            ),
-                            maxLength: 20,
-                          ),
-                          TextFormField(
-                            controller: comentario,
-                            keyboardType: TextInputType.multiline,
-                            decoration: const InputDecoration(
-                              hintText: 'Comentário',
-                              filled: true,
-                            ),
-                            maxLines: 5,
-                            maxLength: 500,
-                            textInputAction: TextInputAction.done,
-                            validator: (String? text) {
-                              if(text == null || text.isEmpty) {
-                                return 'Please enter a value';
-                              }
-                              return null;
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                          onPressed: () async {
-                            String aux = titulo.text.replaceAll(" ", "");
-                            if(aux == "") {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: const Text('Erro de Input'),
-                                  content: const Text('O Título não deve estar vazio'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context, 'OK'),
-                                      child: const Text('OK'),
-                                    )
-                                  ],
-                                ),
-                              );
-                            }
-                            else if(relacionamento == 0 || interesse == 0 || regras == 0 || disponibilidade == 0 || exigencia == 0 || conteudos == 0 || reflexao == 0 || ensino == 0){
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: const Text('Erro de Input'),
-                                  content: const Text('Nenhum rating deve ficar por preencher!'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context, 'OK'),
-                                      child: const Text('OK'),
-                                    )
-                                  ],
-                                ),
-                              );
-                            }
-                            else {
-                              mediaSingle = (relacionamento + interesse + regras + disponibilidade + empenho + exigencia + conteudos + reflexao + ensino) / 9;
-                              addRating(relacionamento, interesse, regras, disponibilidade, empenho, exigencia, conteudos, reflexao, ensino, titulo.text, comentario.text, mediaSingle);
-                              Navigator.pop(context, 'Submit');
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: const Text('Comentário submetido'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context, 'OK'),
-                                      child: const Text('OK'),
-                                    )
-                                  ],
-                                ),
-                              );
-                            }
-                          },
-                          child: const Text('Submit')
-                      )
-                    ],
                   ),
-                );
-              },
-              child: const Text('Avaliar'),
-            ),
-            Container(
-              height: 220,
-              width: 400,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue, width: 2),
+                ],
               ),
-              child: listRatings(context),
-            ),
-          ],
-        ),
-      ),
-    );
+              SizedBox(
+                child: Text(document['faculdade'], style: Theme.of(context).textTheme.headlineSmall,),
+              ),
+              Container(
+                height: 220,
+                width: 400,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue, width: 2),
+                ),
+                child: listRatings(context),
+              ),
+            ]
+          )
+        )
+      );
+    }
   }
 
   Future<dynamic> addRating(double relacionamento, double interesse, double regras, double disponibilidade, double empenho, double exigencia, double conteudos, double reflexao, double ensino, String titulo, String comentario, double mediaSingle) async {
@@ -542,7 +588,21 @@ class TeacherPage extends StatelessWidget {
     return StreamBuilder(
         stream: FirebaseFirestore.instance.collection('avaliacao').where('teacherID', isEqualTo : document['codigo'].toString()).snapshots(),
         builder: (context, snapshot) {
-          if(!snapshot.hasData) return const Text('Loading...');
+          if(!snapshot.hasData) return Center(
+            child:
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  'A carregar...',
+                  style : TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          );
           return ListView.builder(
             itemExtent: 55.0,
             itemCount: (snapshot.data as QuerySnapshot).docs.length,

@@ -18,7 +18,21 @@ class Faculty extends StatelessWidget {
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('curso').where('faculdade', isEqualTo: faculty['sigla']).snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return const Text('A carregar...');
+          if (!snapshot.hasData) return Center(
+            child:
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  'A carregar...',
+                  style : TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          );
           return ListView.builder(
             itemCount: (snapshot.data as QuerySnapshot).docs.length,
             itemBuilder: (context, index) => _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),
@@ -120,7 +134,21 @@ class _LisTileExampleState extends State<LisTileExample>
     return StreamBuilder(
         stream: FirebaseFirestore.instance.collection('faculdade').snapshots(),
         builder: (context, snapshot) {
-          if(!snapshot.hasData) return const Text('A carregar...');
+          if(!snapshot.hasData) return Center(
+            child:
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  'A carregar...',
+                  style : TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          );
           return ListView.builder(
             itemExtent: 80.0,
             itemCount: (snapshot.data as QuerySnapshot).docs.length,

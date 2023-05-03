@@ -17,7 +17,21 @@ class Course extends StatelessWidget {
         body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection('uc').where('courseId', isEqualTo: course['id']).orderBy('codigo', descending: false).snapshots(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return const Text('A carregar...');
+            if (!snapshot.hasData) return Center(
+              child:
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    'A carregar...',
+                    style : TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            );
             return ListView.builder(
               itemCount: (snapshot.data as QuerySnapshot).docs.length,
               itemBuilder: (context, index) => _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),

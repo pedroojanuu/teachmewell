@@ -32,7 +32,21 @@ class _UCState extends State<UC> {
         appBar: AppBar(
           title: Text(uc['nome']),
         ),
-        body: ListView.builder(
+        body: teacherList.isEmpty? Center(
+          child:
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text(
+                'A carregar...',
+                style : TextStyle(
+                  fontSize: 35,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ) : ListView.builder(
           itemCount: teacherList.length,
           itemBuilder: (_, index) {
             return _buildListItem(context, teacherList[index]);
