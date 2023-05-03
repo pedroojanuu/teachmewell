@@ -29,12 +29,16 @@ class Course extends StatelessWidget {
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot document) {
     return ListTile(
-      title: Expanded(
+      title: Row(
+        children: [
+          Expanded(
             child: Text(
               document['nome'],
               style: const TextStyle(fontSize: 22.0, color: Colors.black),
             ),
-          ),
+          )
+        ]
+      ),
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(

@@ -46,7 +46,7 @@ Future<List<int>> getTeacherUCsIDs(String faculty, int teacher, int year) async 
 }
 
 Future<List<int>> getUCTeachersIDs(String faculty, int uc_id) async {
-  List<int> teachers = [];
+  Set<int> teachers = {};
 
   faculty = faculty.toLowerCase();
   final response = await http.Client().get(Uri.parse(
@@ -74,15 +74,7 @@ Future<List<int>> getUCTeachersIDs(String faculty, int uc_id) async {
       teachers.add(int.parse(a_string.substring(38, 44)));
   }
 
-  return teachers;
-}
-
-bool isInDocumentSnapshotList(List<DocumentSnapshot> l, DocumentSnapshot document) {
-  for (DocumentSnapshot d in l) {
-    if (d == document) return true;
-  }
-
-  return false;
+  return teachers.toList();
 }
 
 Future<List<DocumentSnapshot>> getUCTeachers(String faculty, int uc_id) async {
@@ -97,11 +89,9 @@ Future<List<DocumentSnapshot>> getUCTeachers(String faculty, int uc_id) async {
 
     if (query.docs.length > 0) {
       DocumentSnapshot document = query.docs.first;
-      if (!isInDocumentSnapshotList(ret, document)) ret.add(document);
+      ret.add(document);
     }
   }
-
-  ret.sort((a, b) => a['nome'].compareTo(b['nome']));
 
   return ret;
 }
