@@ -63,15 +63,17 @@ Future<List<int>> getUCTeachersIDs(String faculty, int uc_id) async {
       break;
     }
   }
-  if(table == null)
+  if(table == null) {
     return [];
+  }
   var rows = table!.findAll('td', class_:"t");
 
   for (var row in rows) {
     var a = row.find('a');
     var a_string = a.toString();
-    if (a != null && a_string.substring(29, 37) == "p_codigo")
+    if (a != null && a_string.substring(29, 37) == "p_codigo") {
       teachers.add(int.parse(a_string.substring(38, 44)));
+    }
   }
 
   return teachers;
@@ -95,7 +97,7 @@ Future<List<DocumentSnapshot>> getUCTeachers(String faculty, int uc_id) async {
         .where('codigo', isEqualTo: id)
         .where('faculdade', isEqualTo: faculty).get();
 
-    if (query.docs.length > 0) {
+    if (query.docs.isNotEmpty) {
       DocumentSnapshot document = query.docs.first;
       if (!isInDocumentSnapshotList(ret, document)) ret.add(document);
     }
@@ -117,7 +119,7 @@ Future<List<int>> getCourseUCsIDs(String faculty, int curso, int ano_letivo) asy
   int id_before = 0;
 
   for(var li in li_before) {
-    var a_before = li!.findAll('a');
+    var a_before = li.findAll('a');
     for (var a in a_before) {
       String s = a.toString();
       if (s.contains("Plano ")) {
@@ -135,7 +137,7 @@ Future<List<int>> getCourseUCsIDs(String faculty, int curso, int ano_letivo) asy
         try {
           id_before = int.parse(s.substring(55, i));
         } catch (e) {
-          throw e;
+          rethrow;
         }
         break;
       }
@@ -154,8 +156,9 @@ Future<List<int>> getCourseUCsIDs(String faculty, int curso, int ano_letivo) asy
 
   for (var a in as) {
     String s = a.toString();
-    if(s.length < 51 || s.substring(35, 51) != "pv_ocorrencia_id")
+    if(s.length < 51 || s.substring(35, 51) != "pv_ocorrencia_id") {
       continue;
+    }
     int i = 52;
     String char = s.substring(52, 56);
     while(true){
@@ -328,17 +331,22 @@ Future<Course> getCourse(String faculty, int id, String degree) async {
   BeautifulSoup soup = BeautifulSoup(body);
 
   var content = soup.find('*', id: 'conteudoinner');
-  String nome = content!.findAll('h1')[1]!.text.toString();
+  String nome = content!.findAll('h1')[1].text.toString();
 
   var span = soup.find('span', class_: 'pagina-atual');
   String sigla = span!.text.toString().substring(3);
 
   String grau;
 
-  if (nome == 'Criminologia' || nome == 'Direito') grau = 'Licenciatura';
-  else if (nome.substring(0, 12) == 'Licenciatura') grau = 'Licenciatura';
-  else if (nome.substring(0, 18) == 'Mestrado Integrado') grau = 'Mestrado Integrado';
-  else grau = degree;
+  if (nome == 'Criminologia' || nome == 'Direito') {
+    grau = 'Licenciatura';
+  } else if (nome.substring(0, 12) == 'Licenciatura') {
+    grau = 'Licenciatura';
+  } else if (nome.substring(0, 18) == 'Mestrado Integrado') {
+    grau = 'Mestrado Integrado';
+  } else {
+    grau = degree;
+  }
 
   return Course(grau, nome, sigla, faculty.toUpperCase(), id);
 }
