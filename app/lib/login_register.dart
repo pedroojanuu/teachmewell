@@ -107,6 +107,14 @@ class _LoginPageState extends State<LoginPage> {
                     ));
                   },
                   child: const Text('Esqueci-me da palavra-passe', style: TextStyle(color: Colors.white),),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const Faculties()
+                    ));
+                  },
+                  child: const Text('Entrar como convidado', style: TextStyle(color: Colors.white),),
                 )
               ],
             )
