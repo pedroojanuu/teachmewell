@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachmewell/faculty.dart';
+import 'package:teachmewell/profile.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -86,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                     }
                     if(context.mounted) {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const Faculties()
+                          builder: (context) => Profile(email),
                       ));
                     }
                   },
