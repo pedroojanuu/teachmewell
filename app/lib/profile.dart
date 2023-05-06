@@ -29,9 +29,15 @@ class Profile extends StatelessWidget{
                     builder: (context) => Faculties(),
                   ));
                 },
-                child: const Text("Faculdades"),
+                child: Column(
+                    children: [
+                      Image.asset('media/icon.png', width: 100),
+                      Text("Faculdades")
+                    ],
+                  ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF2574A8),
+                  minimumSize: Size(190, 200),
                 )
               ),
               ElevatedButton(
@@ -40,12 +46,19 @@ class Profile extends StatelessWidget{
                       builder: (context) => AllTeachersPage()
                   ));
                 },
-                child: const Text("Pesquisa de Docentes"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2574A8),
+                child: Column(
+                  children: [
+                    Image.asset('media/icon.png', width: 100),
+                    Text("Pesquisa")
+                  ],
+                ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2574A8),
+                    minimumSize: Size(190, 200),
                 )
               )
             ],
+              mainAxisAlignment: MainAxisAlignment.center
           ),
         ],
       )
