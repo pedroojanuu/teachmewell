@@ -6,6 +6,7 @@ import 'package:teachmewell/course.dart';
 import 'package:teachmewell/teacher.dart';
 import 'package:teachmewell/faculty.dart';
 import 'package:teachmewell/login_register.dart';
+import 'package:teachmewell/my_messages.dart';
 
 class Profile extends StatelessWidget{
   final String uemail;
@@ -77,7 +78,7 @@ class Profile extends StatelessWidget{
                 ElevatedButton(
                     onPressed: (){
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => Faculties(),
+                        builder: (context) => MyMessages(202108677),
                       ));
                     },
                     child: Column(

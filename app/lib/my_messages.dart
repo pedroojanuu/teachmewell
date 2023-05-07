@@ -11,21 +11,30 @@ class MyMessages extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    return StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('avaliacao').where('studentID', isEqualTo : studentID).snapshots(),
-        builder: (context, snapshot) {
-          if(!snapshot.hasData) return const Text('Loading...');
-          return ListView.builder(
-            itemExtent: 55.0,
-            itemCount: (snapshot.data as QuerySnapshot).docs.length,
-            itemBuilder:  (context, index) =>
-                _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),
-          );
-        }
+    return Scaffold(
+        appBar: AppBar(
+        title: Text('Profile'),
+      backgroundColor: const Color(0xFF2574A8),
+      actions: [],
+      ),
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('avaliacao').where('studentID', isEqualTo : studentID).snapshots(),
+          builder: (context, snapshot) {
+            if(!snapshot.hasData) return const Text('Loading...');
+            return ListView.builder(
+              itemExtent: 55.0,
+              itemCount: (snapshot.data as QuerySnapshot).docs.length,
+              itemBuilder:  (context, index) =>
+                  _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),
+            );
+          }
+      )
     );
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot document2) {
+    if(document2['titulo']==null || document2['media_single']==null)
+      return Container();
 
     return ListTile(
       title:
