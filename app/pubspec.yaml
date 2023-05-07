@@ -89,6 +89,9 @@ flutter:
   assets:
     - assets/
     - media/icon.png
+    - media/search_icon.png
+    - media/logout_icon.png
+    - media/message_icon.png
     - media/teachmewell_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
