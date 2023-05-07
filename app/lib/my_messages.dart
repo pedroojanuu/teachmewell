@@ -33,8 +33,12 @@ class MyMessages extends StatelessWidget{
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot document2) {
-    if(document2['titulo']==null || document2['media_single']==null)
-      return Container();
+    try{
+      if(document2['titulo']==null || document2['media_single']==null)
+          return Container();
+    }catch(e){
+      return Text("Error on document " + document2.id);
+    }
 
     return ListTile(
       title:
