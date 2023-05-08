@@ -36,7 +36,8 @@ class Profile extends StatelessWidget{
           ),
           Row(
             children: [
-              ElevatedButton(
+              Container(
+              child: ElevatedButton(
                 onPressed: (){
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => Faculties(),
@@ -50,10 +51,16 @@ class Profile extends StatelessWidget{
                   ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF2574A8),
-                  minimumSize: Size(190, 200),
+                  minimumSize: Size(MediaQuery.of(context).size.width/2.4, MediaQuery.of(context).size.width/2.4),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                 )
               ),
-              ElevatedButton(
+                margin: EdgeInsets.all(10)
+              ),
+              Container(
+              child: ElevatedButton(
                 onPressed: (){
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => AllTeachersPage()
@@ -67,15 +74,21 @@ class Profile extends StatelessWidget{
                 ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2574A8),
-                    minimumSize: Size(190, 200),
+                    minimumSize: Size(MediaQuery.of(context).size.width/2.4, MediaQuery.of(context).size.width/2.4),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    )
                 )
-              )
+              ),
+                margin: EdgeInsets.all(10)
+              ),
             ],
               mainAxisAlignment: MainAxisAlignment.center
           ),
           Row(
               children: [
-                ElevatedButton(
+                Container(
+                  child: ElevatedButton(
                     onPressed: (){
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => MyMessages(202108677), //int.parse(uemail.substring(2, 11)
@@ -89,10 +102,16 @@ class Profile extends StatelessWidget{
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2574A8),
-                      minimumSize: Size(190, 200),
+                      minimumSize: Size(MediaQuery.of(context).size.width/2.4, MediaQuery.of(context).size.width/2.4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      )
                     )
                 ),
-                ElevatedButton(
+                  margin: EdgeInsets.all(10)
+                ),
+                Container(
+                  child: ElevatedButton(
                     onPressed: (){
                       // Isto em principio é para mudar, eu é fiz isto para desenrascar
                       Navigator.popUntil(context, (route) => false);
@@ -111,9 +130,14 @@ class Profile extends StatelessWidget{
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2574A8),
-                      minimumSize: Size(190, 200),
+                      minimumSize: Size(MediaQuery.of(context).size.width/2.4, MediaQuery.of(context).size.width/2.4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      )
                     )
-                )
+                ),
+                  margin: EdgeInsets.all(10)
+                ),
               ],
               mainAxisAlignment: MainAxisAlignment.center
           ),
