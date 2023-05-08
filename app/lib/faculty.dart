@@ -87,17 +87,6 @@ class _FacultiesState extends State<Faculties> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Faculdades'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              tooltip: 'Pesquisar um docente',
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AllTeachersPage()
-                ));
-              },
-            ),
-          ],
         ),
         body: const LisTileExample(),
       ),

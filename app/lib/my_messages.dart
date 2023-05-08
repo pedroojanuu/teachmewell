@@ -3,17 +3,38 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_rating_native/flutter_rating_native.dart';
+import 'dart:collection';
 
-class MyMessages extends StatelessWidget{
+class MyMessages extends StatefulWidget {
   final int studentID;
 
   MyMessages(this.studentID);
 
   @override
+  _MyMessagesState createState() => new _MyMessagesState(studentID);
+}
+class _MyMessagesState extends State<MyMessages> {
+  final int studentID;
+
+  HashMap<int, String> names = HashMap<int, String>();
+
+  _MyMessagesState(this.studentID){
+    FirebaseFirestore.instance.collection('avaliacao').where('studentID', isEqualTo : studentID).get().then((value) => setState(() {
+      for(int i = 0; i < value.docs.length; i++){
+        FirebaseFirestore.instance.collection('professor').where('codigo', isEqualTo : int.parse(value.docs[i]['teacherID'])).get().then((value2) => setState(() {
+          names[i] = "lala($i)lala";
+          //names[int.parse(value.docs[i]['teacherID'])] = value2.docs[0]['nome'];
+        }));
+      }
+      print(names[0]);
+    }));
+  }
+
+  @override
   Widget build(BuildContext context){
     return Scaffold(
         appBar: AppBar(
-        title: Text('Profile'),
+        title: Text('Minhas Mensagens'),
       backgroundColor: const Color(0xFF2574A8),
       actions: [],
       ),
@@ -40,13 +61,15 @@ class MyMessages extends StatelessWidget{
       return Text("Error on document " + document2.id);
     }
 
+    String teachersName = (names[document2['teacherID']] == null ? "Loading..." : names[document2['teacherID']]!);
+
     return ListTile(
       title:
       Row(
         children: [
           Expanded(
             child: Text(
-              document2['titulo'],
+              teachersName,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
