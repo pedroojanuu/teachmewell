@@ -86,8 +86,7 @@ Future<List<DocumentSnapshot>> getUCTeachers(String faculty, int uc_id) async {
 
   for (int id in ids) {
     QuerySnapshot query = await FirebaseFirestore.instance.collection('professor')
-        .where('codigo', isEqualTo: id)
-        .where('faculdade', isEqualTo: faculty).get();
+        .where('codigo', isEqualTo: id).get();
 
     if (query.docs.isNotEmpty) {
       DocumentSnapshot document = query.docs.first;

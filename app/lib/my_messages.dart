@@ -16,18 +16,26 @@ class MyMessages extends StatefulWidget {
 class _MyMessagesState extends State<MyMessages> {
   final int studentID;
 
-  HashMap<int, String> names = HashMap<int, String>();
+  HashMap<int, DocumentSnapshot> teachers = HashMap<int, DocumentSnapshot>();
 
   _MyMessagesState(this.studentID){
-    FirebaseFirestore.instance.collection('avaliacao').where('studentID', isEqualTo : studentID).get().then((value) => setState(() {
-      for(int i = 0; i < value.docs.length; i++){
-        FirebaseFirestore.instance.collection('professor').where('codigo', isEqualTo : int.parse(value.docs[i]['teacherID'])).get().then((value2) => setState(() {
-          names[i] = "lala($i)lala";
-          //names[int.parse(value.docs[i]['teacherID'])] = value2.docs[0]['nome'];
-        }));
-      }
-      print(names[0]);
+    getTeachers().then((value) => setState(() {
+      teachers = value;
     }));
+  }
+
+  Future<HashMap<int, DocumentSnapshot>> getTeachers() async {
+    HashMap<int, DocumentSnapshot> teachers_temp = HashMap<int, DocumentSnapshot>();
+    var avaliacoes = await FirebaseFirestore.instance.collection('avaliacao')
+        .where('studentID', isEqualTo : studentID).get();
+    for(int i = 0; i < avaliacoes.docs.length; i++){
+      var prof = await FirebaseFirestore.instance.collection('professor')
+          .where('codigo', isEqualTo : int.parse(avaliacoes.docs[i]['teacherID']))
+          .get();
+        // names[i] = "lala($i)lala";
+      teachers_temp[int.parse(avaliacoes.docs[i]['teacherID'])] = prof.docs[0];
+    }
+    return teachers_temp;
   }
 
   @override
@@ -43,7 +51,6 @@ class _MyMessagesState extends State<MyMessages> {
           builder: (context, snapshot) {
             if(!snapshot.hasData) return const Text('Loading...');
             return ListView.builder(
-              itemExtent: 55.0,
               itemCount: (snapshot.data as QuerySnapshot).docs.length,
               itemBuilder:  (context, index) =>
                   _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),
@@ -58,33 +65,52 @@ class _MyMessagesState extends State<MyMessages> {
       if(document2['titulo']==null || document2['media_single']==null)
           return Container();
     }catch(e){
-      return Text("Error on document " + document2.id);
+      return Container();
     }
 
-    String teachersName = (names[document2['teacherID']] == null ? "Loading..." : names[document2['teacherID']]!);
+    DocumentSnapshot? teacher = teachers[int.parse(document2['teacherID'])];
+
+    if(teacher == null)
+      return Container();
 
     return ListTile(
-      title:
-      Row(
-        children: [
-          Expanded(
-            child: Text(
-              teachersName,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-          Container(
-              decoration: const BoxDecoration(
-                color: Color(0xffddddff),
+        title: Row(
+          children: [
+            Container(
+              alignment: Alignment.topLeft,
+              padding: const EdgeInsets.only(right: 8.0, top: 8.0),
+              child: CircleAvatar(
+                backgroundColor: Colors.orange,
+                radius: 33,
+                child: CircleAvatar(
+                  foregroundImage: NetworkImage('https://sigarra.up.pt/${teacher['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${teacher['codigo']}'),
+                  backgroundImage: const NetworkImage('https://www.der-windows-papst.de/wp-content/uploads/2019/03/Windows-Change-Default-Avatar-448x400.png'),
+                  radius: 30,
+                  onBackgroundImageError: (e, s) {
+                    debugPrint('image issue, $e,$s');
+                  },
+                ),
               ),
-              padding: const EdgeInsets.all(10.0),
+            ),
+            Expanded(
               child: Text(
-                document2['media_single'].toStringAsFixed(1),
-                style: Theme.of(context).textTheme.bodyMedium,
-              )
-          )
-        ],
-      ),
+                teacher['nome'],
+                style: const TextStyle(fontSize: 22.0, color: Colors.black),
+              ),
+            ),
+            Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xffddddff),
+                  shape: BoxShape.circle,
+                ),
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  document2['media_single'].toStringAsFixed(1),
+                  style: Theme.of(context).textTheme.headlineMedium,
+                )
+            )
+          ],
+        ),
       onTap: () {
         showDialog(
           context: context,
@@ -92,6 +118,7 @@ class _MyMessagesState extends State<MyMessages> {
             scrollable: true,
             content: Column(
               children: [
+                Text(teacher['nome'], style: const TextStyle(fontSize: 25),),
                 const SizedBox(child: Text('Bom Relacionamento com os Estudantes'),),
                 SizedBox(
                   child: FlutterRating (rating: document2['bom relacionamento com os estudantes'], size: 40, color: Colors.orange),
