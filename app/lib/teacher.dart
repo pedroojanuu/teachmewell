@@ -138,7 +138,7 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
                               alignment: Alignment.topLeft,
                               child: Text(
                                 teacher.name,
-                                style: const TextStyle(fontSize: 22.0, color: Colors.black),
+                                style: const TextStyle(fontSize: 22.0),
                               ),
                             ),
                             Container(
@@ -710,7 +710,7 @@ class FacultyTeachers extends StatelessWidget {
               Expanded(
                 child: Text(
                   document['nome'],
-                  style: const TextStyle(fontSize: 22.0, color: Colors.black),
+                  style: const TextStyle(fontSize: 22.0),
                 ),
               ),
               Container(

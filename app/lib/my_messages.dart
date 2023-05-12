@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_rating_native/flutter_rating_native.dart';
 import 'dart:collection';
+import 'package:teachmewell/teacher.dart';
 
 class MyMessages extends StatefulWidget {
   final int studentID;
@@ -80,12 +81,12 @@ class _MyMessagesState extends State<MyMessages> {
               alignment: Alignment.topLeft,
               padding: const EdgeInsets.only(right: 8.0, top: 8.0),
               child: CircleAvatar(
-                backgroundColor: Colors.orange,
-                radius: 33,
+                backgroundColor: Colors.grey,
+                radius: 28,
                 child: CircleAvatar(
                   foregroundImage: NetworkImage('https://sigarra.up.pt/${teacher['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${teacher['codigo']}'),
                   backgroundImage: const NetworkImage('https://www.der-windows-papst.de/wp-content/uploads/2019/03/Windows-Change-Default-Avatar-448x400.png'),
-                  radius: 30,
+                  radius: 25,
                   onBackgroundImageError: (e, s) {
                     debugPrint('image issue, $e,$s');
                   },
@@ -95,20 +96,19 @@ class _MyMessagesState extends State<MyMessages> {
             Expanded(
               child: Text(
                 teacher['nome'],
-                style: const TextStyle(fontSize: 22.0, color: Colors.black),
+                style: const TextStyle(fontSize: 19.0),
               ),
             ),
             Container(
                 decoration: const BoxDecoration(
                   color: Color(0xffddddff),
-                  shape: BoxShape.circle,
                 ),
                 padding: const EdgeInsets.all(10.0),
                 child: Text(
                   document2['media_single'].toStringAsFixed(1),
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style: const TextStyle(fontSize: 19),
                 )
-            )
+            ),
           ],
         ),
       onTap: () {
@@ -118,7 +118,18 @@ class _MyMessagesState extends State<MyMessages> {
             scrollable: true,
             content: Column(
               children: [
-                Text(teacher['nome'], style: const TextStyle(fontSize: 25),),
+                InkWell(
+                  child: Text(teacher['nome'],
+                          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center
+                          ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TeacherPage(teacher)),
+                    );
+                  },
+                ),
                 const SizedBox(child: Text('Bom Relacionamento com os Estudantes'),),
                 SizedBox(
                   child: FlutterRating (rating: document2['bom relacionamento com os estudantes'], size: 40, color: Colors.orange),
