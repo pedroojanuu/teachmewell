@@ -79,17 +79,13 @@ class _FacultiesState extends State<Faculties> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-          listTileTheme: const ListTileThemeData(
-            textColor: Colors.white,
-          )),
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text('Faculdades'),
+          backgroundColor: const Color(0xFF2574A8),
+          actions: [],
         ),
         body: const LisTileExample(),
-      ),
     );
   }
 }
@@ -128,8 +124,8 @@ class _LisTileExampleState extends State<LisTileExample>
           tag: 'Faculdade',
           child: Material(
             child: ListTile(
-              title: Text(document["sigla"]),
-              subtitle: Text(document["nome"]),
+              title: Text(document["sigla"], style: const TextStyle(color: Colors.white)),
+              subtitle: Text(document["nome"], style: const TextStyle(color: Colors.white)),
               tileColor: Colors.blue,
               onTap: () {
                 Navigator.push(

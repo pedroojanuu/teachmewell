@@ -13,7 +13,6 @@ class Course extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(course['sigla']),
-        backgroundColor: const Color(0xFF2574A8),
       ),
         body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection('uc').where('courseId', isEqualTo: course['id']).orderBy('codigo', descending: false).snapshots(),
