@@ -14,6 +14,7 @@ class Faculty extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text(faculty['sigla']),
+          backgroundColor: const Color(0xFF2574A8),
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('curso').where('faculdade', isEqualTo: faculty['sigla']).snapshots(),
@@ -124,9 +125,8 @@ class _LisTileExampleState extends State<LisTileExample>
           tag: 'Faculdade',
           child: Material(
             child: ListTile(
-              title: Text(document["sigla"], style: const TextStyle(color: Colors.white)),
-              subtitle: Text(document["nome"], style: const TextStyle(color: Colors.white)),
-              tileColor: Colors.blue,
+              title: Text(document["sigla"], style: const TextStyle(color: Colors.black)),
+              subtitle: Text(document["nome"], style: const TextStyle(color: Colors.black)),
               onTap: () {
                 Navigator.push(
                   context,
