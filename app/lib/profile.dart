@@ -16,101 +16,103 @@ class Profile extends StatelessWidget{
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
         backgroundColor: const Color(0xFF2574A8),
-        actions: [],
+        actions: const [],
       ),
       body: Column(
         children: [
           Container(
-            child: Text(uemail.substring(0, 11),
-              style: TextStyle(fontSize: 30),),
             height: 100,
-            alignment: Alignment.bottomCenter
+            alignment: Alignment.bottomCenter,
+            child: Text(uemail.substring(0, 11),
+              style: const TextStyle(fontSize: 30),)
           ),
           Container(
-            child: Text(uemail,
-              style: TextStyle(fontSize: 20)),
             height: 100,
             alignment: Alignment.topCenter,
+            child: Text(uemail,
+              style: const TextStyle(fontSize: 20)),
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
+              margin: const EdgeInsets.all(10),
               child: ElevatedButton(
                 onPressed: (){
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Faculties(),
+                    builder: (context) => const Faculties(),
                   ));
                 },
-                child: Column(
-                    children: [
-                      Image.asset('media/icon.png', width: 100),
-                      Text("Faculdades")
-                    ],
-                  ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF2574A8),
                   minimumSize: Size(MediaQuery.of(context).size.width/2.4, MediaQuery.of(context).size.width/2.4),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                )
-              ),
-                margin: EdgeInsets.all(10)
+                ),
+                child: Column(
+                    children: [
+                      Image.asset('media/icon.png', width: 100),
+                      const Text("Faculdades")
+                    ],
+                  )
+              )
               ),
               Container(
+              margin: const EdgeInsets.all(10),
               child: ElevatedButton(
                 onPressed: (){
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => AllTeachersPage()
                   ));
                 },
-                child: Column(
-                  children: [
-                    Image.asset('media/search_icon.png', width: 100),
-                    Text("Pesquisa")
-                  ],
-                ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2574A8),
                     minimumSize: Size(MediaQuery.of(context).size.width/2.4, MediaQuery.of(context).size.width/2.4),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     )
+                ),
+                child: Column(
+                  children: [
+                    Image.asset('media/search_icon.png', width: 100),
+                    const Text("Pesquisa")
+                  ],
                 )
+              )
               ),
-                margin: EdgeInsets.all(10)
-              ),
-            ],
-              mainAxisAlignment: MainAxisAlignment.center
+            ]
           ),
           Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
+                  margin: const EdgeInsets.all(10),
                   child: ElevatedButton(
                     onPressed: (){
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => MyMessages(202108677), //int.parse(uemail.substring(2, 11)
                       ));
                     },
-                    child: Column(
-                      children: [
-                        Image.asset('media/message_icon.png', width: 100),
-                        Text("Minhas Mensagens")
-                      ],
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2574A8),
                       minimumSize: Size(MediaQuery.of(context).size.width/2.4, MediaQuery.of(context).size.width/2.4),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       )
+                    ),
+                    child: Column(
+                      children: [
+                        Image.asset('media/message_icon.png', width: 100),
+                        const Text("Minhas Mensagens")
+                      ],
                     )
-                ),
-                  margin: EdgeInsets.all(10)
+                )
                 ),
                 Container(
+                  margin: const EdgeInsets.all(10),
                   child: ElevatedButton(
                     onPressed: (){
                       // Isto em principio é para mudar, eu é fiz isto para desenrascar
@@ -119,27 +121,25 @@ class Profile extends StatelessWidget{
                           builder: (context) => const LoginPage()
                       ));
                     },
-                    child: Column(
-                      children: [
-                        Container(
-                          child:Image.asset('media/logout_icon.png', width: 10),
-                          width: 100,
-                        ),
-                        Text("Logout")
-                      ],
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2574A8),
                       minimumSize: Size(MediaQuery.of(context).size.width/2.4, MediaQuery.of(context).size.width/2.4),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       )
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 100,
+                          child:Image.asset('media/logout_icon.png', width: 10),
+                        ),
+                        const Text("Logout")
+                      ],
                     )
+                )
                 ),
-                  margin: EdgeInsets.all(10)
-                ),
-              ],
-              mainAxisAlignment: MainAxisAlignment.center
+              ]
           ),
         ],
       )

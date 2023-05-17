@@ -265,6 +265,7 @@ class TeacherPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(document['nome']),
+        backgroundColor: const Color(0xFF2574A8),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -500,13 +501,16 @@ class TeacherPage extends StatelessWidget {
                   ),
                 );
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2574A8),
+              ),
               child: const Text('Avaliar'),
             ),
             Container(
               height: 220,
               width: 400,
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue, width: 2),
+                border: Border.all(color: const Color(0xFF2574A8), width: 2),
               ),
               child: listRatings(context),
             ),
