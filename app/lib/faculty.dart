@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:teachmewell/course.dart';
-import 'package:teachmewell/teacher.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class Faculty extends StatelessWidget {
   final DocumentSnapshot faculty;
@@ -19,7 +18,27 @@ class Faculty extends StatelessWidget {
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('curso').where('faculdade', isEqualTo: faculty['sigla']).snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return const Text('A carregar...');
+          if (!snapshot.hasData) {
+            return Center(
+            child:
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                SizedBox(
+                  height: 75,
+                  width: 75,
+                  child: LoadingIndicator(
+                      indicatorType: Indicator.ballSpinFadeLoader,
+                      colors: [Color(0xFF2574A8)],
+                      strokeWidth: 10,
+                      backgroundColor: Colors.transparent,
+                      pathBackgroundColor: Colors.transparent
+                  ),
+                )
+              ],
+            ),
+          );
+          }
           return ListView.builder(
             itemCount: (snapshot.data as QuerySnapshot).docs.length,
             itemBuilder: (context, index) => _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),
@@ -32,11 +51,17 @@ class Faculty extends StatelessWidget {
   Widget _buildListItem(BuildContext context, DocumentSnapshot document) {
     String grau = document['grau'].toString();
     String grau_abrev;
-    if (grau == 'Licenciatura') grau_abrev = 'L';
-    else if (grau == 'Mestrado Integrado') grau_abrev = 'MI';
-    else if (grau == 'Mestrado') grau_abrev = 'M';
-    else if (grau == 'Doutoramento') grau_abrev = 'D';
-    else grau_abrev = 'O';
+    if (grau == 'Licenciatura') {
+      grau_abrev = 'L';
+    } else if (grau == 'Mestrado Integrado') {
+      grau_abrev = 'MI';
+    } else if (grau == 'Mestrado') {
+      grau_abrev = 'M';
+    } else if (grau == 'Doutoramento') {
+      grau_abrev = 'D';
+    } else {
+      grau_abrev = 'O';
+    }
     return ListTile(
       title: Row(
         children: [
@@ -84,7 +109,7 @@ class _FacultiesState extends State<Faculties> {
         appBar: AppBar(
           title: const Text('Faculdades'),
           backgroundColor: const Color(0xFF2574A8),
-          actions: [],
+          actions: const [],
         ),
         body: const LisTileExample(),
     );
@@ -106,7 +131,27 @@ class _LisTileExampleState extends State<LisTileExample>
     return StreamBuilder(
         stream: FirebaseFirestore.instance.collection('faculdade').snapshots(),
         builder: (context, snapshot) {
-          if(!snapshot.hasData) return const Text('A carregar...');
+          if(!snapshot.hasData) {
+            return Center(
+            child:
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                SizedBox(
+                  height: 75,
+                  width: 75,
+                  child: LoadingIndicator(
+                      indicatorType: Indicator.ballSpinFadeLoader,
+                      colors: [Color(0xFF2574A8)],
+                      strokeWidth: 10,
+                      backgroundColor: Colors.transparent,
+                      pathBackgroundColor: Colors.transparent
+                  ),
+                )
+              ],
+            ),
+          );
+          }
           return ListView.builder(
             itemExtent: 80.0,
             itemCount: (snapshot.data as QuerySnapshot).docs.length,

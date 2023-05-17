@@ -1,12 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachmewell/faculty.dart';
-import 'package:teachmewell/course.dart';
 import 'package:teachmewell/teacher.dart';
-import 'package:teachmewell/faculty.dart';
 import 'package:teachmewell/login_register.dart';
-import 'package:teachmewell/my_messages.dart';
+import 'package:teachmewell/my_comments.dart';
 import 'globals.dart' as globals;
 
 class Profile extends StatelessWidget{
@@ -108,7 +104,7 @@ class Profile extends StatelessWidget{
                           child: Column(
                             children: [
                               Image.asset('media/message_icon.png', width: 100),
-                              const Text("Minhas Mensagens")
+                              const Text("Meus Comentários")
                             ],
                           )
                       )
@@ -133,7 +129,7 @@ class Profile extends StatelessWidget{
                           ),
                           child: Column(
                             children: [
-                              Container(
+                              SizedBox(
                                 width: 100,
                                 child:Image.asset('media/logout_icon.png', width: 10),
                               ),
@@ -159,7 +155,7 @@ class Profile extends StatelessWidget{
             height: 200,
             alignment: Alignment.center,
             child: const Text("Convidad@",
-              style: const TextStyle(fontSize: 30),)
+              style: TextStyle(fontSize: 30),)
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
