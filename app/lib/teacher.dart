@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_rating_native/flutter_rating_native.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'globals.dart' as globals;
 
 class TeacherDetails {
@@ -54,6 +55,7 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF2574A8),
           title: Container(
             decoration: BoxDecoration(
               color: Colors.blue.shade200,
@@ -66,37 +68,46 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
                 });
               },
               controller: _textEditingController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   border: InputBorder.none,
                   errorBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
-                  hintText: 'Pesquisar...'),
+                  hintText: '    Pesquisar...'),
           )
         ),
       ),
       body: teacherDetailsList.isEmpty?
-          Center(
-            child:
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'A carregar...',
-                    style : TextStyle(
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-          )
+        Center(
+          child:
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              /*SimpleCircularProgressBar(
+                      progressColors: [Color(0xFF2574A8), Color(0xFF82BCE3)],
+                      animationDuration: 1,
+                      backColor: Colors.transparent,
+                    ),*/
+              SizedBox(
+                height: 75,
+                width: 75,
+                child: LoadingIndicator(
+                    indicatorType: Indicator.ballSpinFadeLoader,
+                    colors: [Color(0xFF2574A8)],
+                    strokeWidth: 10,
+                    backgroundColor: Colors.transparent,
+                    pathBackgroundColor: Colors.transparent
+                ),
+              )
+            ],
+          ),
+        )
           : teacherDetailsListOnSearch.isEmpty && _textEditingController.text.isNotEmpty?
           Center (
             child:
               Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     Text(
                       'Sem resultados',
                       style: TextStyle(
@@ -266,6 +277,7 @@ class TeacherPage extends StatelessWidget {
     if (globals.loggedIn) {
       return Scaffold(
         appBar: AppBar(
+          backgroundColor: const Color(0xFF2574A8),
           title: Text(document['nome']),
         ),
         body: SingleChildScrollView(
@@ -511,7 +523,7 @@ class TeacherPage extends StatelessWidget {
                 height: 220,
                 width: 400,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue, width: 2),
+                  border: Border.all(color: const Color(0xFF2574A8), width: 2),
                 ),
                 child: listRatings(context),
               ),
@@ -591,21 +603,27 @@ class TeacherPage extends StatelessWidget {
     return StreamBuilder(
         stream: FirebaseFirestore.instance.collection('avaliacao').where('teacherID', isEqualTo : document['codigo'].toString()).snapshots(),
         builder: (context, snapshot) {
-          if(!snapshot.hasData) return Center(
-            child:
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text(
-                  'A carregar...',
-                  style : TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          );
+          if(!snapshot.hasData) {
+            return Center(
+              child:
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  SizedBox(
+                    height: 75,
+                    width: 75,
+                    child: LoadingIndicator(
+                        indicatorType: Indicator.ballSpinFadeLoader,
+                        colors: [Color(0xFF2574A8)],
+                        strokeWidth: 10,
+                        backgroundColor: Colors.transparent,
+                        pathBackgroundColor: Colors.transparent
+                    ),
+                  )
+                ],
+              ),
+            );
+          }
           return ListView.builder(
             itemExtent: 55.0,
             itemCount: (snapshot.data as QuerySnapshot).docs.length,
@@ -729,7 +747,27 @@ class FacultyTeachers extends StatelessWidget {
         body: StreamBuilder(
             stream: FirebaseFirestore.instance.collection('professor').where('faculdade', isEqualTo: faculdade).snapshots(),
             builder: (context, snapshot) {
-              if(!snapshot.hasData) return const Text('A carregar...');
+              if(!snapshot.hasData) {
+                return Center(
+                child:
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    SizedBox(
+                      height: 75,
+                      width: 75,
+                      child: LoadingIndicator(
+                          indicatorType: Indicator.ballSpinFadeLoader,
+                          colors: [Color(0xFF2574A8)],
+                          strokeWidth: 10,
+                          backgroundColor: Colors.transparent,
+                          pathBackgroundColor: Colors.transparent
+                      ),
+                    )
+                  ],
+                ),
+              );
+              }
               return ListView.builder(
                 itemExtent: 80.0,
                 itemCount: (snapshot.data as QuerySnapshot).docs.length,
