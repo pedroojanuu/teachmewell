@@ -7,6 +7,7 @@ import 'package:teachmewell/teacher.dart';
 import 'package:teachmewell/faculty.dart';
 import 'package:teachmewell/login_register.dart';
 import 'package:teachmewell/my_messages.dart';
+import 'globals.dart' as globals;
 
 class Profile extends StatelessWidget{
   final String uemail;
