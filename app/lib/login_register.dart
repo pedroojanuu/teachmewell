@@ -87,6 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     }
                     if(context.mounted) {
+                      globals.loggedIn = true;
                       Navigator.pop(context);
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => Profile(email),
@@ -107,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () async {
                   globals.loggedIn = false;
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Profile('up123456789@up.pt')
+                      builder: (context) => Profile('')
                   ));
                 },
                 child: const Text('Entrar como convidado', style: TextStyle(color: Colors.white),),
