@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/basic.dart';
 import 'package:teachmewell/faculty.dart';
 import 'package:teachmewell/profile.dart';
 import 'globals.dart' as globals;
@@ -71,20 +73,57 @@ class _LoginPageState extends State<LoginPage> {
                     final email = _email.text;
                     final password = _password.text;
 
-                    if(email == '' || password == ''){
+                    if(email == ''){
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                              content: Text("Deve preencher o email!"),
+                              actions: <Widget>[
+                                new TextButton(
+                                    child: Text('Fechar'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    }
+                                )
+                              ]
+                          ));
+                      return;
+                    }
+
+                    else if(password == ''){
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                              content: Text("Deve preencher a password!"),
+                              actions: <Widget>[
+                                new TextButton(
+                                    child: Text('Fechar'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    }
+                                )
+                              ]
+                          ));
                       return;
                     }
 
                     try{
                       await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
                     } on FirebaseAuthException catch (e) {
-                      if (e.code == 'user-not-found') {
-                        //print('No user found for that email.');
-                        return;
-                      } else if (e.code == 'wrong-password') {
-                        //print('Wrong password provided for that user.');
-                        return;
-                      }
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            content: Text("Email ou Password errados!"),
+                            actions: <Widget>[
+                              new TextButton(
+                                child: Text('Fechar'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                }
+                              )
+                            ]
+                          ));
+                      return;
                     }
                     if(context.mounted) {
                       globals.loggedIn = true;

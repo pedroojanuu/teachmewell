@@ -117,6 +117,7 @@ class Profile extends StatelessWidget{
                       margin: const EdgeInsets.all(10),
                       child: ElevatedButton(
                           onPressed: (){
+                            globals.loggedIn = false;
                             // Isto em principio é para mudar, eu é fiz isto para desenrascar
                             Navigator.popUntil(context, (route) => false);
                             Navigator.of(context).push(MaterialPageRoute(
@@ -218,6 +219,7 @@ class Profile extends StatelessWidget{
                   margin: const EdgeInsets.all(10),
                   child: ElevatedButton(
                     onPressed: (){
+                      globals.loggedIn = false;
                       // Isto em principio é para mudar, eu é fiz isto para desenrascar
                       Navigator.popUntil(context, (route) => false);
                       Navigator.of(context).push(MaterialPageRoute(
