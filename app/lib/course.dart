@@ -13,25 +13,12 @@ class Course extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(course['sigla']),
+        backgroundColor: const Color(0xFF2574A8),
       ),
         body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection('uc').where('courseId', isEqualTo: course['id']).orderBy('codigo', descending: false).snapshots(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return Center(
-              child:
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
-                    'A carregar...',
-                    style : TextStyle(
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            );
+            if (!snapshot.hasData) return const Text('A carregar...');
             return ListView.builder(
               itemCount: (snapshot.data as QuerySnapshot).docs.length,
               itemBuilder: (context, index) => _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),

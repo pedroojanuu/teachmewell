@@ -14,25 +14,12 @@ class Faculty extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text(faculty['sigla']),
+          backgroundColor: const Color(0xFF2574A8),
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('curso').where('faculdade', isEqualTo: faculty['sigla']).snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return Center(
-            child:
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text(
-                  'A carregar...',
-                  style : TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          );
+          if (!snapshot.hasData) return const Text('A carregar...');
           return ListView.builder(
             itemCount: (snapshot.data as QuerySnapshot).docs.length,
             itemBuilder: (context, index) => _buildListItem(context, (snapshot.data as QuerySnapshot).docs[index]),
@@ -93,28 +80,13 @@ class _FacultiesState extends State<Faculties> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-          listTileTheme: const ListTileThemeData(
-            textColor: Colors.white,
-          )),
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text('Faculdades'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              tooltip: 'Pesquisar um docente',
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AllTeachersPage()
-                ));
-              },
-            ),
-          ],
+          backgroundColor: const Color(0xFF2574A8),
+          actions: [],
         ),
         body: const LisTileExample(),
-      ),
     );
   }
 }
@@ -134,21 +106,7 @@ class _LisTileExampleState extends State<LisTileExample>
     return StreamBuilder(
         stream: FirebaseFirestore.instance.collection('faculdade').snapshots(),
         builder: (context, snapshot) {
-          if(!snapshot.hasData) return Center(
-            child:
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text(
-                  'A carregar...',
-                  style : TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          );
+          if(!snapshot.hasData) return const Text('A carregar...');
           return ListView.builder(
             itemExtent: 80.0,
             itemCount: (snapshot.data as QuerySnapshot).docs.length,
@@ -167,9 +125,8 @@ class _LisTileExampleState extends State<LisTileExample>
           tag: 'Faculdade',
           child: Material(
             child: ListTile(
-              title: Text(document["sigla"]),
-              subtitle: Text(document["nome"]),
-              tileColor: Colors.blue,
+              title: Text(document["sigla"], style: const TextStyle(color: Colors.black)),
+              subtitle: Text(document["nome"], style: const TextStyle(color: Colors.black)),
               onTap: () {
                 Navigator.push(
                   context,

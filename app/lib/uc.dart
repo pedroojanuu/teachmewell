@@ -31,6 +31,7 @@ class _UCState extends State<UC> {
     return Scaffold(
         appBar: AppBar(
           title: Text(uc['nome']),
+          backgroundColor: const Color(0xFF2574A8),
         ),
         body: teacherList.isEmpty? Center(
           child:
