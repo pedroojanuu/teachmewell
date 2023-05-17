@@ -33,7 +33,21 @@ class _UCState extends State<UC> {
           title: Text(uc['nome']),
           backgroundColor: const Color(0xFF2574A8),
         ),
-        body: ListView.builder(
+        body: teacherList.isEmpty? Center(
+          child:
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text(
+                'A carregar...',
+                style : TextStyle(
+                  fontSize: 35,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ) : ListView.builder(
           itemCount: teacherList.length,
           itemBuilder: (_, index) {
             return _buildListItem(context, teacherList[index]);
