@@ -36,6 +36,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   // Login page
   Widget build(BuildContext context) {
+    if(FirebaseAuth.instance.currentUser != null){
+      globals.loggedIn = true;
+      return Profile(FirebaseAuth.instance.currentUser!.email!);
+    }
+
     return Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: const Color(0xFF2574A8), //#2574A8

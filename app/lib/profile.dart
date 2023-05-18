@@ -114,6 +114,7 @@ class Profile extends StatelessWidget{
                       child: ElevatedButton(
                           onPressed: (){
                             globals.loggedIn = false;
+                            FirebaseAuth.instance.signOut();
                             // Isto em principio é para mudar, eu é fiz isto para desenrascar
                             Navigator.popUntil(context, (route) => false);
                             Navigator.of(context).push(MaterialPageRoute(
