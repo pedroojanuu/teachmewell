@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachmewell/faculty.dart';
 import 'package:teachmewell/teacher.dart';
@@ -91,7 +92,7 @@ class Profile extends StatelessWidget{
                       child: ElevatedButton(
                           onPressed: (){
                             Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => MyMessages(202108677), //int.parse(uemail.substring(2, 11)
+                              builder: (context) => MyMessages(int.parse(uemail.substring(2, 11))),
                             ));
                           },
                           style: ElevatedButton.styleFrom(

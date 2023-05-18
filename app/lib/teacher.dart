@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_rating_native/flutter_rating_native.dart';
@@ -589,7 +590,7 @@ class TeacherPage extends StatelessWidget {
       'organizacao dos conteudos': conteudos,
       'promocao da reflexao': reflexao,
       'qualidade do ensino': ensino,
-      'studentID': 202108677,
+      'studentID': int.parse(FirebaseAuth.instance.currentUser!.email!.substring(2, 11)),
       'teacherID': document['codigo'].toString(),
       'titulo' : titulo,
       'comentario' : comentario,
