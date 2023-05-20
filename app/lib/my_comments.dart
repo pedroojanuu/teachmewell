@@ -138,7 +138,6 @@ class _MyMessagesState extends State<MyMessages> {
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
                   ),
                 );
               },

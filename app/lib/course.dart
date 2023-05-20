@@ -55,7 +55,7 @@ class Course extends StatelessWidget {
           Expanded(
             child: Text(
               document['nome'],
-              style: const TextStyle(fontSize: 22.0, color: Colors.black),
+              style: const TextStyle(fontSize: 22.0),
             ),
           )
         ]

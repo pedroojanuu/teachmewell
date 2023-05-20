@@ -70,13 +70,13 @@ class Faculty extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8.0, top: 8.0),
             child: Text(
               grau_abrev,
-              style: const TextStyle(fontSize: 32.0, color: Colors.black),
+              style: const TextStyle(fontSize: 32.0),
             ),
           ),
           Expanded(
             child: Text(
               document['nome'],
-              style: const TextStyle(fontSize: 22.0, color: Colors.black),
+              style: const TextStyle(fontSize: 22.0),
             ),
           ),
         ],
@@ -170,8 +170,8 @@ class _LisTileExampleState extends State<LisTileExample>
           tag: 'Faculdade',
           child: Material(
             child: ListTile(
-              title: Text(document["sigla"], style: const TextStyle(color: Colors.black)),
-              subtitle: Text(document["nome"], style: const TextStyle(color: Colors.black)),
+              title: Text(document["sigla"]),
+              subtitle: Text(document["nome"]),
               onTap: () {
                 Navigator.push(
                   context,

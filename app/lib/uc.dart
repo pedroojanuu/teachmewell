@@ -86,7 +86,7 @@ class _UCState extends State<UC> {
             Expanded(
               child: Text(
                 document['nome'],
-                style: const TextStyle(fontSize: 22.0, color: Colors.black),
+                style: const TextStyle(fontSize: 22.0),
               ),
             ),
             Container(

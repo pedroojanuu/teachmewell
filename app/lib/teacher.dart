@@ -144,14 +144,14 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
                         ),
                       ),
                       Expanded(
-                        //child: Text(teacher.name, style: const TextStyle(fontSize: 22.0, color: Colors.black),),
+                        //child: Text(teacher.name, style: const TextStyle(fontSize: 22.0)),
                         child: Column(
                           children: [
                             Container(
                               alignment: Alignment.topLeft,
                               child: Text(
                                 teacher.name,
-                                style: const TextStyle(fontSize: 22.0, color: Colors.black),
+                                style: const TextStyle(fontSize: 22.0),
                               ),
                             ),
                             Container(
@@ -812,7 +812,7 @@ class FacultyTeachers extends StatelessWidget {
               Expanded(
                 child: Text(
                   document['nome'],
-                  style: const TextStyle(fontSize: 22.0, color: Colors.black),
+                  style: const TextStyle(fontSize: 22.0),
                 ),
               ),
               Container(
