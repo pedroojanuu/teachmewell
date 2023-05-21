@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_rating_native/flutter_rating_native.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
+import 'dart:math';
 import 'globals.dart' as globals;
 
 class TeacherDetails {
@@ -131,7 +133,7 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.only(right: 8.0, top: 8.0),
                         child: CircleAvatar(
-                          backgroundColor: Colors.orange,
+                          backgroundColor: const Color(0xFF2574A8),
                           radius: 33,
                           child: CircleAvatar(
                             foregroundImage: NetworkImage('https://sigarra.up.pt/${teacher.faculty.toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${teacher.code}'),
@@ -252,13 +254,66 @@ int minimumEditDistance(String source, String target) {
   return dp[n][m];
 }
 
-class TeacherPage extends StatelessWidget {
+
+
+class TeacherPage extends StatefulWidget {
   final DocumentSnapshot document;
 
   TeacherPage(this.document);
 
   @override
+  _TeacherPageState createState() {
+    return new _TeacherPageState(document);
+  }
+}
+
+
+class _TeacherPageState extends State<TeacherPage> {
+  final DocumentSnapshot document;
+
+  List<QueryDocumentSnapshot<Object?>> comments = <QueryDocumentSnapshot<Object?>>[];
+
+  _TeacherPageState(this.document){
+    FirebaseFirestore.instance.collection('avaliacao').where('teacherID', isEqualTo : document['codigo'].toString()).get().then((value) => setState(() {
+      comments = value.docs;
+    }));
+  }
+
+  @override
   Widget build(BuildContext context) {
+
+    double sum_comments = 0, num_comments = 0, media_geral = 0;
+    Map<String, double> parameters = {'bom relacionamento com os estudantes':0, 'capacidade de estimular o interesse':0,
+      'cumprimento das regras de avaliacao':0, 'disponibilidade':0, 'empenho':0, 'exigencia':0, 'organizacao dos conteudos':0,
+      'promocao da reflexao':0, 'qualidade do ensino':0};
+
+
+    for(var comment in comments) {
+      num_comments += 1;
+      sum_comments += comment['media_single'];
+      parameters['bom relacionamento com os estudantes'] = parameters['bom relacionamento com os estudantes']! + comment['bom relacionamento com os estudantes'];
+      parameters['capacidade de estimular o interesse'] = parameters['capacidade de estimular o interesse']! + comment['capacidade de estimular o interesse'];
+      parameters['cumprimento das regras de avaliacao'] = parameters['cumprimento das regras de avaliacao']! + comment['cumprimento das regras de avaliacao'];
+      parameters['disponibilidade']= parameters['disponibilidade']! + comment['disponibilidade'];
+      parameters['empenho'] = parameters['empenho']! + comment['empenho'];
+      parameters['exigencia'] = parameters['exigencia']! + comment['exigencia'];
+      parameters['organizacao dos conteudos'] = parameters['organizacao dos conteudos']! + comment['organizacao dos conteudos'];
+      parameters['promocao da reflexao'] = parameters['promocao da reflexao']! + comment['promocao da reflexao'];
+      parameters['qualidade do ensino'] = parameters['qualidade do ensino']! + comment['qualidade do ensino'];
+    }
+
+    if(num_comments != 0) {
+      media_geral = sum_comments / num_comments;
+      media_geral.roundToDouble();
+      parameters.forEach((key, value) {parameters[key] = parameters[key]! / num_comments;});
+    }
+
+    var sortedParameters = Map.fromEntries(
+        parameters.entries.toList()..sort((e1, e2) => e2.value.compareTo(e1.value))
+    );
+
+    double p1 = sortedParameters.values.toList()[0], p2 = sortedParameters.values.toList()[1], p3 = sortedParameters.values.toList()[2];
+    String p1_name = sortedParameters.keys.toList()[0], p2_name = sortedParameters.keys.toList()[1], p3_name = sortedParameters.keys.toList()[2];
 
     final GlobalKey<FormState> formKey = GlobalKey();
     final titulo = TextEditingController();
@@ -275,6 +330,8 @@ class TeacherPage extends StatelessWidget {
     double ensino = 0;
     double mediaSingle = 0;
 
+    late ValueNotifier<double> valueNotifier = ValueNotifier(media_geral*20);
+
     if (globals.loggedIn) {
       return Scaffold(
         appBar: AppBar(
@@ -290,7 +347,7 @@ class TeacherPage extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     padding: const EdgeInsets.all(15.0),
                     child: CircleAvatar(
-                      backgroundColor: Colors.orange,
+                      backgroundColor: const Color(0xFF2574A8),
                       radius: 55,
                       child: CircleAvatar(
                         foregroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
@@ -304,8 +361,48 @@ class TeacherPage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(
-                child: Text(document['faculdade'], style: Theme.of(context).textTheme.headlineSmall,),
+              Row (
+                children: [
+                  SizedBox(
+                    child: Text(document['faculdade'], style: Theme.of(context).textTheme.headlineSmall,),
+                  ),
+                  SimpleCircularProgressBar(
+                    size: 35,
+                    progressStrokeWidth: 5,
+                    backStrokeWidth: 0,
+                    valueNotifier: valueNotifier,
+                    mergeMode: true,
+                    animationDuration: 2,
+                    progressColors: const [Colors.orange],
+                    onGetText: (double value) {
+                      return Text(
+                        media_geral.toStringAsFixed(1),
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(p1_name),
+                  Text(p1.toString()),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(p2_name),
+                  Text(p2.toString()),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(p3_name),
+                  Text(p3.toString()),
+                ],
               ),
               ElevatedButton(
                 onPressed: () {
@@ -495,6 +592,9 @@ class TeacherPage extends StatelessWidget {
                                 mediaSingle = (relacionamento + interesse + regras + disponibilidade + empenho + exigencia + conteudos + reflexao + ensino) / 9;
                                 addRating(relacionamento, interesse, regras, disponibilidade, empenho, exigencia, conteudos, reflexao, ensino, titulo.text, comentario.text, mediaSingle);
                                 Navigator.pop(context, 'Submit');
+                                FirebaseFirestore.instance.collection('avaliacao').where('teacherID', isEqualTo : document['codigo'].toString()).get().then((value) => setState(() {
+                                  comments = value.docs;
+                                }));
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) => AlertDialog(
@@ -521,8 +621,8 @@ class TeacherPage extends StatelessWidget {
                 child: const Text('Avaliar'),
               ),
               Container(
-                height: 220,
-                width: 400,
+                width: MediaQuery.of(context).size.width*0.90,
+                height: MediaQuery.of(context).size.height*0.50,
                 decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFF2574A8), width: 2),
                 ),
@@ -546,7 +646,7 @@ class TeacherPage extends StatelessWidget {
                 alignment: Alignment.topLeft,
                   padding: const EdgeInsets.all(15.0),
                   child: CircleAvatar(
-                    backgroundColor: Colors.orange,
+                    backgroundColor: const Color(0xFF2574A8),
                     radius: 55,
                     child: CircleAvatar(
                       foregroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
@@ -636,6 +736,8 @@ class TeacherPage extends StatelessWidget {
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot document2) {
+    double media_comment = double.parse(document2['media_single'].toStringAsFixed(1));
+    late ValueNotifier<double> valueNotifier = ValueNotifier(media_comment*20);
 
     return ListTile(
       title:
@@ -647,16 +749,24 @@ class TeacherPage extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
-          Container(
-              decoration: const BoxDecoration(
-                color: Color(0xffddddff),
-              ),
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
+          SimpleCircularProgressBar(
+            size: 35,
+            progressStrokeWidth: 5,
+            backStrokeWidth: 0,
+            valueNotifier: valueNotifier,
+            mergeMode: true,
+            animationDuration: 2,
+            progressColors: const [Colors.orange],
+            onGetText: (double value) {
+              return Text(
                 document2['media_single'].toStringAsFixed(1),
-                style: Theme.of(context).textTheme.bodyMedium,
-              )
-          )
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              );
+            },
+          ),
         ],
       ),
       onTap: () {
@@ -797,7 +907,7 @@ class FacultyTeachers extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 padding: const EdgeInsets.only(right: 8.0, top: 8.0),
                 child: CircleAvatar(
-                  backgroundColor: Colors.orange,
+                  backgroundColor: const Color(0xFF2574A8),
                   radius: 33,
                   child: CircleAvatar(
                     foregroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),

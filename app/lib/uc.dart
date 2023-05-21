@@ -71,7 +71,7 @@ class _UCState extends State<UC> {
               alignment: Alignment.topLeft,
               padding: const EdgeInsets.only(right: 8.0, top: 8.0),
               child: CircleAvatar(
-                backgroundColor: Colors.orange,
+                backgroundColor: const Color(0xFF2574A8),
                 radius: 33,
                 child: CircleAvatar(
                   foregroundImage: NetworkImage('https://sigarra.up.pt/${document['faculdade'].toString().toLowerCase()}/pt/FOTOGRAFIAS_SERVICE.foto?pct_cod=${document['codigo']}'),
