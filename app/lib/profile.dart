@@ -233,7 +233,7 @@ class Profile extends StatelessWidget{
                     ),
                     child: Column(
                       children: [
-                        Container(
+                        SizedBox(
                           width: 100,
                           child:Image.asset('media/logout_icon.png', width: 10),
                         ),
