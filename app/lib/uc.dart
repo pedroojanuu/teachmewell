@@ -46,7 +46,7 @@ class _UCState extends State<UC> {
                   child: LoadingIndicator(
                       indicatorType: Indicator.ballSpinFadeLoader,
                       colors: [Color(0xFF2574A8)],
-                      strokeWidth: 10,
+                      strokeWidth: 0,
                       backgroundColor: Colors.transparent,
                       pathBackgroundColor: Colors.transparent
                   ),
@@ -69,7 +69,12 @@ class _UCState extends State<UC> {
           children: [
             Container(
               alignment: Alignment.topLeft,
-              padding: const EdgeInsets.only(right: 8.0, top: 8.0),
+              padding: const EdgeInsets.only(
+                left: 5,
+                top: 8,
+                right: 15,
+                bottom: 8,
+              ),
               child: CircleAvatar(
                 backgroundColor: const Color(0xFF2574A8),
                 radius: 33,
@@ -89,17 +94,6 @@ class _UCState extends State<UC> {
                 style: const TextStyle(fontSize: 22.0),
               ),
             ),
-            Container(
-                decoration: const BoxDecoration(
-                  color: Color(0xffddddff),
-                  shape: BoxShape.circle,
-                ),
-                padding: const EdgeInsets.all(10.0),
-                child: Text(
-                  '0',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                )
-            )
           ],
         ),
         onTap: () {
