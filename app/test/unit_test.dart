@@ -5,9 +5,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:teachmewell/firebase_options.dart';
 import 'package:teachmewell/main.dart';
 import 'package:teachmewell/teacher.dart';
+import 'package:teachmewell/uc.dart';
 
 
-void main() {
+void main() async {
   test('Testing getUCTeachersIDs', () async {
     List<int> teachers = await getUCTeachersIDs("FEUP", 501682);
     Set<int> teachersSet = teachers.toSet();
@@ -44,18 +45,18 @@ void main() {
     expect(received_FLUP_SOCI, expected_FLUP_SOCI);
   });
 
-  test('Testing getUCTeachers', () async {
-    // WidgetsFlutterBinding.ensureInitialized();
-    // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-    // runApp(const MyApp());
-    //
-    // List<dynamic> teachers = await getUCTeachers("FEUP", 501682);
-    //
-    // Set<int> expectedTeachers = {201100, 202091, 235739};
-    //
-    // for(var teacher in teachers){
-    //   expect(expectedTeachers.contains(teacher['id']), true);
-    // }
+  test("FEUP_L.EIC_ES details", () async {
+    UC_details expectedES = new UC_details("Engenharia de Software", "L.EIC017", "ES", "feup", 501679);
+    UC_details receivedES = await getUCInfo("FEUP", 501679);
+
+    expect(ucEquals(receivedES, expectedES), true);
+  });
+
+  test("FEP_LECO_MIF details", () async {
+    UC_details expectedMIF = new UC_details("Mercados e Investimentos Financeiros", "1EC208", "MIF", "fep", 499899);
+    UC_details receivedMIF = await getUCInfo("FEP", 499899);
+
+    expect(ucEquals(expectedMIF, receivedMIF), true);
   });
 
   test('Testing search 1', () async {
@@ -74,7 +75,7 @@ void main() {
     ];
 
     for(int i = 0; i < searchResult.length; i++){
-      expect(equals(searchResult[i], expectedTeachers[i]), true);
+      expect(teacherEquals(searchResult[i], expectedTeachers[i]), true);
     }
 
   });
@@ -95,7 +96,7 @@ void main() {
     ];
 
     for(int i = 0; i < searchResult.length; i++){
-      expect(equals(searchResult[i], expectedTeachers[i]), true);
+      expect(teacherEquals(searchResult[i], expectedTeachers[i]), true);
     }
 
   });
@@ -119,7 +120,7 @@ void main() {
     ];
 
     for(int i = 0; i < searchResult.length; i++){
-      expect(equals(searchResult[i], expectedTeachers[i]), true);
+      expect(teacherEquals(searchResult[i], expectedTeachers[i]), true);
     }
 
   });
@@ -142,12 +143,16 @@ void main() {
     ];
 
     for(int i = 0; i < searchResult.length; i++){
-      expect(equals(searchResult[i], expectedTeachers[i]), true);
+      expect(teacherEquals(searchResult[i], expectedTeachers[i]), true);
     }
 
   });
 }
 
-bool equals(TeacherDetails t1, TeacherDetails t2){
+bool teacherEquals(TeacherDetails t1, TeacherDetails t2){
   return t1.rowid == t2.rowid && t1.name == t2.name && t1.name_simpl == t2.name_simpl && t1.faculty == t2.faculty && t1.code == t2.code;
+}
+
+bool ucEquals(UC_details uc1, UC_details uc2) {
+  return uc1.nome == uc2.nome && uc1.codigo == uc2.codigo && uc1.acronimo == uc2.acronimo && uc1.faculdade == uc2.faculdade && uc1.id == uc2.id;
 }
