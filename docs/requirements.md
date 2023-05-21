@@ -10,6 +10,16 @@ As a professor I want to check my ratings and comments so I can improve my teach
 
 As a student, I want to check the rating of a professor in order to know whether I should choose them. (Mockups 3 and 7)
 
+As a user, I want to see my professors organized by subjects and faculties. (Mockups 3 and 4)
+
+As a student, I want to keep my session. (Mockup 1)
+
+As a student, I want to be able to logout. (Mockup 2)
+
+As a student, I want to be able to view my profile with my comments. (Mockup 2)
+
+As a student, I want to able to edit my own comments. (Mockup 6)
+
 
 ### Acceptance tests
 
@@ -54,6 +64,56 @@ Feature: Search for professor
     Given he has accessed the search menu after logging in
     When the user writes the professor's name on the search bar and presses 'Search'
     Then a list of professors with a compatible name is shown
+
+### User story 5 (sorted professors)
+
+Feature: Filters
+
+    Scenario: User chooses a faculty from faculties screen
+    Given he has accessed the faculties menu after logging in as student or guest
+    When the user chooses the desired faculty, course and subject
+    Then a list of professors that meet the criteria are shown
+
+### User story 6 (keep logged in)
+
+Feature: Persistent Login
+
+    Scenario: User enters the app without having to login
+    Given he has logged in before as a student
+    When he presses the app icon from the device's menu
+    Then the login page is skipped
+
+
+### User story 7 (Logout)
+
+Feature: Logout
+
+    Scenario: User taps the logout button
+    Given he has accessed the profile page
+    When the user presses the button
+    Then the user's session ends
+
+
+### User story 8 (Profile with own comments)
+
+Feature: Check comments made by self
+
+    Scenario: User sees comments made by themselves
+    Given they are logged in as a student
+    When the user presses the 'Os Meus Comentários' button
+    Then the user's comments are listed
+
+
+### User story 9 (Edit comment)
+
+Feature: Edit comments
+
+    Scenario: User edits their comment
+    Given they are logged in
+    When they see one of their comments
+    Then they are able to edit them
+
+
 
 ## Domain Model
 

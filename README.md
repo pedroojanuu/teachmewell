@@ -16,6 +16,7 @@ You can find here details about the product (or mini-app or module), from a high
 
 * Business Modelling
     * ![Product Vision](docs/ProductVision.md)
+    * ![Elevator Pitch](docs/ElevatorPitch.md)
 
 * ![Requirements](docs/requirements.md)
     * ![User Stories](docs/requirements.md#user-stories)
