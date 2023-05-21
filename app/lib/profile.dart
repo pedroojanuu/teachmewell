@@ -115,12 +115,12 @@ class Profile extends StatelessWidget{
                       child: ElevatedButton(
                           onPressed: (){
                             globals.loggedIn = false;
-                            FirebaseAuth.instance.signOut();
-                            // Isto em principio é para mudar, eu é fiz isto para desenrascar
-                            Navigator.popUntil(context, (route) => false);
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const LoginPage()
-                            ));
+                            FirebaseAuth.instance.signOut().then((value){
+                              Navigator.popUntil(context, (route) => false);
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const LoginPage()
+                              ));
+                            });
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF2574A8),
