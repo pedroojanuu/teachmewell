@@ -10,6 +10,7 @@
 ![image](https://github.com/FEUP-LEIC-ES-2022-23/2LEIC05T1/assets/92723402/3686246a-4239-4f88-85ab-f452508fe611)
 
 #### After iteration 4:
+![image](https://github.com/FEUP-LEIC-ES-2022-23/2LEIC05T1/assets/92723402/bb9b2a31-adc7-40ea-9439-769f2af17933)
 
 
 Below, you can find links to every release so far;
@@ -46,7 +47,7 @@ In this release, we implemented a search feature and the possibility of seeing e
 
 #### Do differently:
 
- - 
+ - Correctly estimate the amount of time it would take to implement certain features.
 
 ##### Puzzles:
 
