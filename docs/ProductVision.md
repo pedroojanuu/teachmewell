@@ -10,5 +10,5 @@ For UP (University of Porto) students. An app where the user can rate and get th
  - View a Teacher's rating - Both teachers and students can view a teacher's score on many parameters.
 
 ## Assumptions and dependencies
- - Firebase database to store the ratings
- - SIGARRA teacher search
+ - Firebase database to store the ratings.
+ - SIGARRA teacher search.
