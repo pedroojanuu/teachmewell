@@ -20,6 +20,8 @@ As a student, I want to be able to view my profile with my comments. (Mockup 2)
 
 As a student, I want to able to edit my own comments. (Mockup 6)
 
+As a user, I want to be able to check the average general score of a professor. (Mockup 7)
+
 
 ### Acceptance tests
 
@@ -65,7 +67,7 @@ Feature: Search for professor
     When the user writes the professor's name on the search bar and presses 'Search'
     Then a list of professors with a compatible name is shown
 
-### User story 5 (sorted professors)
+#### User story 5 (sorted professors)
 
 Feature: Filters
 
@@ -74,7 +76,7 @@ Feature: Filters
     When the user chooses the desired faculty, course and subject
     Then a list of professors that meet the criteria are shown
 
-### User story 6 (keep logged in)
+#### User story 6 (keep logged in)
 
 Feature: Persistent Login
 
@@ -84,7 +86,7 @@ Feature: Persistent Login
     Then the login page is skipped
 
 
-### User story 7 (Logout)
+#### User story 7 (Logout)
 
 Feature: Logout
 
@@ -94,7 +96,7 @@ Feature: Logout
     Then the user's session ends
 
 
-### User story 8 (Profile with own comments)
+#### User story 8 (Profile with own comments)
 
 Feature: Check comments made by self
 
@@ -102,9 +104,14 @@ Feature: Check comments made by self
     Given they are logged in as a student
     When the user presses the 'Os Meus Comentários' button
     Then the user's comments are listed
+    
+    Scenario: User can't see comments made by themselves
+    Given they are not logged in
+    When they are using the application
+    Then they don't have access to their 'Os Meus Comentários' page
 
 
-### User story 9 (Edit comment)
+#### User story 9 (Edit comment)
 
 Feature: Edit comments
 
@@ -114,6 +121,15 @@ Feature: Edit comments
     Then they are able to edit them
 
 
+#### User story 10 (See a professor's general rating)
+
+Feature: See professors' average ratings
+
+    Scenario: User sees a professor's average rating
+    Given they are in the professor's page
+    When they look at the screen
+    Then they see the professor's average rating
+    
 
 ## Domain Model
 
