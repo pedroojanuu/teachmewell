@@ -2,11 +2,11 @@
 
 ## Members
 
- - João António Teixeira Coelho - 202004846
- - João Guimarães Mota - 202108677
- - Pedro de Almeida Lima - 202108806
- - Pedro Jorge Mendes Jesus Landolt - 202103337
- - Pedro Simão Januário Vieira - 202108768
+ - [João António Teixeira Coelho](https://github.com/Jcoelho13) - 202004846
+ - [João Guimarães Mota](https://github.com/Joao-Mota) - 202108677
+ - [Pedro de Almeida Lima](https://github.com/up202108806) - 202108806
+ - [Pedro Jorge Mendes Jesus Landolt](https://github.com/PedroLandolt) - 202103337
+ - Pedro Simão Januário Vieira (me) - 202108768
 
 # TeachMeWell
 
